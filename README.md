@@ -18,45 +18,58 @@ A brief description of the application here. Lorem ipsum dolor sit amet, consect
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] Proper use of Markdown
-- [ ] A concise and compelling elevator pitch
-- [ ] Description of key features
-- [ ] Description of how you will use each technology
-- [ ] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
+- [x] Proper use of Markdown
+- [x] A concise and compelling elevator pitch
+- [x] Description of key features
+- [x] Description of how you will use each technology
+- [x] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
 
 ### Elevator pitch
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+I have friends and family scattered from Japan to Germany and keeping track of everyone’s local time is a frequent hassle. I often find myself Googling “current time in Tokyo” or manually calculating when our schedules overlap so that we can call each other.
+
+ezTime is a simple, single-page tool designed to help myself and others save some time and headache. It lets me quickly check the current or future time in the time zones I care about most with as little friction as possible. If it isn’t simpler than mental math and Google searches, it isn’t worth using, so ezTime is designed with a focus on clarity and usability with minimal input. Beyond login and registration, there is no navigation and everything happens on one page, including bookmarked time zones, quick time conversion, and unobtrusive reminder notifications.
 
 ### Design
 
-![Design image](placeholder.png)
+![Design image](eztime_mockup.png)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Here is a simple diagram to illustrate how visitors interact with the backend.
 
 ```mermaid
 sequenceDiagram
-    actor You
-    actor Website
-    You->>Website: Replace this with your design
+    actor Client
+    actor Server
+    actor DB
+    Client->>Server: Login/Register
+    Server->>DB: Login/Register
+    DB-->Server: Auth
+    Server-->>Client: Auth
+    Client->>Server: Bookmark/Preference
+    Server->>DB: Bookmark/Preference
+    Client->>Server: Reminder
+    Server->>DB: Reminder
+    Server-->>Client: Reminder push
 ```
 
 ### Key features
 
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
+- **Bookmarked Time Zones:** Users can save frequently checked time zones (e.g., “Mom”, "Tokyo Friends”) for quick, always-visible reference. These appear in a scrollable sidebar.
+- **Central Time Conversion Widget:** At the center of the page is a simple widget for entering a different time. Once a custom time has been provided, the bookmarked time zones temporarily update to display the corresponding times for each person.
+- **Reminders Sidebar:** Users can create reminders which are stored on the server and delivered via WebSocket push notification at the scheduled time.
+- **Import/Export:** Reminders and bookmarks can be exported or imported as a text string stored in the clipboard for ease of sharing.
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
-- **CSS** - Description here
-- **React** - Description here
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
+- **HTML** - Used to structure the splash+login page and the home page with all core containers.
+- **CSS** - Responsive and intuitive layout. Scrollable sidebar regions. Clean, dark UI.
+- **React** - Routing between pages. Components for bookmark tiles, reminder tiles, and preference controls. Dynamic updates when entering custom times. Sidebar rendering + smooth UI state transitions. Popup dialogs for creating new bookmarks and reminders.
+- **Service** - Registration and authentication. Bookmark and Reminder CRUD. Update user preferences. Display an inspirational quote from a third party API on login or refresh.
+- **DB/Login** - The database will store user account credentials, preferences, and their bookmarked timezones and reminders, including organizational metadata.
+- **WebSocket** - Used to push real-time reminder notifications from the server to the client.
+When a reminder’s time is reached, the server sends a WebSocket message, prompting a notification popup on the client.
 
 ## 🚀 AWS deliverable
 
