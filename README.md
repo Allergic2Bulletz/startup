@@ -39,8 +39,8 @@ Here is a simple diagram to illustrate how visitors interact with the backend.
 ```mermaid
 sequenceDiagram
     actor Client
-    actor Server
-    actor DB
+    participant Server
+    participant DB
     Client->>Server: Login/Register
     Server->>DB: Login/Register
     DB-->Server: Auth
