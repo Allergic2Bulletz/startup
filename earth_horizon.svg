@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="108" viewBox="0 0 192 108" role="img" aria-label="Earth horizon from space">
+  <defs>
+    <!-- Space gradient -->
+    <linearGradient id="spaceGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#02030A"/>
+      <stop offset="60%" stop-color="#050B1A"/>
+      <stop offset="100%" stop-color="#0B1E3A"/>
+    </linearGradient>
+    <!-- Atmospheric glow -->
+    <radialGradient id="glow" cx="50%" cy="80%" r="60%">
+      <stop offset="0%" stop-color="#4FB5FF" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#3A8DDE" stop-opacity="0.5"/>
+      <stop offset="70%" stop-color="#1E4F88" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0C2540" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Ocean gradient -->
+    <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#025D9E"/>
+      <stop offset="70%" stop-color="#013A62"/>
+      <stop offset="100%" stop-color="#01233D"/>
+    </linearGradient>
+    <!-- Cloud texture pattern -->
+    <pattern id="clouds" patternUnits="userSpaceOnUse" width="32" height="16">
+      <circle cx="8" cy="8" r="6" fill="#FFFFFF" fill-opacity="0.25"/>
+      <circle cx="20" cy="6" r="5" fill="#FFFFFF" fill-opacity="0.18"/>
+      <circle cx="26" cy="12" r="4" fill="#FFFFFF" fill-opacity="0.2"/>
+      <circle cx="4" cy="4" r="3" fill="#FFFFFF" fill-opacity="0.15"/>
+      <circle cx="14" cy="12" r="3" fill="#FFFFFF" fill-opacity="0.22"/>
+    </pattern>
+    <!-- Limb mask for soft fade -->
+    <radialGradient id="limbFade" cx="50%" cy="80%" r="65%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="70%" stop-color="#FFFFFF" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="limbMask">
+      <rect width="192" height="108" fill="url(#limbFade)"/>
+    </mask>
+  </defs>
+
+  <!-- Deep space background -->
+  <rect width="192" height="108" fill="url(#spaceGrad)"/>
+
+  <!-- Atmospheric glow over space -->
+  <rect width="192" height="108" fill="url(#glow)"/>
+
+  <!-- Earth limb (arc) -->
+  <g mask="url(#limbMask)">
+    <path d="M-40 90 Q96 10 232 90 L232 140 L-40 140 Z" fill="url(#ocean)"/>
+    <!-- Clouds over limb -->
+    <path d="M-40 90 Q96 10 232 90 L232 140 L-40 140 Z" fill="url(#clouds)"/>
+  </g>
+
+  <!-- Thin atmosphere edge highlight -->
+  <path d="M-40 90 Q96 10 232 90" stroke="#6FD2FF" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M-40 90 Q96 10 232 90" stroke="#B3ECFF" stroke-width="0.6" stroke-linecap="round" fill="none" opacity="0.9"/>
+
+  <!-- Stars (subtle) -->
+  <g fill="#FFFFFF" fill-opacity="0.6">
+    <circle cx="12" cy="18" r="0.6"/>
+    <circle cx="34" cy="8" r="0.5"/>
+    <circle cx="58" cy="22" r="0.7"/>
+    <circle cx="80" cy="6" r="0.5"/>
+    <circle cx="104" cy="16" r="0.65"/>
+    <circle cx="128" cy="12" r="0.55"/>
+    <circle cx="150" cy="20" r="0.5"/>
+    <circle cx="170" cy="4" r="0.6"/>
+    <circle cx="186" cy="14" r="0.55"/>
+  </g>
+
+  <!-- Caption (optional remove if not desired) -->
+  <text x="50%" y="102" font-family="Verdana, Arial, sans-serif" font-size="7" fill="#7FB9E8" text-anchor="middle" opacity="0.7">Earth Horizon</text>
+</svg>
