@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" role="img" aria-label="Clock favicon">
+  <!-- Small, high-contrast clock icon for 16x16 favicon -->
+  <g fill="none" stroke="#111" stroke-linecap="round" stroke-linejoin="round">
+    <!-- clock face -->
+    <circle cx="8" cy="8" r="6" stroke-width="1.2" />
+    <!-- hour hand (short) -->
+    <line x1="8" y1="8" x2="8" y2="5.2" stroke-width="1.4" />
+    <!-- minute hand (longer, angled) -->
+    <line x1="8" y1="8" x2="11" y2="8.8" stroke-width="1.1" />
+    <!-- center dot -->
+    <circle cx="8" cy="8" r="0.6" fill="#111" stroke="none" />
+  </g>
+</svg>

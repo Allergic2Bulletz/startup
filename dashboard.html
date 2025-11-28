@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ezTime - Simple Time Zone Coordination</title>
+    <link rel="icon" href="favicon-16x16.svg" />
 </head>
 <body>
     <header>
@@ -78,25 +79,22 @@
                     <h4>Call Mom</h4>
                     <p>Today at 3:00 PM CST</p>
                     <span class="reminder-status">Active</span>
+                    <button class="copy-reminder-btn">⧉</button>
                 </div>
                 
                 <div class="reminder-item">
                     <h4>Team Meeting</h4>
                     <p>Tomorrow at 9:00 AM JST</p>
                     <span class="reminder-status">Active</span>
+                    <button class="copy-reminder-btn">⧉</button>
                 </div>
                 
                 <div class="reminder-item">
                     <h4>Birthday Call</h4>
                     <p>Dec 1 at 2:00 PM GMT</p>
                     <span class="reminder-status">Scheduled</span>
+                    <button class="copy-reminder-btn">⧉</button>
                 </div>
-            </div>
-            
-            <div id="import-export">
-                <h3>Import/Export</h3>
-                <button id="export-btn">Export Data</button>
-                <button id="import-btn">Import Data</button>
             </div>
         </aside>
     </main>
@@ -137,15 +135,12 @@
             // Future: Open preferences modal
         });
         
-        // Import/Export functionality
-        document.getElementById('export-btn').addEventListener('click', function() {
-            console.log('Export data clicked');
-            // Future: Generate JSON string and copy to clipboard
-        });
-        
-        document.getElementById('import-btn').addEventListener('click', function() {
-            console.log('Import data clicked');
-            // Future: Open dialog to paste import data
+        // Copy reminder to clipboard functionality
+        document.querySelectorAll('.copy-reminder-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                console.log('Copy reminder to clipboard clicked');
+                // Future: Generate JSON representation of reminder and copy to clipboard
+            });
         });
         
         // Future: WebSocket connection for real-time reminder notifications
