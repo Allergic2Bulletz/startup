@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ezTime - Simple Time Zone Coordination</title>
-    <link rel="icon" href="favicon-16x16.svg" />
+    <link rel="icon" href="favicon.ico" />
 </head>
 <body>
     <header>
@@ -16,95 +16,87 @@
     </header>
 
     <main>
-        <table width="100%" cellpadding="10" cellspacing="0">
-            <tr>
-                <td width="30%" valign="top">
-                    <!-- Left sidebar: Bookmarked time zones -->
-                    <aside id="bookmarks-sidebar">
-                        <h2>Bookmarked Time Zones</h2>
-                        <button id="add-bookmark-btn">+ Add Bookmark</button>
-                        
-                        <div id="bookmarks-list">
-                            <!-- Placeholder bookmarks -->
-                            <div class="bookmark-item">
-                                <h3>Mom (Chicago)</h3>
-                                <p class="time-display">2:30 PM</p>
-                                <p class="date-display">Nov 28, 2025</p>
-                            </div>
-                            
-                            <div class="bookmark-item">
-                                <h3>Tokyo Friends</h3>
-                                <p class="time-display">4:30 AM</p>
-                                <p class="date-display">Nov 29, 2025</p>
-                            </div>
-                            
-                            <div class="bookmark-item">
-                                <h3>London Office</h3>
-                                <p class="time-display">8:30 PM</p>
-                                <p class="date-display">Nov 28, 2025</p>
-                            </div>
-                        </div>
-                    </aside>
-                </td>
-                <td width="40%" valign="top">
-                    <!-- Central time conversion widget -->
-                    <section id="time-converter">
-                        <h2>Time Converter</h2>
-                        
-                        <div id="current-time-display">
-                            <h3>Current Time</h3>
-                            <p id="current-time">2:30 PM MST</p>
-                            <p id="current-date">Thursday, November 28, 2025</p>
-                        </div>
-                        
-                        <div id="custom-time-input">
-                            <h3>Convert Custom Time</h3>
-                            <label for="custom-time">Enter time:</label>
-                            <input type="time" id="custom-time" name="custom-time">
-                            <label for="custom-date">Date:</label>
-                            <input type="date" id="custom-date" name="custom-date">
-                            <button id="convert-btn">Update All Times</button>
-                        </div>
-                        
-                        <div id="third-party-quote">
-                            <h3>Daily Inspiration</h3>
-                            <p id="quote-text">"Time is what we want most, but what we use worst." - William Penn</p>
-                        </div>
-                    </section>
-                </td>
-                <td width="30%" valign="top">
-                    <!-- Right sidebar: Reminders -->
-                    <aside id="reminders-sidebar">
-                        <h2>Reminders</h2>
-                        <button id="add-reminder-btn">+ Add Reminder</button>
-                        
-                        <div id="reminders-list">
-                            <!-- Placeholder reminders -->
-                            <div class="reminder-item">
-                                <h4>Call Mom</h4>
-                                <p>Today at 3:00 PM CST</p>
-                                <span class="reminder-status">Active</span>
-                                <button class="copy-reminder-btn">⧉</button>
-                            </div>
-                            
-                            <div class="reminder-item">
-                                <h4>Team Meeting</h4>
-                                <p>Tomorrow at 9:00 AM JST</p>
-                                <span class="reminder-status">Active</span>
-                                <button class="copy-reminder-btn">⧉</button>
-                            </div>
-                            
-                            <div class="reminder-item">
-                                <h4>Birthday Call</h4>
-                                <p>Dec 1 at 2:00 PM GMT</p>
-                                <span class="reminder-status">Scheduled</span>
-                                <button class="copy-reminder-btn">⧉</button>
-                            </div>
-                        </div>
-                    </aside>
-                </td>
-            </tr>
-        </table>
+        <!-- Left sidebar: Bookmarked time zones -->
+        <aside id="bookmarks-sidebar">
+            <h2>Bookmarked Time Zones</h2>
+            <button id="add-bookmark-btn">+ Add Bookmark</button>
+            
+            <div id="bookmarks-list">
+                <!-- Placeholder bookmarks -->
+                <div class="bookmark-item">
+                    <h3>Mom (Chicago)</h3>
+                    <p class="time-display">2:30 PM</p>
+                    <p class="date-display">Nov 28, 2025</p>
+                </div>
+                
+                <div class="bookmark-item">
+                    <h3>Tokyo Friends</h3>
+                    <p class="time-display">4:30 AM</p>
+                    <p class="date-display">Nov 29, 2025</p>
+                </div>
+                
+                <div class="bookmark-item">
+                    <h3>London Office</h3>
+                    <p class="time-display">8:30 PM</p>
+                    <p class="date-display">Nov 28, 2025</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Central time conversion widget -->
+        <section id="time-converter">
+            <h2>Time Converter</h2>
+            
+            <div id="current-time-display">
+                <h3>Current Time</h3>
+                <p id="current-time">2:30 PM MST</p>
+                <p id="current-date">Thursday, November 28, 2025</p>
+            </div>
+            
+            <div id="custom-time-input">
+                <h3>Convert Custom Time</h3>
+                <label for="custom-time">Enter time:</label>
+                <input type="time" id="custom-time" name="custom-time">
+                <label for="custom-date">Date:</label>
+                <input type="date" id="custom-date" name="custom-date">
+                <button id="convert-btn">Update All Times</button>
+            </div>
+            
+            <div id="third-party-quote">
+                <h3>Daily Inspiration</h3>
+                <p id="quote-text">"Time is what we want most, but what we use worst." - William Penn</p>
+            </div>
+        </section>
+
+        <!-- Right sidebar: Reminders -->
+        <aside id="reminders-sidebar">
+            <h2>Reminders</h2>
+            <button id="add-reminder-btn">+ Add Reminder</button>
+            
+            <div id="reminders-list">
+                <!-- Placeholder reminders -->
+                <div class="reminder-item">
+                    <h4>Call Mom</h4>
+                    <p>Today at 3:00 PM CST</p>
+                    <span class="reminder-status">Active</span>
+                    <button class="copy-reminder-btn">⧉</button>
+                </div>
+                
+                <div class="reminder-item">
+                    <h4>Team Meeting</h4>
+                    <p>Tomorrow at 9:00 AM JST</p>
+                    <span class="reminder-status">Active</span>
+                    <button class="copy-reminder-btn">⧉</button>
+                </div>
+                
+                <div class="reminder-item">
+                    <h4>Birthday Call</h4>
+                    <p>Dec 1 at 2:00 PM GMT</p>
+                    <span class="reminder-status">Scheduled</span>
+                    <button class="copy-reminder-btn">⧉</button>
+                </div>
+            </div>
+        </aside>
     </main>
 
     <footer>
