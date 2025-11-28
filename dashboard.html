@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ezTime - Simple Time Zone Coordination</title>
+</head>
+<body>
+    <header>
+        <h1>ezTime Dashboard</h1>
+        <nav>
+            <button id="logout-btn">Logout</button>
+            <button id="preferences-btn">Preferences</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Left sidebar: Bookmarked time zones -->
+        <aside id="bookmarks-sidebar">
+            <h2>Bookmarked Time Zones</h2>
+            <button id="add-bookmark-btn">+ Add Bookmark</button>
+            
+            <div id="bookmarks-list">
+                <!-- Placeholder bookmarks -->
+                <div class="bookmark-item">
+                    <h3>Mom (Chicago)</h3>
+                    <p class="time-display">2:30 PM</p>
+                    <p class="date-display">Nov 28, 2025</p>
+                </div>
+                
+                <div class="bookmark-item">
+                    <h3>Tokyo Friends</h3>
+                    <p class="time-display">4:30 AM</p>
+                    <p class="date-display">Nov 29, 2025</p>
+                </div>
+                
+                <div class="bookmark-item">
+                    <h3>London Office</h3>
+                    <p class="time-display">8:30 PM</p>
+                    <p class="date-display">Nov 28, 2025</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Central time conversion widget -->
+        <section id="time-converter">
+            <h2>Time Converter</h2>
+            
+            <div id="current-time-display">
+                <h3>Current Time</h3>
+                <p id="current-time">2:30 PM MST</p>
+                <p id="current-date">Thursday, November 28, 2025</p>
+            </div>
+            
+            <div id="custom-time-input">
+                <h3>Convert Custom Time</h3>
+                <label for="custom-time">Enter time:</label>
+                <input type="time" id="custom-time" name="custom-time">
+                <label for="custom-date">Date:</label>
+                <input type="date" id="custom-date" name="custom-date">
+                <button id="convert-btn">Update All Times</button>
+            </div>
+            
+            <div id="third-party-quote">
+                <h3>Daily Inspiration</h3>
+                <p id="quote-text">"Time is what we want most, but what we use worst." - William Penn</p>
+            </div>
+        </section>
+
+        <!-- Right sidebar: Reminders -->
+        <aside id="reminders-sidebar">
+            <h2>Reminders</h2>
+            <button id="add-reminder-btn">+ Add Reminder</button>
+            
+            <div id="reminders-list">
+                <!-- Placeholder reminders -->
+                <div class="reminder-item">
+                    <h4>Call Mom</h4>
+                    <p>Today at 3:00 PM CST</p>
+                    <span class="reminder-status">Active</span>
+                </div>
+                
+                <div class="reminder-item">
+                    <h4>Team Meeting</h4>
+                    <p>Tomorrow at 9:00 AM JST</p>
+                    <span class="reminder-status">Active</span>
+                </div>
+                
+                <div class="reminder-item">
+                    <h4>Birthday Call</h4>
+                    <p>Dec 1 at 2:00 PM GMT</p>
+                    <span class="reminder-status">Scheduled</span>
+                </div>
+            </div>
+            
+            <div id="import-export">
+                <h3>Import/Export</h3>
+                <button id="export-btn">Export Data</button>
+                <button id="import-btn">Import Data</button>
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        <p>Connected | Last updated: <span id="last-update">Nov 28, 2025 2:30 PM</span></p>
+    </footer>
+
+    <script>
+        // Placeholder for future JavaScript functionality
+        
+        // Time conversion logic
+        document.getElementById('convert-btn').addEventListener('click', function() {
+            console.log('Convert custom time clicked');
+            // Future: Update all bookmark times based on custom input
+        });
+        
+        // Bookmark management
+        document.getElementById('add-bookmark-btn').addEventListener('click', function() {
+            console.log('Add bookmark clicked');
+            // Future: Open modal to create new bookmark
+        });
+        
+        // Reminder management
+        document.getElementById('add-reminder-btn').addEventListener('click', function() {
+            console.log('Add reminder clicked');
+            // Future: Open modal to create new reminder
+        });
+        
+        // Navigation
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            console.log('Logout clicked');
+            // Future: Handle logout and redirect to index.html
+        });
+        
+        document.getElementById('preferences-btn').addEventListener('click', function() {
+            console.log('Preferences clicked');
+            // Future: Open preferences modal
+        });
+        
+        // Import/Export functionality
+        document.getElementById('export-btn').addEventListener('click', function() {
+            console.log('Export data clicked');
+            // Future: Generate JSON string and copy to clipboard
+        });
+        
+        document.getElementById('import-btn').addEventListener('click', function() {
+            console.log('Import data clicked');
+            // Future: Open dialog to paste import data
+        });
+        
+        // Future: WebSocket connection for real-time reminder notifications
+        // Future: Auto-update current time display
+        // Future: Third-party API call for inspirational quotes
+    </script>
+</body>
+</html>
