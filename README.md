@@ -86,14 +86,14 @@ Caddy is a reverse proxy service that actually receives incoming requests and fo
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
 - [x] **HTML pages** - I created the two HTML pages necessary for my service: the splash/login page and the dashboard.
-- [x] **Proper HTML element usage** - My HTML pages appropriately use HTML tags, including each of BODY, NAV, MAIN, HEADER, FOOTER where appropriate.
+- [x] **Proper HTML element usage** - My HTML pages appropriately use HTML tags, including each of BODY, NAV, MAIN, HEADER, FOOTER where appropriate. Also included modals for taking in user input on the dashboard.
 - [x] **Links** - My website does not feature navigation beyond redirecting after authorization or logout, but for the time being I have implemented buttons to navigate between the two pages without authorization.
 - [x] **Text** - I added text placeholders for instructions, reminder/bookmark element data, and site info.
 - [x] **3rd party API placeholder** - I added my 3rd party quote API placeholder.
 - [x] **Images** - I've added a sample image of the Earth as seen from space. Given the point of the website is to resolve timezone issues, it seemed thematic. I might use something similar as a background to the splash screen.
 - [x] **Login placeholder** - I completed my login and registration placeholders on the splash page.
 - [x] **DB data placeholder** - DB Data is represented by the placeholder reminder/bookmark elements.
-- [x] **WebSocket placeholder** - I added a to-do for the websocket, which will provide the push-notification functionality for reminders, which 
+- [x] **WebSocket placeholder** - I added a to-do for the websocket, which will provide the push-notification functionality for reminders I've added.
 
 ## 🚀 CSS deliverable
 
