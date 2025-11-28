@@ -1,6 +1,6 @@
 # CS 260 Notes
 
-[My startup - Simon](https://simon.cs260.click)
+[My startup - eztimes](https://startup.eztimes.me)
 
 ## Helpful links
 
@@ -10,8 +10,7 @@
 
 ## AWS
 
-My IP address is: 54.81.96.130
-Launching my AMI I initially put it on a private subnet. Even though it had a public IP address and the security group was right, I wasn't able to connect to it.
+My elastic IP address is: 54.243.35.4
 
 ## Caddy
 
@@ -19,11 +18,10 @@ No problems worked just like it said in the [instruction](https://github.com/web
 
 ## HTML
 
-This was easy. I was careful to use the correct structural elements such as header, footer, main, nav, and form. The links between the three views work great using the `a` element.
+Make sure you are using the correct service when running the deployment script! Consider creating a stripped down version just for updating the startup service.
 
-The part I didn't like was the duplication of the header and footer code. This is messy, but it will get cleaned up when I get to React.
 
-## CSS
+## CSS (EXAMPLE NOTES)
 
 This took a couple hours to get it how I wanted. It was important to make it responsive and Bootstrap helped with that. It looks great on all kinds of screen sizes.
 
@@ -68,11 +66,11 @@ I also used SVG to make the icon and logo for the app. This turned out to be a p
 </svg>
 ```
 
-## React Part 1: Routing
+## React Part 1: Routing EXAMPLE NOTES
 
 Setting up Vite and React was pretty simple. I had a bit of trouble because of conflicting CSS. This isn't as straight forward as you would find with Svelte or Vue, but I made it work in the end. If there was a ton of CSS it would be a real problem. It sure was nice to have the code structured in a more usable way.
 
-## React Part 2: Reactivity
+## React Part 2: Reactivity EXAMPLE NOTES
 
 This was a lot of fun to see it all come together. I had to keep remembering to use React state instead of just manipulating the DOM directly.
 
