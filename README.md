@@ -75,21 +75,25 @@ When a reminder’s time is reached, the server sends a WebSocket message, promp
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Server deployed and accessible with custom domain name** - [My server link](https://yourdomainnamehere.click).
+- [x] **Server deployed and accessible with custom domain name** - [My server link](https://eztimes.me).
+
+My domain registrar is namecheap, but AWS Route 53's Hosted Zone is the actual nameserver.
+
+Caddy is a reverse proxy service that actually receives incoming requests and forwards them to appropriate services. Needs to be restarted to update. Read more [here](https://github.com/webprogramming260/.github/blob/main/profile/webServers/caddy/caddy.md).
 
 ## 🚀 HTML deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **HTML pages** - I did not complete this part of the deliverable.
-- [ ] **Proper HTML element usage** - I did not complete this part of the deliverable.
-- [ ] **Links** - I did not complete this part of the deliverable.
-- [ ] **Text** - I did not complete this part of the deliverable.
-- [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
-- [ ] **Images** - I did not complete this part of the deliverable.
-- [ ] **Login placeholder** - I did not complete this part of the deliverable.
-- [ ] **DB data placeholder** - I did not complete this part of the deliverable.
-- [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [x] **HTML pages** - I created the two HTML pages necessary for my service: the splash/login page and the dashboard.
+- [x] **Proper HTML element usage** - My HTML pages appropriately use HTML tags, including each of BODY, NAV, MAIN, HEADER, FOOTER where appropriate.
+- [x] **Links** - My website does not feature navigation beyond redirecting after authorization or logout, but for the time being I have implemented buttons to navigate between the two pages without authorization.
+- [x] **Text** - I added text placeholders for instructions, reminder/bookmark element data, and site info.
+- [x] **3rd party API placeholder** - I added my 3rd party quote API placeholder.
+- [x] **Images** - I've added a sample image of the Earth as seen from space. Given the point of the website is to resolve timezone issues, it seemed thematic. I might use something similar as a background to the splash screen.
+- [x] **Login placeholder** - I completed my login and registration placeholders on the splash page.
+- [x] **DB data placeholder** - DB Data is represented by the placeholder reminder/bookmark elements.
+- [x] **WebSocket placeholder** - I added a to-do for the websocket, which will provide the push-notification functionality for reminders, which 
 
 ## 🚀 CSS deliverable
 
