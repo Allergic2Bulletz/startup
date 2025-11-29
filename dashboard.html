@@ -56,86 +56,92 @@
                 <h2>Bookmarked Time Zones</h2>
                 <button class="add-element-button" id="add-bookmark-btn">+ Add Bookmark</button>
                 
-                <div class="bookmarks-list">
-                <!-- Placeholder bookmarks -->
-                <div class="bookmark-tile">
-                    <div class="tile-header">
-                        <h3>Mom (Chicago)</h3>
-                        <div class="tile-controls">
-                            <button class="move-up-btn">↑</button>
-                            <button class="move-down-btn">↓</button>
-                            <button class="delete-element-button">×</button>
+                <div class="bookmarks-grid">
+                    <!-- Placeholder bookmarks -->
+                    <div class="bookmark-tile">
+                        <div class="tile-header">
+                            <h3>Mom (Chicago)</h3>
+                            <div class="tile-controls">
+                                <button class="move-up-btn">↑</button>
+                                <button class="move-down-btn">↓</button>
+                                <button class="delete-element-button">×</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="tile-content">
-                        <p class="time-display">2:30 PM</p>
-                        <p class="date-display">Nov 28, 2025</p>
-                        <select class="timezone-select">
-                            <option value="America/Chicago" selected>Central Time (Chicago)</option>
-                            <option value="America/New_York">Eastern Time (New York)</option>
-                            <option value="America/Denver">Mountain Time (Denver)</option>
-                            <option value="America/Los_Angeles">Pacific Time (Los Angeles)</option>
-                            <option value="Europe/London">GMT (London)</option>
-                            <option value="Europe/Paris">CET (Paris)</option>
-                            <option value="Asia/Tokyo">JST (Tokyo)</option>
-                            <option value="Asia/Shanghai">CST (Shanghai)</option>
-                            <option value="Australia/Sydney">AEST (Sydney)</option>
-                        </select>
+                        <div class="tile-content">
+                            <p>
+                                <span class="time-display">2:30 PM</span>
+                                <span class="date-display">Nov 28, 2025</span>
+                            </p>
+                            <select class="timezone-select">
+                                <option value="America/Chicago" selected>Central Time (Chicago)</option>
+                                <option value="America/New_York">Eastern Time (New York)</option>
+                                <option value="America/Denver">Mountain Time (Denver)</option>
+                                <option value="America/Los_Angeles">Pacific Time (Los Angeles)</option>
+                                <option value="Europe/London">GMT (London)</option>
+                                <option value="Europe/Paris">CET (Paris)</option>
+                                <option value="Asia/Tokyo">JST (Tokyo)</option>
+                                <option value="Asia/Shanghai">CST (Shanghai)</option>
+                                <option value="Australia/Sydney">AEST (Sydney)</option>
+                            </select>
+                        </div>
+                        
                     </div>
                     
-                </div>
-                
-                <div class="bookmark-tile">
-                    <div class="tile-header">
-                        <h3>Tokyo Friends</h3>
-                        <div class="tile-controls">
-                            <button class="move-up-btn">↑</button>
-                            <button class="move-down-btn">↓</button>
-                            <button class="delete-element-button">×</button>
+                    <div class="bookmark-tile">
+                        <div class="tile-header">
+                            <h3>Tokyo Friends</h3>
+                            <div class="tile-controls">
+                                <button class="move-up-btn">↑</button>
+                                <button class="move-down-btn">↓</button>
+                                <button class="delete-element-button">×</button>
+                            </div>
+                        </div>
+                        <div class="tile-content">
+                            <p>
+                                <span class="time-display">4:30 AM</span>
+                                <span class="date-display">Nov 29, 2025</span>
+                            </p>                            
+                            <select class="timezone-select">
+                                <option value="Asia/Tokyo" selected>JST (Tokyo)</option>
+                                <option value="America/New_York">Eastern Time (New York)</option>
+                                <option value="America/Chicago">Central Time (Chicago)</option>
+                                <option value="America/Denver">Mountain Time (Denver)</option>
+                                <option value="America/Los_Angeles">Pacific Time (Los Angeles)</option>
+                                <option value="Europe/London">GMT (London)</option>
+                                <option value="Europe/Paris">CET (Paris)</option>
+                                <option value="Asia/Shanghai">CST (Shanghai)</option>
+                                <option value="Australia/Sydney">AEST (Sydney)</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="tile-content">
-                        <p class="time-display">4:30 AM</p>
-                        <p class="date-display">Nov 29, 2025</p>
-                        <select class="timezone-select">
-                            <option value="Asia/Tokyo" selected>JST (Tokyo)</option>
-                            <option value="America/New_York">Eastern Time (New York)</option>
-                            <option value="America/Chicago">Central Time (Chicago)</option>
-                            <option value="America/Denver">Mountain Time (Denver)</option>
-                            <option value="America/Los_Angeles">Pacific Time (Los Angeles)</option>
-                            <option value="Europe/London">GMT (London)</option>
-                            <option value="Europe/Paris">CET (Paris)</option>
-                            <option value="Asia/Shanghai">CST (Shanghai)</option>
-                            <option value="Australia/Sydney">AEST (Sydney)</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="bookmark-tile">
-                    <div class="tile-header">
-                        <h3>London Office</h3>
-                        <div class="tile-controls">
-                            <button class="move-up-btn">↑</button>
-                            <button class="move-down-btn">↓</button>
-                            <button class="delete-element-button">×</button>
+                    
+                    <div class="bookmark-tile">
+                        <div class="tile-header">
+                            <h3>London Office</h3>
+                            <div class="tile-controls">
+                                <button class="move-up-btn">↑</button>
+                                <button class="move-down-btn">↓</button>
+                                <button class="delete-element-button">×</button>
+                            </div>
+                        </div>
+                        <div class="tile-content">
+                            <p>
+                                <span class="time-display">8:30 PM</span>
+                                <span class="date-display">Nov 28, 2025</span>
+                            </p>
+                            <select class="timezone-select">
+                                <option value="Europe/London" selected>GMT (London)</option>
+                                <option value="America/New_York">Eastern Time (New York)</option>
+                                <option value="America/Chicago">Central Time (Chicago)</option>
+                                <option value="America/Denver">Mountain Time (Denver)</option>
+                                <option value="America/Los_Angeles">Pacific Time (Los Angeles)</option>
+                                <option value="Europe/Paris">CET (Paris)</option>
+                                <option value="Asia/Tokyo">JST (Tokyo)</option>
+                                <option value="Asia/Shanghai">CST (Shanghai)</option>
+                                <option value="Australia/Sydney">AEST (Sydney)</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="tile-content">
-                        <p class="time-display">8:30 PM</p>
-                        <p class="date-display">Nov 28, 2025</p>
-                        <select class="timezone-select">
-                            <option value="Europe/London" selected>GMT (London)</option>
-                            <option value="America/New_York">Eastern Time (New York)</option>
-                            <option value="America/Chicago">Central Time (Chicago)</option>
-                            <option value="America/Denver">Mountain Time (Denver)</option>
-                            <option value="America/Los_Angeles">Pacific Time (Los Angeles)</option>
-                            <option value="Europe/Paris">CET (Paris)</option>
-                            <option value="Asia/Tokyo">JST (Tokyo)</option>
-                            <option value="Asia/Shanghai">CST (Shanghai)</option>
-                            <option value="Australia/Sydney">AEST (Sydney)</option>
-                        </select>
-                    </div>
-                </div>
                 </div>
             </section>
         </div>
@@ -145,7 +151,7 @@
             <h2>Reminders</h2>
             <button class="add-element-button" id="add-reminder-btn">+ Add Reminder</button>
             
-            <div class="reminders-list">
+            <div class="reminders-grid">
                 <!-- Placeholder reminders -->
                 <div class="reminder-tile">
                     <div class="tile-header">
@@ -156,8 +162,10 @@
                             <button class="delete-element-button">×</button>
                         </div>
                     </div>
-                    <p>Today at 3:00 PM</p>
-                    <button class="copy-reminder-btn">⧉</button>
+                    <div class="tile-content">
+                        <span>Today at 3:00 PM</span>
+                        <button class="copy-reminder-btn">⧉</button>
+                    </div>
                 </div>
                 
                 <div class="reminder-tile">
@@ -169,8 +177,10 @@
                             <button class="delete-element-button">×</button>
                         </div>
                     </div>
-                    <p>Tomorrow at 9:00 AM</p>
-                    <span class="reminder-status">Active</span>
+                    <div class="tile-content">
+                        <span>Nov 29 at 10:00 AM</span>
+                        <button class="copy-reminder-btn">⧉</button>
+                    </div>
                 </div>
                 
                 <div class="reminder-tile">
@@ -182,8 +192,10 @@
                             <button class="delete-element-button">×</button>
                         </div>
                     </div>
-                    <p>Dec 1 at 2:00 PM</p>
-                    <button class="copy-reminder-btn">⧉</button>
+                    <div class="tile-content">
+                        <span>Dec 1 at 2:00 PM</span>
+                        <button class="copy-reminder-btn">⧉</button>
+                    </div>
                 </div>
             </div>
         </section>
