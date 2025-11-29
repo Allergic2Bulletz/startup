@@ -22,3 +22,21 @@
     align-items: center;
     padding: 0 10px;
     border-bottom: 1px solid #444;}
+
+/* Forecast mode styling for bookmark times */
+.time-display.forecast,
+.date-display.forecast {
+    color: #4a90e2; /* Blue color to indicate forecast time */
+    font-style: italic;
+}
+
+/* Visual indicator that times are in forecast mode */
+.bookmark-tile.forecast-mode {
+    /*TODO - this might not be necssary. Maybe a better method to indicate that we are in forecast mode?*/
+    border-left: 3px solid #4a90e2;
+}
+
+.bookmark-tile.forecast-mode::before {
+    content: "📅 ";
+    color: #4a90e2;
+}

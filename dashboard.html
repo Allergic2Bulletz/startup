@@ -310,7 +310,66 @@
         document.getElementById('convert-btn').addEventListener('click', function() {
             console.log('Convert custom time clicked');
             // Future: Update all bookmark times based on custom input
+            handleCustomTimeConversion();
         });
+        
+        // Custom time input validation and forecast mode
+        function handleCustomTimeConversion() {
+            const customTime = document.getElementById('custom-time').value;
+            const customDate = document.getElementById('custom-date').value;
+            
+            // Validate inputs
+            if (!customTime || !customDate) {
+                console.log('Invalid input: missing time or date');
+                // Reset to current time mode
+                resetToCurrentTimeMode();
+                return;
+            }
+            
+            console.log('Custom time input valid:', customTime, customDate);
+            
+            // Enter forecast mode
+            enterForecastMode();
+            
+            // Future: Calculate offset times for each bookmark timezone
+            // Future: Update time-display and date-display elements with calculated times
+        }
+        
+        function enterForecastMode() {
+            console.log('Entering forecast mode');
+            
+            // Add forecast styling to all bookmark tiles and their time displays
+            document.querySelectorAll('.bookmark-tile').forEach(tile => {
+                tile.classList.add('forecast-mode');
+                
+                const timeDisplay = tile.querySelector('.time-display');
+                const dateDisplay = tile.querySelector('.date-display');
+                
+                if (timeDisplay) timeDisplay.classList.add('forecast');
+                if (dateDisplay) dateDisplay.classList.add('forecast');
+            });
+        }
+        
+        function resetToCurrentTimeMode() {
+            console.log('Resetting to current time mode');
+            
+            // Remove forecast styling from all bookmark tiles and their time displays
+            document.querySelectorAll('.bookmark-tile').forEach(tile => {
+                tile.classList.remove('forecast-mode');
+                
+                const timeDisplay = tile.querySelector('.time-display');
+                const dateDisplay = tile.querySelector('.date-display');
+                
+                if (timeDisplay) timeDisplay.classList.remove('forecast');
+                if (dateDisplay) dateDisplay.classList.remove('forecast');
+            });
+            
+            // Clear custom time inputs
+            document.getElementById('custom-time').value = '';
+            document.getElementById('custom-date').value = '';
+            
+            // Future: Reset time displays to current times
+        }
         
         // Bookmark management
         document.getElementById('add-bookmark-btn').addEventListener('click', function() {
