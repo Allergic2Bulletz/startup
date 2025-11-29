@@ -99,12 +99,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Header, footer, and main content body** - I did not complete this part of the deliverable.
-- [ ] **Navigation elements** - I did not complete this part of the deliverable.
-- [ ] **Responsive to window resizing** - I did not complete this part of the deliverable.
-- [ ] **Application elements** - I did not complete this part of the deliverable.
-- [ ] **Application text content** - I did not complete this part of the deliverable.
-- [ ] **Application images** - I did not complete this part of the deliverable.
+- [x] **Header, footer, and main content body** - I have formatted all of these elements and they appropriate scale for different window sizes.
+- [x] **Navigation elements** - I have styled buttons for navigation between my webpages.
+- [x] **Responsive to window resizing** - I used flexboxes and auto-fit grids to ensure maximum readability on different devices.
+- [x] **Application elements** - I've styled my core application elements; each reminder and bookmark exists within a tile. I also have modals that appear above the dashboard for accepting user input for creating new reminders & bookmarks, as well as updating preferences.
+- [x] **Application text content** - Where applicable, I have italicized or bolded text. I also have CSS styling to change the appearance of text depending on user interaction or application state, such as a forecasted time in another timezone or an expired reminder.
+- [x] **Application images** - I have moved my image of the Earth to serve as the background of my splash page!
 
 ## 🚀 React part 1: Routing deliverable
 
