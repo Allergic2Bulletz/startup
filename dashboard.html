@@ -61,7 +61,11 @@
                 <div class="bookmark-tile">
                     <div class="tile-header">
                         <h3>Mom (Chicago)</h3>
-                        <button class="delete-element-button">×</button>
+                        <div class="tile-controls">
+                            <button class="move-up-btn">↑</button>
+                            <button class="move-down-btn">↓</button>
+                            <button class="delete-element-button">×</button>
+                        </div>
                     </div>
                     <div class="tile-content">
                         <p class="time-display">2:30 PM</p>
@@ -84,7 +88,11 @@
                 <div class="bookmark-tile">
                     <div class="tile-header">
                         <h3>Tokyo Friends</h3>
-                        <button class="delete-element-button">×</button>
+                        <div class="tile-controls">
+                            <button class="move-up-btn">↑</button>
+                            <button class="move-down-btn">↓</button>
+                            <button class="delete-element-button">×</button>
+                        </div>
                     </div>
                     <div class="tile-content">
                         <p class="time-display">4:30 AM</p>
@@ -106,7 +114,11 @@
                 <div class="bookmark-tile">
                     <div class="tile-header">
                         <h3>London Office</h3>
-                        <button class="delete-element-button">×</button>
+                        <div class="tile-controls">
+                            <button class="move-up-btn">↑</button>
+                            <button class="move-down-btn">↓</button>
+                            <button class="delete-element-button">×</button>
+                        </div>
                     </div>
                     <div class="tile-content">
                         <p class="time-display">8:30 PM</p>
@@ -138,7 +150,11 @@
                 <div class="reminder-tile">
                     <div class="tile-header">
                         <h4>Call Mom</h4>
-                        <button class="delete-element-button">×</button>
+                        <div class="tile-controls">
+                            <button class="move-up-btn">↑</button>
+                            <button class="move-down-btn">↓</button>
+                            <button class="delete-element-button">×</button>
+                        </div>
                     </div>
                     <p>Today at 3:00 PM</p>
                     <span class="reminder-status">Active</span>
@@ -148,7 +164,11 @@
                 <div class="reminder-tile">
                     <div class="tile-header">
                         <h4>Team Meeting</h4>
-                        <button class="delete-element-button">×</button>
+                        <div class="tile-controls">
+                            <button class="move-up-btn">↑</button>
+                            <button class="move-down-btn">↓</button>
+                            <button class="delete-element-button">×</button>
+                        </div>
                     </div>
                     <p>Tomorrow at 9:00 AM</p>
                     <span class="reminder-status">Active</span>
@@ -158,7 +178,11 @@
                 <div class="reminder-tile">
                     <div class="tile-header">
                         <h4>Birthday Call</h4>
-                        <button class="delete-element-button">×</button>
+                        <div class="tile-controls">
+                            <button class="move-up-btn">↑</button>
+                            <button class="move-down-btn">↓</button>
+                            <button class="delete-element-button">×</button>
+                        </div>
                     </div>
                     <p>Dec 1 at 2:00 PM</p>
                     <span class="reminder-status">Scheduled</span>
@@ -450,6 +474,40 @@
                 if (bookmarkTile) {
                     console.log('Updating times for bookmark:', bookmarkTile.querySelector('h3').textContent);
                     // Future: Call time conversion API and update time-display and date-display
+                }
+            });
+        });
+        
+        // Move-up functionality
+        document.querySelectorAll('.move-up-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const currentTile = this.closest('.bookmark-tile, .reminder-tile');
+                const previousTile = currentTile.previousElementSibling;
+                
+                if (previousTile) {
+                    console.log('Moving tile up');
+                    // Swap positions by inserting current tile before the previous one
+                    currentTile.parentNode.insertBefore(currentTile, previousTile);
+                    // Future: Update order in database
+                } else {
+                    console.log('Already at top - cannot move up');
+                }
+            });
+        });
+        
+        // Move-down functionality  
+        document.querySelectorAll('.move-down-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const currentTile = this.closest('.bookmark-tile, .reminder-tile');
+                const nextTile = currentTile.nextElementSibling;
+                
+                if (nextTile) {
+                    console.log('Moving tile down');
+                    // Swap positions by inserting current tile after the next one
+                    currentTile.parentNode.insertBefore(nextTile, currentTile);
+                    // Future: Update order in database
+                } else {
+                    console.log('Already at bottom - cannot move down');
                 }
             });
         });
