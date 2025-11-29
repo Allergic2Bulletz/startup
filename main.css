@@ -1,0 +1,25 @@
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(34, 34, 70);
+    color: #ddd;
+    font-size: 18px;
+    height: 100vh;
+    padding: 0px;
+    margin: 0px;
+}
+
+header, footer {
+    display: flex;
+    text-align: left;
+    flex: 0 30px;
+    padding: 10px;
+    background-color: rgb(24, 24, 50);
+    margin: 0px;
+    border-width: 0px;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
