@@ -21,6 +21,15 @@ No problems worked just like it said in the [instruction](https://github.com/web
 Make sure you are using the correct service when running the deployment script! Consider creating a stripped down version just for updating the startup service.
 
 
+## CSS
+flex-direction means "put content in a single row/column," not "put content into separate rows/columns"
+
+Important note about Bootstrap: *"You don't need to worry about this now, but later on, when we introduce the downloading of JavaScript packages, you can use the Node Package Manager (NPM) to download Bootstrap and include it in your source code. That way you don't have to rely on someone else's server to provide you with a vital piece of your application. For future reference, to include Bootstrap in your application using NPM you would run the following from your console."* `npm install bootstrap@5.3.3`
+
+Padding: space between a container's border and its interior elements. INTERIOR SPACE.
+
+Margin: space between a container's border and its parent element or other sibling elements. EXTERIOR SPACE.
+
 ## CSS (EXAMPLE NOTES)
 
 This took a couple hours to get it how I wanted. It was important to make it responsive and Bootstrap helped with that. It looks great on all kinds of screen sizes.

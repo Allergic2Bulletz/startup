@@ -1,4 +1,4 @@
-# Your startup name here
+# eztimes
 
 [My Notes](notes.md)
 
@@ -28,7 +28,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 I have friends and family scattered from Japan to Germany and keeping track of everyone’s local time is a frequent hassle. I often find myself Googling “current time in Tokyo” or manually calculating when our schedules overlap so that we can call each other.
 
-ezTime is a simple, single-page tool designed to help myself and others save some time and headache. It lets me quickly check the current or future time in the time zones I care about most with as little friction as possible. If it isn’t simpler than mental math and Google searches, it isn’t worth using, so ezTime is designed with a focus on clarity and usability with minimal input. Beyond login and registration, there is no navigation and everything happens on one page, including bookmarked time zones, quick time conversion, and unobtrusive reminder notifications.
+ezTimes is a simple, single-page tool designed to help myself and others save some time and headache. It lets me quickly check the current or future time in the time zones I care about most with as little friction as possible. If it isn’t simpler than mental math and Google searches, it isn’t worth using, so ezTimes is designed with a focus on clarity and usability with minimal input. Beyond login and registration, there is no navigation and everything happens on one page, including bookmarked time zones, quick time conversion, and unobtrusive reminder notifications.
 
 ### Design
 

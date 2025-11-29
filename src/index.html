@@ -3,24 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ezTime - Simple Time Zone Coordination</title>
+    <title>ezTimes - Simple Time Zone Coordination</title>
     <link rel="icon" href="favicon-16x16.svg" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="splash.css">
 </head>
 <body>
-    <header>
-        <h1>ezTime</h1>
+    <!-- <header>
+        <h1>ezTimes</h1>
         <p>Time Zone Coordination finally made easy. <a href="https://github.com/Allergic2Bulletz/startup">Cameron Coltrin's Github</a></p>
+    </header> -->
+    <header class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <span class="navbar-brand">ezTimes</span>
+            <span class="navbar-text">Simple time zone coordination for friends and family worldwide</span>
+            <a href="https://github.com/Allergic2Bulletz/startup" class="nav-link">Cameron Coltrin's Github</a>
+        </div>
     </header>
 
     <main>
         <section>
-            <h2>Welcome to ezTime</h2>
+            <h2>Welcome to ezTimes</h2>
             <p>Keep track of everyone's local time with minimal hassle. Bookmark your frequently-checked time zones, convert times across regions, and get notifications for your important reminders.</p>
         </section>
 
-        <section>
+        <section class="login-register-section">
             <h3>Login or Register</h3>
             <form>
                 <div>
@@ -51,6 +59,7 @@
         <p>Last updated Nov 2025.</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script>
         // Placeholder for future JavaScript functionality
         document.getElementById('login-btn').addEventListener('click', function(e) {
