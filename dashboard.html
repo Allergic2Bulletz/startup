@@ -59,21 +59,70 @@
                 <div class="bookmarks-list">
                 <!-- Placeholder bookmarks -->
                 <div class="bookmark-tile">
-                    <h3>Mom (Chicago)</h3>
-                    <p class="time-display">2:30 PM</p>
-                    <p class="date-display">Nov 28, 2025</p>
+                    <div class="tile-header">
+                        <h3>Mom (Chicago)</h3>
+                        <button class="delete-element-button">×</button>
+                    </div>
+                    <div class="tile-content">
+                        <p class="time-display">2:30 PM</p>
+                        <p class="date-display">Nov 28, 2025</p>
+                        <select class="timezone-select">
+                            <option value="America/Chicago" selected>Central Time (Chicago)</option>
+                            <option value="America/New_York">Eastern Time (New York)</option>
+                            <option value="America/Denver">Mountain Time (Denver)</option>
+                            <option value="America/Los_Angeles">Pacific Time (Los Angeles)</option>
+                            <option value="Europe/London">GMT (London)</option>
+                            <option value="Europe/Paris">CET (Paris)</option>
+                            <option value="Asia/Tokyo">JST (Tokyo)</option>
+                            <option value="Asia/Shanghai">CST (Shanghai)</option>
+                            <option value="Australia/Sydney">AEST (Sydney)</option>
+                        </select>
+                    </div>
+                    
                 </div>
                 
                 <div class="bookmark-tile">
-                    <h3>Tokyo Friends</h3>
-                    <p class="time-display">4:30 AM</p>
-                    <p class="date-display">Nov 29, 2025</p>
+                    <div class="tile-header">
+                        <h3>Tokyo Friends</h3>
+                        <button class="delete-element-button">×</button>
+                    </div>
+                    <div class="tile-content">
+                        <p class="time-display">4:30 AM</p>
+                        <p class="date-display">Nov 29, 2025</p>
+                        <select class="timezone-select">
+                            <option value="Asia/Tokyo" selected>JST (Tokyo)</option>
+                            <option value="America/New_York">Eastern Time (New York)</option>
+                            <option value="America/Chicago">Central Time (Chicago)</option>
+                            <option value="America/Denver">Mountain Time (Denver)</option>
+                            <option value="America/Los_Angeles">Pacific Time (Los Angeles)</option>
+                            <option value="Europe/London">GMT (London)</option>
+                            <option value="Europe/Paris">CET (Paris)</option>
+                            <option value="Asia/Shanghai">CST (Shanghai)</option>
+                            <option value="Australia/Sydney">AEST (Sydney)</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="bookmark-tile">
-                    <h3>London Office</h3>
-                    <p class="time-display">8:30 PM</p>
-                    <p class="date-display">Nov 28, 2025</p>
+                    <div class="tile-header">
+                        <h3>London Office</h3>
+                        <button class="delete-element-button">×</button>
+                    </div>
+                    <div class="tile-content">
+                        <p class="time-display">8:30 PM</p>
+                        <p class="date-display">Nov 28, 2025</p>
+                        <select class="timezone-select">
+                            <option value="Europe/London" selected>GMT (London)</option>
+                            <option value="America/New_York">Eastern Time (New York)</option>
+                            <option value="America/Chicago">Central Time (Chicago)</option>
+                            <option value="America/Denver">Mountain Time (Denver)</option>
+                            <option value="America/Los_Angeles">Pacific Time (Los Angeles)</option>
+                            <option value="Europe/Paris">CET (Paris)</option>
+                            <option value="Asia/Tokyo">JST (Tokyo)</option>
+                            <option value="Asia/Shanghai">CST (Shanghai)</option>
+                            <option value="Australia/Sydney">AEST (Sydney)</option>
+                        </select>
+                    </div>
                 </div>
                 </div>
             </section>
@@ -87,21 +136,30 @@
             <div class="reminders-list">
                 <!-- Placeholder reminders -->
                 <div class="reminder-tile">
-                    <h4>Call Mom</h4>
+                    <div class="tile-header">
+                        <h4>Call Mom</h4>
+                        <button class="delete-element-button">×</button>
+                    </div>
                     <p>Today at 3:00 PM</p>
                     <span class="reminder-status">Active</span>
                     <button class="copy-reminder-btn">⧉</button>
                 </div>
                 
                 <div class="reminder-tile">
-                    <h4>Team Meeting</h4>
+                    <div class="tile-header">
+                        <h4>Team Meeting</h4>
+                        <button class="delete-element-button">×</button>
+                    </div>
                     <p>Tomorrow at 9:00 AM</p>
                     <span class="reminder-status">Active</span>
                     <button class="copy-reminder-btn">⧉</button>
                 </div>
                 
                 <div class="reminder-tile">
-                    <h4>Birthday Call</h4>
+                    <div class="tile-header">
+                        <h4>Birthday Call</h4>
+                        <button class="delete-element-button">×</button>
+                    </div>
                     <p>Dec 1 at 2:00 PM</p>
                     <span class="reminder-status">Scheduled</span>
                     <button class="copy-reminder-btn">⧉</button>
@@ -308,6 +366,32 @@
             button.addEventListener('click', function() {
                 console.log('Copy reminder to clipboard clicked');
                 // Future: Generate JSON representation of reminder and copy to clipboard
+            });
+        });
+        
+        // Delete element functionality
+        document.querySelectorAll('.delete-element-button').forEach(button => {
+            button.addEventListener('click', function() {
+                console.log('Delete element clicked');
+                // Future: Remove element from list and update database
+                // For now, just remove from DOM
+                const elementToDelete = this.closest('.bookmark-tile, .reminder-tile');
+                if (elementToDelete) {
+                    elementToDelete.remove();
+                }
+            });
+        });
+        
+        // Bookmark timezone change functionality
+        document.querySelectorAll('.timezone-select').forEach(select => {
+            select.addEventListener('change', function() {
+                console.log('Timezone changed to:', this.value);
+                // Future: Update bookmark timezone in database and recalculate displayed time
+                const bookmarkTile = this.closest('.bookmark-tile');
+                if (bookmarkTile) {
+                    console.log('Updating times for bookmark:', bookmarkTile.querySelector('h3').textContent);
+                    // Future: Call time conversion API and update time-display and date-display
+                }
             });
         });
         
