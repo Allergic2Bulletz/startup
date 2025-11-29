@@ -37,6 +37,7 @@ footer {
     border-top: 1px solid #444;
     justify-content: center;
 }
+
 footer > * {
     margin: 0 10px;
 }
