@@ -1,1 +1,24 @@
 /* Dashboard-specific styles for ezTime */
+.core-container {
+    display: flex;
+
+}
+
+.bookmarks-list {
+    display: grid;
+    padding: 0;
+}
+
+.bookmark-tile {
+    margin: 5px 0;
+    background-color: #222;
+    border-radius: 1em;
+    border: 1px solid #444;
+}
+
+.tile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid #444;}
