@@ -26,33 +26,6 @@
     <main>
         <!-- Core functionality container -->
         <div class="core-container">
-            <!-- Bookmarks container -->
-            <section class="bookmarks-container">
-                <h2>Bookmarked Time Zones</h2>
-                <button class="add-element-button" id="add-bookmark-btn">+ Add Bookmark</button>
-                
-                <div class="bookmarks-list">
-                <!-- Placeholder bookmarks -->
-                <div class="bookmark-item">
-                    <h3>Mom (Chicago)</h3>
-                    <p class="time-display">2:30 PM</p>
-                    <p class="date-display">Nov 28, 2025</p>
-                </div>
-                
-                <div class="bookmark-item">
-                    <h3>Tokyo Friends</h3>
-                    <p class="time-display">4:30 AM</p>
-                    <p class="date-display">Nov 29, 2025</p>
-                </div>
-                
-                <div class="bookmark-item">
-                    <h3>London Office</h3>
-                    <p class="time-display">8:30 PM</p>
-                    <p class="date-display">Nov 28, 2025</p>
-                </div>
-                </div>
-            </section>
-
             <!-- Central time conversion widget -->
             <section class="time-converter">
             <h2>Time Converter</h2>
@@ -77,6 +50,33 @@
                 <p class="quote-text">"Time is what we want most, but what we use worst." - William Penn</p>
             </div>
             </section>
+
+            <!-- Bookmarks container -->
+            <section class="bookmarks-container">
+                <h2>Bookmarked Time Zones</h2>
+                <button class="add-element-button" id="add-bookmark-btn">+ Add Bookmark</button>
+                
+                <div class="bookmarks-list">
+                <!-- Placeholder bookmarks -->
+                <div class="bookmark-tile">
+                    <h3>Mom (Chicago)</h3>
+                    <p class="time-display">2:30 PM</p>
+                    <p class="date-display">Nov 28, 2025</p>
+                </div>
+                
+                <div class="bookmark-tile">
+                    <h3>Tokyo Friends</h3>
+                    <p class="time-display">4:30 AM</p>
+                    <p class="date-display">Nov 29, 2025</p>
+                </div>
+                
+                <div class="bookmark-tile">
+                    <h3>London Office</h3>
+                    <p class="time-display">8:30 PM</p>
+                    <p class="date-display">Nov 28, 2025</p>
+                </div>
+                </div>
+            </section>
         </div>
 
         <!-- Reminders container -->
@@ -86,21 +86,21 @@
             
             <div class="reminders-list">
                 <!-- Placeholder reminders -->
-                <div class="reminder-item">
+                <div class="reminder-tile">
                     <h4>Call Mom</h4>
                     <p>Today at 3:00 PM</p>
                     <span class="reminder-status">Active</span>
                     <button class="copy-reminder-btn">⧉</button>
                 </div>
                 
-                <div class="reminder-item">
+                <div class="reminder-tile">
                     <h4>Team Meeting</h4>
                     <p>Tomorrow at 9:00 AM</p>
                     <span class="reminder-status">Active</span>
                     <button class="copy-reminder-btn">⧉</button>
                 </div>
                 
-                <div class="reminder-item">
+                <div class="reminder-tile">
                     <h4>Birthday Call</h4>
                     <p>Dec 1 at 2:00 PM</p>
                     <span class="reminder-status">Scheduled</span>
@@ -110,7 +110,7 @@
         </section>
     </main>
 
-    <img src="earth_from_space.png" alt="An image of Earth seen from space.">
+    <!-- <img src="earth_from_space.png" alt="An image of Earth seen from space."> -->
 
     <!-- Modal dialogs for user input -->
     <div id="modal-overlay" class="modal-overlay" style="display: none;">
