@@ -1,15 +1,51 @@
 /* Dashboard-specific styles for ezTime */
-.core-container {
+main {
     display: flex;
-
+    flex-direction: column;
+    gap: 1em;
 }
 
-.bookmarks-list {
+.core-container {
+    display: flex;
+    flex: 6;
+    gap: 1em;
+}
+
+.time-converter {
+    flex: 1;
+}
+
+.bookmarks-container {  
+    flex: 3.2;
+}
+
+.reminders-container {
+    border-top: 3px solid #444;
+    /* margin-top: 1em; */
+    flex: 4;
+}
+
+.bookmarks-grid, .reminders-grid {
     display: grid;
-    padding: 0;
+    padding: 1em 0;
+    gap: 0.5em;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 250px));
+    grid-template-rows: auto;
+}
+
+@media (max-width: 480px) {
+    .bookmarks-grid, .reminders-grid {
+        grid-template-columns: 1fr; /* Force single column */
+    }
 }
 
 .bookmark-tile {
+    background-color: #222;
+    border-radius: 1em;
+    border: 1px solid #444;
+}
+
+.reminder-tile {
     margin: 5px 0;
     background-color: #222;
     border-radius: 1em;
@@ -21,7 +57,12 @@
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;
-    border-bottom: 1px solid #444;}
+    border-bottom: 1px solid #444;
+}
+
+.tile-content {
+    margin: 1em 0.5em;
+}
 
 /* Forecast mode styling for bookmark times */
 .time-display.forecast,
@@ -39,4 +80,8 @@
 .bookmark-tile.forecast-mode::before {
     content: "📅 ";
     color: #4a90e2;
+}
+
+.reminder-tile.expired {
+    background-color: rgb(85, 0, 0);
 }
