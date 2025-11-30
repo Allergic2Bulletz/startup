@@ -72,12 +72,12 @@
 }
 
 /* Visual indicator that times are in forecast mode */
-.bookmark-tile.forecast-mode {
+.bookmarkTile.forecast-mode {
     /*TODO - this might not be necssary. Maybe a better method to indicate that we are in forecast mode?*/
     border-color: #4a90e2;
 }
 
-.bookmark-tile.forecast-mode::before {
+.bookmarkTile.forecast-mode::before {
     content: "📅 ";
     color: #4a90e2;
 }
