@@ -134,6 +134,25 @@ export default function Dashboard() {
                             </select>
                         </div>
                     </div>
+
+                    <BookmarkTile 
+                        name="Work (New York)" 
+                        argTimezone="America/New_York" 
+                        referenceTime={referenceTime} 
+                        forecasting={forecasting}
+                    />
+                    <BookmarkTile 
+                        name="Sydney Team" 
+                        argTimezone="Australia/Sydney" 
+                        referenceTime={referenceTime} 
+                        forecasting={forecasting}
+                    />
+                    <BookmarkTile
+                        name="Paris Office of excquisite loquacity and grandeur for testing purposes"
+                        argTimezone="Europe/Paris"
+                        referenceTime={referenceTime}
+                        forecasting={forecasting}
+                    />
                 </div>
             </section>
         </div>
