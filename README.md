@@ -110,9 +110,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Bundled using Vite** - I did not complete this part of the deliverable.
-- [ ] **Components** - I did not complete this part of the deliverable.
-- [ ] **Router** - I did not complete this part of the deliverable.
+- [x] **Bundled using Vite** - I successfully installed Vite and was able to use it to bundle and test my project.
+- [x] **Components** - I ported my splash page, dashboard, dialogue modals, and header + footer to React, as well as their CSS.
+- [x] **Router** - I used a React Router to navigate between my two webpages and change what is displayed in the body of the page.
 
 ## 🚀 React part 2: Reactivity deliverable
 
