@@ -46,6 +46,13 @@ I have installed bootstrap and react-bootstrap! If it is not used, considered un
 
 A very important note regarding scoped selectors when using CSS modules: only class selectors (i.e. `.main`) are scoped, even in a modules CSS file! An element selector (i.e. `main`) is still treated as a global selector.
 
+## React Part 2: Reactivity
+A bunch of interesting reading about Javscript function logic, including some methods to make thread-safe operations, from [the 260 docs](https://github.com/webprogramming260/.github/blob/main/profile/javascript/arrow/arrow.md)
+
+Reminder that Hooks [must be called at the top scope of the function and cannot be called inside of a loop or conditional.](https://github.com/webprogramming260/.github/blob/main/profile/webFrameworks/react/hooks/hooks.md)
+
+
+
 ## React Part 2: Reactivity EXAMPLE NOTES
 
 This was a lot of fun to see it all come together. I had to keep remembering to use React state instead of just manipulating the DOM directly.
