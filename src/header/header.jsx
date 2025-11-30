@@ -1,9 +1,9 @@
 // Header.jsx
 import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AuthState } from '../authState.js';
 
-function Header() {
+function Header(props) {
   const location = useLocation();
   const isDashboard = location.pathname === '/dashboard';
   const navigate = useNavigate();
@@ -15,9 +15,9 @@ function Header() {
         <span className="tagline">Time Zone Coordination finally made easy.</span>
       </div>
       
-      {isDashboard && (
+      {props.currentAuthState === AuthState.Authenticated && (
         <nav>
-          <span className="welcome-message">Logged in as User</span>
+          <span className="welcome-message">Logged in as {props.userName}</span>
           <button id="logout-btn" onClick={() => navigate('/')}>Logout</button>
           <button id="preferences-btn">Preferences</button>
         </nav>

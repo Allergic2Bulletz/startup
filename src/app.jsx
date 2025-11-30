@@ -15,7 +15,7 @@ export default function App() {
     return (
         <BrowserRouter>
             <div className="body">
-                <Header />
+                <Header userName={userName} currentAuthState={currentAuthState} />
 
                 <Routes>
                     <Route path="/" element={<Splash userName={userName} currentAuthState={currentAuthState} onAuthChange={(userName, authState) => {setAuthState(authState);setUserName(userName);}} />}/>
