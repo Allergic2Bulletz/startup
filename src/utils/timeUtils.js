@@ -17,4 +17,11 @@ const formatDate = (date) => {
     });
 };
 
-export { formatTime, formatDate };
+// Convert date between timezones
+const convertToTimezone = (date, targetTimezone) => {
+    const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+    const targetDate = new Date(utcDate.toLocaleString('en-US', { timeZone: targetTimezone }));
+    return targetDate;
+};
+
+export { formatTime, formatDate, convertToTimezone };
