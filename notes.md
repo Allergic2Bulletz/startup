@@ -40,6 +40,10 @@ Set up Browser Router
 Translate existing html files into jsx files
 Migrate and import CSS as needed
 
+I have installed bootstrap and react-bootstrap! If it is not used, considered uninstalling.
+
+`import React from 'react';` is necessary in JSX files even though VS Code says it isn't used. Spooky!
+
 ## React Part 2: Reactivity EXAMPLE NOTES
 
 This was a lot of fun to see it all come together. I had to keep remembering to use React state instead of just manipulating the DOM directly.
