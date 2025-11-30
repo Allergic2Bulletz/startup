@@ -50,7 +50,7 @@ export default function Dashboard() {
                 
                 <div className={styles.bookmarksGrid}>
                     {/* Placeholder bookmarks */}
-                    <div className={styles.bookmarkTile}>
+                    <div className={styles.tile}>
                         <div className={styles.tileHeader}>
                             <h3>Mom (Chicago)</h3>
                             <div className={styles.tileControls}>
