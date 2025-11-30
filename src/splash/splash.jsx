@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthState } from '../authState.js';
 
 function Splash({ userName, currentAuthState, onAuthChange }) {
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
@@ -12,16 +13,35 @@ function Splash({ userName, currentAuthState, onAuthChange }) {
     });
 
     // Placeholder function for authentication - replace with real authentication later
-    const handleLogin = (email, password) => {
+    // For now, just set userName to email and mark as authenticated
+    const handleLogin = async (email, password) => {
         // TODO: Replace with actual authentication logic
-        // For now, just set userName to email and mark as authenticated
-        localStorage.setItem('userName', email);
-        onAuthChange(email, AuthState.Authenticated);
-        navigate('/dashboard');
+        try {
+            setIsLoading(true);
+            localStorage.setItem('userName', email);
+            onAuthChange(email, AuthState.Authenticated);
+            navigate('/dashboard');
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const handleRegister = async (email, password) => {
+        // TODO: Replace with actual authentication logic
+        try {
+            setIsLoading(true);
+            localStorage.setItem('userName', email);
+            onAuthChange(email, AuthState.Authenticated);
+            navigate('/dashboard');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (isLoading) return; // Prevent multiple submissions
+        if (!formData.email || !formData.password) return; // Basic validation
         handleLogin(formData.email, formData.password);
     };
 
