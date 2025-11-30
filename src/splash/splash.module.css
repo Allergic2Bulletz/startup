@@ -13,7 +13,7 @@
     text-align: center;
     gap: 1em;
 
-    background-image: url('earth_from_space.png');
+    background-image: url('/earth_from_space.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
