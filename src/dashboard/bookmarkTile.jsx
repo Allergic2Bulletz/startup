@@ -3,30 +3,36 @@ import React from 'react';
 import styles from './dashboard.module.css';
 import { formatTimeForTimezone, formatDateForTimezone } from '../utils/timeUtils.js';
 
-function BookmarkTile({name, argTimezone, referenceTime, forecasting}) {
-    const [timezone, setTimezone] = React.useState(argTimezone || 'America/New_York');
+const BookmarkTile = React.memo(function BookmarkTile({ bookmark, referenceTime, forecasting, onUpdate, onDelete, onMoveUp, onMoveDown }) {
+    const handleTimezoneChange = (newTimezone) => {
+        onUpdate({ timezone: newTimezone });
+    };
 
     return (
         <div className={`${styles.tile} ${forecasting ? styles.forecastMode : ''}`}>
             <div className={styles.tileHeader}>
-                <h3>{name}</h3>
+                <h3>{bookmark.name}</h3>
                 <div className={styles.tileControls}>
-                    <button className={styles.moveUpBtn}>↑</button>
-                    <button className={styles.moveDownBtn}>↓</button>
-                    <button className={styles.deleteElementButton}>×</button>
+                    <button className={styles.moveUpBtn} onClick={onMoveUp}>↑</button>
+                    <button className={styles.moveDownBtn} onClick={onMoveDown}>↓</button>
+                    <button className={styles.deleteElementButton} onClick={onDelete}>×</button>
                 </div>
             </div>
             <div className={styles.tileContent}>
                 <p style={{marginBottom: '0.5em', marginTop: '0', textAlign: 'center'}}>
                     <span className={`${styles.timeDisplay} ${forecasting ? styles.forecast : ''}`}>
-                        {formatTimeForTimezone(referenceTime || new Date(), timezone)}
+                        {formatTimeForTimezone(referenceTime || new Date(), bookmark.timezone)}
                     </span>
                     <br />
                     <span className={`${styles.dateDisplay} ${forecasting ? styles.forecast : ''}`}>
-                        {formatDateForTimezone(referenceTime || new Date(), timezone)}
+                        {formatDateForTimezone(referenceTime || new Date(), bookmark.timezone)}
                     </span>
                 </p>
-                <select className={styles.timezoneSelect} defaultValue={timezone} onChange={(e) => setTimezone(e.target.value)}>
+                <select 
+                    className={styles.timezoneSelect} 
+                    value={bookmark.timezone}
+                    onChange={(e) => handleTimezoneChange(e.target.value)}
+                >
                     <option value="America/Chicago">Central Time (Chicago)</option>
                     <option value="America/New_York">Eastern Time (New York)</option>
                     <option value="America/Denver">Mountain Time (Denver)</option>
@@ -38,9 +44,8 @@ function BookmarkTile({name, argTimezone, referenceTime, forecasting}) {
                     <option value="Australia/Sydney">AEST (Sydney)</option>
                 </select>
             </div>
-            
         </div>
     )
-}
+});
 
 export default BookmarkTile;

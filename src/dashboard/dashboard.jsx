@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import '../app.css'; // Import shared styles
 import styles from './dashboard.module.css';
 import AddBookmarkModal from '../modals/AddBookmarkModal';
 import AddReminderModal from '../modals/AddReminderModal';
 import TimeConverter from './timeConverter';
 import BookmarkTile from './bookmarkTile';
+import useBookmarks from '../hooks/useBookmarks';
 
 export default function Dashboard() {
     const [showBookmarkModal, setShowBookmarkModal] = useState(false);
@@ -13,6 +14,9 @@ export default function Dashboard() {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [customTime, setCustomTime] = useState('');
     const [customDate, setCustomDate] = useState('');
+    
+    // Bookmark management
+    const { bookmarks, addBookmark, updateBookmark, deleteBookmark, moveBookmark } = useBookmarks();
 
     // Update current time every second
     useEffect(() => {
@@ -59,6 +63,8 @@ export default function Dashboard() {
 
     const handleSaveBookmark = (bookmarkData) => {
         console.log('Saving bookmark:', bookmarkData);
+        const {name, timezone} = bookmarkData;
+        addBookmark({ name, timezone });
         // Add your bookmark saving logic here
     };
 
@@ -90,110 +96,18 @@ export default function Dashboard() {
                 <button className={styles.addElementButton} id="add-bookmark-btn" onClick={() => setShowBookmarkModal(true)}>+ Add Bookmark</button>
                 
                 <div className={styles.bookmarksGrid}>
-                    {/* Placeholder bookmarks */}
-                    <div className={styles.tile}>
-                        <div className={styles.tileHeader}>
-                            <h3>Mom (Chicago)</h3>
-                            <div className={styles.tileControls}>
-                                <button className={styles.moveUpBtn}>↑</button>
-                                <button className={styles.moveDownBtn}>↓</button>
-                                <button className={styles.deleteElementButton}>×</button>
-                            </div>
-                        </div>
-                        <div className={styles.tileContent}>
-                            <p>
-                                <span className={styles.timeDisplay}>2:30 PM</span>
-                                <span className={styles.dateDisplay}>Nov 28, 2025</span>
-                            </p>
-                            <select className={styles.timezoneSelect} defaultValue="America/Chicago">
-                                <option value="America/Chicago">Central Time (Chicago)</option>
-                                <option value="America/New_York">Eastern Time (New York)</option>
-                                <option value="America/Denver">Mountain Time (Denver)</option>
-                                <option value="America/Los_Angeles">Pacific Time (Los Angeles)</option>
-                                <option value="Europe/London">GMT (London)</option>
-                                <option value="Europe/Paris">CET (Paris)</option>
-                                <option value="Asia/Tokyo">JST (Tokyo)</option>
-                                <option value="Asia/Shanghai">CST (Shanghai)</option>
-                                <option value="Australia/Sydney">AEST (Sydney)</option>
-                            </select>
-                        </div>
-                        
-                    </div>
-                    
-                    <div className={styles.tile}>
-                        <div className={styles.tileHeader}>
-                            <h3>Tokyo Friends</h3>
-                            <div className={styles.tileControls}>
-                                <button className={styles.moveUpBtn}>↑</button>
-                                <button className={styles.moveDownBtn}>↓</button>
-                                <button className={styles.deleteElementButton}>×</button>
-                            </div>
-                        </div>
-                        <div className={styles.tileContent}>
-                            <p>
-                                <span className={styles.timeDisplay}>4:30 AM</span>
-                                <span className={styles.dateDisplay}>Nov 29, 2025</span>
-                            </p>                            
-                            <select className={styles.timezoneSelect} defaultValue="Asia/Tokyo">
-                                <option value="Asia/Tokyo">JST (Tokyo)</option>
-                                <option value="America/New_York">Eastern Time (New York)</option>
-                                <option value="America/Chicago">Central Time (Chicago)</option>
-                                <option value="America/Denver">Mountain Time (Denver)</option>
-                                <option value="America/Los_Angeles">Pacific Time (Los Angeles)</option>
-                                <option value="Europe/London">GMT (London)</option>
-                                <option value="Europe/Paris">CET (Paris)</option>
-                                <option value="Asia/Shanghai">CST (Shanghai)</option>
-                                <option value="Australia/Sydney">AEST (Sydney)</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div className={styles.tile}>
-                        <div className={styles.tileHeader}>
-                            <h3>London Office</h3>
-                            <div className={styles.tileControls}>
-                                <button className={styles.moveUpBtn}>↑</button>
-                                <button className={styles.moveDownBtn}>↓</button>
-                                <button className={styles.deleteElementButton}>×</button>
-                            </div>
-                        </div>
-                        <div className={styles.tileContent}>
-                            <p>
-                                <span className={styles.timeDisplay}>8:30 PM</span>
-                                <span className={styles.dateDisplay}>Nov 28, 2025</span>
-                            </p>
-                            <select className={styles.timezoneSelect} defaultValue="Europe/London">
-                                <option value="Europe/London">GMT (London)</option>
-                                <option value="America/New_York">Eastern Time (New York)</option>
-                                <option value="America/Chicago">Central Time (Chicago)</option>
-                                <option value="America/Denver">Mountain Time (Denver)</option>
-                                <option value="America/Los_Angeles">Pacific Time (Los Angeles)</option>
-                                <option value="Europe/Paris">CET (Paris)</option>
-                                <option value="Asia/Tokyo">JST (Tokyo)</option>
-                                <option value="Asia/Shanghai">CST (Shanghai)</option>
-                                <option value="Australia/Sydney">AEST (Sydney)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <BookmarkTile 
-                        name="Work (New York)" 
-                        argTimezone="America/New_York" 
-                        referenceTime={referenceTime} 
-                        forecasting={forecasting}
-                    />
-                    <BookmarkTile 
-                        name="Sydney Team" 
-                        argTimezone="Australia/Sydney" 
-                        referenceTime={referenceTime} 
-                        forecasting={forecasting}
-                    />
-                    <BookmarkTile
-                        name="Paris Office of excquisite loquacity and grandeur for testing purposes"
-                        argTimezone="Europe/Paris"
-                        referenceTime={referenceTime}
-                        forecasting={forecasting}
-                    />
+                    {bookmarks.map(bookmark => (
+                        <BookmarkTile 
+                            key={bookmark.id}
+                            bookmark={bookmark}
+                            referenceTime={referenceTime} 
+                            forecasting={forecasting}
+                            onUpdate={(changes) => updateBookmark(bookmark.id, changes)}
+                            onDelete={() => deleteBookmark(bookmark.id)}
+                            onMoveUp={() => moveBookmark(bookmark.id, 'up')}
+                            onMoveDown={() => moveBookmark(bookmark.id, 'down')}
+                        />
+                    ))}
                 </div>
             </section>
         </div>
