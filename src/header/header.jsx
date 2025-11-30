@@ -19,7 +19,7 @@ function Header(props) {
         <nav>
           <span className="welcome-message">Logged in as {props.userName}</span>
           <button id="logout-btn" onClick={() => navigate('/')}>Logout</button>
-          <button id="preferences-btn">Preferences</button>
+          <button id="preferences-btn">Preferences ⚙️</button>
         </nav>
       )}
     </header>
