@@ -11,4 +11,4 @@ node_modules/
 .env.production.local
 
 # Ignore my todos
-TODO.md
+todo.md
