@@ -17,11 +17,25 @@ const formatDate = (date) => {
     });
 };
 
-// Convert date between timezones
-const convertToTimezone = (date, targetTimezone) => {
-    const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
-    const targetDate = new Date(utcDate.toLocaleString('en-US', { timeZone: targetTimezone }));
-    return targetDate;
+// Format time for specific timezone
+const formatTimeForTimezone = (date, timezone) => {
+    return date.toLocaleTimeString('en-US', {
+        timeZone: timezone,
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZoneName: 'short'
+    });
 };
 
-export { formatTime, formatDate, convertToTimezone };
+// Format date for specific timezone
+const formatDateForTimezone = (date, timezone) => {
+    return date.toLocaleDateString('en-US', {
+        timeZone: timezone,
+        weekday: 'long',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+};
+
+export { formatTime, formatDate, formatTimeForTimezone, formatDateForTimezone };

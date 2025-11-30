@@ -1,7 +1,7 @@
 import React from 'react';
 
 import styles from './dashboard.module.css';
-import { formatTime, formatDate, convertToTimezone } from '../utils/timeUtils.js';
+import { formatTimeForTimezone, formatDateForTimezone } from '../utils/timeUtils.js';
 
 function BookmarkTile({name, argTimezone, referenceTime, forecasting}) {
     const [timezone, setTimezone] = React.useState(argTimezone || 'America/New_York');
