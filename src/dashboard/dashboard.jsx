@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../app.css'; // Import shared styles
 import styles from './dashboard.module.css';
+import AddBookmarkModal from '../modals/AddBookmarkModal';
+import AddReminderModal from '../modals/AddReminderModal';
 
 export default function Dashboard() {
+    const [showBookmarkModal, setShowBookmarkModal] = useState(false);
+    const [showReminderModal, setShowReminderModal] = useState(false);
+    const [showPreferencesModal, setShowPreferencesModal] = useState(false);
+
+    const handleSaveBookmark = (bookmarkData) => {
+        console.log('Saving bookmark:', bookmarkData);
+        // Add your bookmark saving logic here
+    };
+
+    const handleSaveReminder = (reminderData) => {
+        console.log('Saving reminder:', reminderData);
+        // Add your reminder saving logic here
+    };
+
+    const handleSavePreferences = (preferencesData) => {
+        console.log('Saving preferences:', preferencesData);
+        // Add your preferences saving logic here
+    };
+
     return (
         <main className={styles.main}>
         {/* Core functionality container */}
@@ -35,7 +56,7 @@ export default function Dashboard() {
             {/* Bookmarks container */}
             <section className={styles.bookmarksContainer}>
                 <h2>Bookmarked Time Zones</h2>
-                <button className={styles.addElementButton} id="add-bookmark-btn">+ Add Bookmark</button>
+                <button className={styles.addElementButton} id="add-bookmark-btn" onClick={() => setShowBookmarkModal(true)}>+ Add Bookmark</button>
                 
                 <div className={styles.bookmarksGrid}>
                     {/* Placeholder bookmarks */}
@@ -130,7 +151,7 @@ export default function Dashboard() {
         {/* Reminders container */}
         <section className={styles.remindersContainer}>
             <h2>Reminders</h2>
-            <button className={styles.addElementButton} id="add-reminder-btn">+ Add Reminder</button>
+            <button className={styles.addElementButton} id="add-reminder-btn" onClick={() => setShowReminderModal(true)}>+ Add Reminder</button>
             
             <div className={styles.remindersGrid}>
                 {/* Placeholder reminders */}
@@ -180,6 +201,17 @@ export default function Dashboard() {
                 </div>
             </div>
         </section>
-    </main>
+        <AddBookmarkModal
+                isOpen={showBookmarkModal}
+                onClose={() => setShowBookmarkModal(false)}
+                onSave={handleSaveBookmark}
+            />
+            
+        <AddReminderModal
+                isOpen={showReminderModal}
+                onClose={() => setShowReminderModal(false)}
+                onSave={handleSaveReminder}
+            />
+    </main>    
     );
 }
