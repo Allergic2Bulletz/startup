@@ -17,12 +17,13 @@ function BookmarkTile({name, argTimezone, referenceTime, forecasting}) {
                 </div>
             </div>
             <div className={styles.tileContent}>
-                <p>
+                <p style={{marginBottom: '0.5em', marginTop: '0', textAlign: 'center'}}>
                     <span className={`${styles.timeDisplay} ${forecasting ? styles.forecast : ''}`}>
-                        {formatTime(convertToTimezone(referenceTime || new Date(), timezone))}
+                        {formatTimeForTimezone(referenceTime || new Date(), timezone)}
                     </span>
+                    <br />
                     <span className={`${styles.dateDisplay} ${forecasting ? styles.forecast : ''}`}>
-                        {formatDate(convertToTimezone(referenceTime || new Date(), timezone))}
+                        {formatDateForTimezone(referenceTime || new Date(), timezone)}
                     </span>
                 </p>
                 <select className={styles.timezoneSelect} defaultValue={timezone} onChange={(e) => setTimezone(e.target.value)}>
