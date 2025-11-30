@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../app.css'; // Import shared styles
 import styles from './dashboard.module.css';
 import AddBookmarkModal from '../modals/AddBookmarkModal';
 import AddReminderModal from '../modals/AddReminderModal';
+import TimeConverter from './timeConverter';
 
 export default function Dashboard() {
     const [showBookmarkModal, setShowBookmarkModal] = useState(false);
     const [showReminderModal, setShowReminderModal] = useState(false);
     const [showPreferencesModal, setShowPreferencesModal] = useState(false);
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    // Update current time every second
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(timer);
+    }, []);
 
     const handleSaveBookmark = (bookmarkData) => {
         console.log('Saving bookmark:', bookmarkData);
@@ -28,30 +40,7 @@ export default function Dashboard() {
         <main className={styles.main}>
         {/* Core functionality container */}
         <div className={styles.coreContainer}>
-            {/*Central time conversion widget*/}
-            <section className={styles.timeConverter}>
-            <h2>Time Converter</h2>
-            
-            <div className={styles.currentTimeDisplay}>
-                <h3>Current Time</h3>
-                <p className={styles.currentTime}>2:30 PM MST</p>
-                <p className={styles.currentDate}>Thursday, November 28, 2025</p>
-            </div>
-            
-            <div className={styles.customTimeInput}>
-                <h3>Convert Custom Time</h3>
-                <label htmlFor="custom-time">Enter time:</label>
-                <input type="time" id="custom-time" name="custom-time" />
-                <label htmlFor="custom-date">Date:</label>
-                <input type="date" id="custom-date" name="custom-date" />
-                <button className={styles.updateTimesButton} id="convert-btn">Update All Times</button>
-            </div>
-            
-            <div className={styles.thirdPartyQuote}>
-                <h3>Daily Inspiration</h3>
-                <p className={styles.quoteText}>"Time is what we want most, but what we use worst." - William Penn</p>
-            </div>
-            </section>
+            <TimeConverter currentTime={currentTime} />
 
             {/* Bookmarks container */}
             <section className={styles.bookmarksContainer}>
