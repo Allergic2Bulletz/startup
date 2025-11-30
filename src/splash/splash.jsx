@@ -6,7 +6,7 @@ import { AuthState } from '../authState.js';
 import { Unauthenticated } from './unauthenticated.jsx';
 
 function Splash({ userName, currentAuthState, onAuthChange }) {
-
+    const navigate = useNavigate();
 
     const handleTestClick = () => {
         navigate('/dashboard');
