@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './dashboard.module.css';
 import { formatTime, formatDate } from '../utils/timeUtils.js';
 
-function TimeConverter({ currentTime }) {
+function TimeConverter({ currentTime, customTime, customDate, onCustomTimeChange, onCustomDateChange }) {
     return (
         <section className={styles.timeConverter}>
             <h2>Time Converter</h2>
@@ -17,10 +17,33 @@ function TimeConverter({ currentTime }) {
             <div className={styles.customTimeInput}>
                 <h3>Convert Custom Time</h3>
                 <label htmlFor="custom-time">Enter time:</label>
-                <input type="time" id="custom-time" name="custom-time" />
+                <input 
+                    type="time" 
+                    id="custom-time" 
+                    name="custom-time" 
+                    value={customTime}
+                    onChange={(e) => onCustomTimeChange(e.target.value)}
+                />
                 <label htmlFor="custom-date">Date:</label>
-                <input type="date" id="custom-date" name="custom-date" />
-                <button className={styles.updateTimesButton} id="convert-btn">Update All Times</button>
+                <input 
+                    type="date" 
+                    id="custom-date" 
+                    name="custom-date" 
+                    value={customDate}
+                    onChange={(e) => onCustomDateChange(e.target.value)}
+                />
+                <button 
+                    className={styles.updateTimesButton} 
+                    id="reset-btn"
+                    onClick={() => {
+                        if (customTime || customDate) {
+                            onCustomTimeChange('');
+                            onCustomDateChange('');
+                        }
+                    }}
+                >
+                    Clear Custom Time
+                </button>
             </div>
             
             <div className={styles.thirdPartyQuote}>

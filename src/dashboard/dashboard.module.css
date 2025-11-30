@@ -76,11 +76,10 @@
 /* Visual indicator that times are in forecast mode */
 .tile.forecastMode {
     /*TODO - this might not be necssary. Maybe a better method to indicate that we are in forecast mode?*/
-    border-left: 3px solid #4a90e2;
+    border: 3px solid #4a90e2;
 }
 
 .tile.forecastMode::before {
-    content: "📅 ";
     color: #4a90e2;
 }
 
