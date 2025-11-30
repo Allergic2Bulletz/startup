@@ -4,6 +4,7 @@ import styles from './dashboard.module.css';
 import AddBookmarkModal from '../modals/AddBookmarkModal';
 import AddReminderModal from '../modals/AddReminderModal';
 import TimeConverter from './timeConverter';
+import BookmarkTile from './bookmarkTile';
 
 export default function Dashboard() {
     const [showBookmarkModal, setShowBookmarkModal] = useState(false);
@@ -78,7 +79,7 @@ export default function Dashboard() {
                         
                     </div>
                     
-                    <div className={styles.bookmarkTile}>
+                    <div className={styles.tile}>
                         <div className={styles.tileHeader}>
                             <h3>Tokyo Friends</h3>
                             <div className={styles.tileControls}>
@@ -106,7 +107,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                     
-                    <div className={styles.bookmarkTile}>
+                    <div className={styles.tile}>
                         <div className={styles.tileHeader}>
                             <h3>London Office</h3>
                             <div className={styles.tileControls}>
@@ -144,7 +145,7 @@ export default function Dashboard() {
             
             <div className={styles.remindersGrid}>
                 {/* Placeholder reminders */}
-                <div className={styles.reminderTile}>
+                <div className={styles.tile}>
                     <div className={styles.tileHeader}>
                         <h4>Call Mom</h4>
                         <div className={styles.tileControls}>
@@ -159,7 +160,7 @@ export default function Dashboard() {
                     </div>
                 </div>
                 
-                <div className={styles.reminderTile}>
+                <div className={styles.tile}>
                     <div className={styles.tileHeader}>
                         <h4>Team Meeting</h4>
                         <div className={styles.tileControls}>
@@ -174,7 +175,7 @@ export default function Dashboard() {
                     </div>
                 </div>
                 
-                <div className={styles.reminderTile}>
+                <div className={styles.tile}>
                     <div className={styles.tileHeader}>
                         <h4>Birthday Call</h4>
                         <div className={styles.tileControls}>
