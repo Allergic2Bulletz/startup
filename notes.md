@@ -44,6 +44,8 @@ I have installed bootstrap and react-bootstrap! If it is not used, considered un
 
 `import React from 'react';` is necessary in JSX files even though VS Code says it isn't used. Spooky!
 
+A very important note regarding scoped selectors when using CSS modules: only class selectors (i.e. `.main`) are scoped, even in a modules CSS file! An element selector (i.e. `main`) is still treated as a global selector.
+
 ## React Part 2: Reactivity EXAMPLE NOTES
 
 This was a lot of fun to see it all come together. I had to keep remembering to use React state instead of just manipulating the DOM directly.

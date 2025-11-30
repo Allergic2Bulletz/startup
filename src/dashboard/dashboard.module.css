@@ -1,5 +1,5 @@
 /* Dashboard-specific styles for ezTime */
-main {
+.main {
     display: flex;
     flex-direction: column;
     gap: 1em;

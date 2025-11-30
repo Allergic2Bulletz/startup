@@ -1,4 +1,5 @@
 import React from 'react';
+import '../app.css'; // Import shared styles
 import styles from './dashboard.module.css';
 
 export default function Dashboard() {
@@ -10,24 +11,24 @@ export default function Dashboard() {
             <section className={styles.timeConverter}>
             <h2>Time Converter</h2>
             
-            <div className="current-time-display">
+            <div className={styles.currentTimeDisplay}>
                 <h3>Current Time</h3>
-                <p className="current-time">2:30 PM MST</p>
-                <p className="current-date">Thursday, November 28, 2025</p>
+                <p className={styles.currentTime}>2:30 PM MST</p>
+                <p className={styles.currentDate}>Thursday, November 28, 2025</p>
             </div>
             
-            <div className="custom-time-input">
+            <div className={styles.customTimeInput}>
                 <h3>Convert Custom Time</h3>
                 <label htmlFor="custom-time">Enter time:</label>
                 <input type="time" id="custom-time" name="custom-time" />
                 <label htmlFor="custom-date">Date:</label>
                 <input type="date" id="custom-date" name="custom-date" />
-                <button className="update-times-button" id="convert-btn">Update All Times</button>
+                <button className={styles.updateTimesButton} id="convert-btn">Update All Times</button>
             </div>
             
-            <div className="third-party-quote">
+            <div className={styles.thirdPartyQuote}>
                 <h3>Daily Inspiration</h3>
-                <p className="quote-text">"Time is what we want most, but what we use worst." - William Penn</p>
+                <p className={styles.quoteText}>"Time is what we want most, but what we use worst." - William Penn</p>
             </div>
             </section>
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import '../app.css'; // Import shared styles
 import styles from './splash.module.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,7 +20,7 @@ function Splash() {
 
             <section className={styles.loginRegisterSection}>
                 <h3>Login or Register</h3>
-                <form>
+                <form className={styles.form}>
                     <div>
                         <label htmlFor="email">Email:</label>
                         <input type="email" id="email" name="email" required />
@@ -30,10 +31,10 @@ function Splash() {
                         <input type="password" id="password" name="password" required />
                     </div>
                     
-                    <div>
+                    <div className={styles.buttonGroup}>
                         {/* Login button will take priority if the user hits enter. */}
                         <a href="dashboard.html">
-                            <button type="submit" id="login-btn">Login</button>
+                            <button type="submit" className={styles.loginBtn}>Login</button>
                         </a>
                         <button type="submit" className={styles.registerBtn}>Register</button>
                         <button type="button" className={styles.testBtn} onClick={handleTestClick}>Test</button>
