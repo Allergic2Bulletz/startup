@@ -39,14 +39,13 @@
     }
 }
 
-.bookmarkTile {
+.tile {
     background-color: #222;
     border-radius: 1em;
     border: 1px solid #444;
 }
 
 .reminderTile {
-    margin: 5px 0;
     background-color: #222;
     border-radius: 1em;
     border: 1px solid #444;
@@ -75,16 +74,21 @@
 }
 
 /* Visual indicator that times are in forecast mode */
-.bookmarkTile.forecast-mode {
+.tile.forecastMode {
     /*TODO - this might not be necssary. Maybe a better method to indicate that we are in forecast mode?*/
-    border-color: #4a90e2;
+    border-left: 3px solid #4a90e2;
 }
 
-.bookmarkTile.forecast-mode::before {
+.tile.forecastMode::before {
     content: "📅 ";
     color: #4a90e2;
 }
 
-.reminderTile.expired {
+.tile.forecast::before {
+    content: "📅 ";
+    color: #4a90e2;
+}
+
+.tile.expired {
     background-color: rgb(85, 0, 0);
 }
