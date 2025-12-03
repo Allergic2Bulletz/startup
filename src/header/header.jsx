@@ -1,7 +1,7 @@
 // Header.jsx
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AuthState } from '../authState.js';
+import { AuthState } from '../hooks/useAuthState.js';
 import PreferencesModal from '../modals/PreferencesModal.jsx';
 import styles from './header.module.css';
 
@@ -30,7 +30,7 @@ function Header(props) {
             <button className={styles.preferencesBtn} onClick={handlePreferencesClick}>Preferences ⚙️</button>
           </nav>
         )}
-        
+
         {isDashboard && props.currentAuthState === AuthState.Unauthenticated && (
           <nav className={styles.nav}>
             <span className={styles.welcomeMessage}>Logged in as Guest</span>

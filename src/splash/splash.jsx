@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../app.css'; // Import shared styles
 import styles from './splash.module.css';
 import { useNavigate } from 'react-router-dom';
-import { AuthState } from '../authState.js';
+import { AuthState } from '../hooks/useAuthState.js';
 import { Unauthenticated } from './unauthenticated.jsx';
 
 function Splash({ userName, currentAuthState, onAuthChange }) {

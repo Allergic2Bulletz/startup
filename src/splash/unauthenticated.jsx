@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './splash.module.css';
 import { useNavigate } from 'react-router-dom';
-import { AuthState } from '../authState.js';
+import { AuthState } from '../hooks/useAuthState.js';
 import { useState } from 'react';
 
 export function Unauthenticated({ userName, currentAuthState, onAuthChange }) {

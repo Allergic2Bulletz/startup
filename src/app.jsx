@@ -5,7 +5,7 @@ import './app.css';
 import Header from './header/header.jsx';
 import Splash from './splash/splash.jsx';
 import Dashboard from './dashboard/dashboard.jsx';
-import { AuthState } from './authState.js';
+import { AuthState } from './hooks/useAuthState.js';
 import usePreferences from './hooks/usePreferences.js';
 
 export default function App() {
