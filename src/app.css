@@ -16,7 +16,7 @@ html, body {
     margin: 0px;
 }
 
-header, footer {
+footer {
     display: flex;
     align-items: center;
     flex: 0 30px;
@@ -24,23 +24,6 @@ header, footer {
     background-color: rgb(24, 24, 50);
     margin: 0px;
     border-width: 0px;
-    
-}
-
-header {
-    border-bottom: 1px solid #444;
-    justify-content: space-between;
-}
-
-.logo {
-    margin: 5px 0;
-}
-
-.tagline {
-    font-style: italic;
-}
-
-footer {
     border-top: 1px solid #444;
     justify-content: center;
 }

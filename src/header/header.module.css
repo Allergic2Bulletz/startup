@@ -1,0 +1,55 @@
+/* Header-specific styles */
+.header {
+    display: flex;
+    align-items: center;
+    flex: 0 30px;
+    padding: 10px;
+    background-color: rgb(24, 24, 50);
+    margin: 0px;
+    border-width: 0px;
+    border-bottom: 1px solid #444;
+    justify-content: space-between;
+}
+
+.branding {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    margin: 5px 0;
+    cursor: pointer;
+}
+
+.logo:hover {
+    color: #bbd4ff;
+}
+
+.tagline {
+    font-style: italic;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.welcomeMessage {
+    font-style: italic;
+}
+
+.logoutBtn, .preferencesBtn {
+    background-color: rgb(50, 50, 80);
+    color: #ddd;
+    border: 1px solid #666;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.logoutBtn:hover, .preferencesBtn:hover {
+    background-color: rgb(60, 60, 90);
+    border-color: #888;
+}
