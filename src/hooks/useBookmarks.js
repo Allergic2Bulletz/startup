@@ -21,24 +21,29 @@ const useBookmarks = () => {
         localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
     }, [bookmarks]);
 
-    // Get active (non-deleted) bookmarks, sorted by modifiedAt for display order
+    // Get active (non-deleted) bookmarks, sorted by order index
     const activeBookmarks = useMemo(() => 
         bookmarks
             .filter(bookmark => !bookmark.deleted)
-            .sort((a, b) => new Date(a.modifiedAt) - new Date(b.modifiedAt)),
+            .sort((a, b) => a.order - b.order),
         [bookmarks]
     );
 
     const addBookmark = useCallback((bookmarkData) => {
+        const maxOrder = bookmarks
+            .filter(b => !b.deleted)
+            .reduce((max, b) => Math.max(max, b.order || 0), -1);
+        
         const newBookmark = {
             id: crypto.randomUUID(),
             name: bookmarkData.name,
             timezone: bookmarkData.timezone,
             deleted: false,
+            order: maxOrder + 1,
             modifiedAt: new Date().toISOString()
         };
         setBookmarks(prev => [...prev, newBookmark]);
-    }, []);
+    }, [bookmarks]);
 
     const updateBookmark = useCallback((id, changes) => {
         setBookmarks(prev => prev.map(bookmark => 
@@ -65,36 +70,31 @@ const useBookmarks = () => {
     }, []);
 
     const moveBookmark = useCallback((id, direction) => {
-        const currentIndex = activeBookmarks.findIndex(b => b.id === id);
+        const active = bookmarks.filter(b => !b.deleted).sort((a, b) => a.order - b.order);
+        const currentIndex = active.findIndex(b => b.id === id);
+        
         if (currentIndex === -1) return;
-
+        
         const newIndex = direction === 'up' 
             ? Math.max(0, currentIndex - 1)
-            : Math.min(activeBookmarks.length - 1, currentIndex + 1);
-
+            : Math.min(active.length - 1, currentIndex + 1);
+            
         if (newIndex === currentIndex) return;
-
-        // Update modifiedAt timestamps to reflect new order
-        const now = new Date();
-        const updates = [];
         
-        if (direction === 'up') {
-            // Moving up: set timestamp slightly before the item above
-            const targetTime = new Date(activeBookmarks[newIndex].modifiedAt);
-            targetTime.setSeconds(targetTime.getSeconds() - 1);
-            updates.push({ id, modifiedAt: targetTime.toISOString() });
-        } else {
-            // Moving down: set timestamp slightly after the item below
-            const targetTime = new Date(activeBookmarks[newIndex].modifiedAt);
-            targetTime.setSeconds(targetTime.getSeconds() + 1);
-            updates.push({ id, modifiedAt: targetTime.toISOString() });
-        }
-
+        // Swap order values between current and target bookmarks
+        const current = active[currentIndex];
+        const target = active[newIndex];
+        
         setBookmarks(prev => prev.map(bookmark => {
-            const update = updates.find(u => u.id === bookmark.id);
-            return update ? { ...bookmark, ...update } : bookmark;
+            if (bookmark.id === current.id) {
+                return { ...bookmark, order: target.order, modifiedAt: new Date().toISOString() };
+            }
+            if (bookmark.id === target.id) {
+                return { ...bookmark, order: current.order, modifiedAt: new Date().toISOString() };
+            }
+            return bookmark;
         }));
-    }, [activeBookmarks]);
+    }, [bookmarks]);
 
     return {
         bookmarks: activeBookmarks,
