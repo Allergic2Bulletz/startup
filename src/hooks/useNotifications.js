@@ -6,11 +6,9 @@ const useNotifications = () => {
 
     const showNotification = useCallback((message, notificationType = 'default', autoClose = true) => {
         const newNotification = {
-            id: crypto.randomUUID(),
             message,
             notificationType,
-            autoClose,
-            timestamp: Date.now()
+            autoClose
         };
         setNotification(newNotification);
     }, []);
