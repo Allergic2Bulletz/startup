@@ -5,8 +5,12 @@ import './app.css';
 import Header from './header/header.jsx';
 import Splash from './splash/splash.jsx';
 import Dashboard from './dashboard/dashboard.jsx';
+import NotificationBanner from './banners/notificationBanner.jsx';
 import { AuthState } from './hooks/useAuthState.js';
 import usePreferences from './hooks/usePreferences.js';
+import useNotifications from './hooks/useNotifications.js';
+import { NotificationContext } from './contexts/NotificationContext.js';
+import NotificationTest from './examples/NotificationTest.jsx';
 
 export default function App() {
     const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
@@ -15,10 +19,18 @@ export default function App() {
     
     // Preferences management
     const { preferences, updatePreferences, resetPreferences } = usePreferences();
+    
+    // Notification management
+    const { notification, showNotification, hideNotification } = useNotifications();
 
     return (
         <BrowserRouter>
-            <div className="body">
+            <NotificationContext.Provider value={{ showNotification, hideNotification }}>
+                <div className="body">
+                    <NotificationBanner 
+                        notification={notification} 
+                        onClose={hideNotification} 
+                    />
                 <Header 
                     userName={userName} 
                     currentAuthState={currentAuthState}
@@ -40,7 +52,9 @@ export default function App() {
                     <p>Last updated Nov 2025.</p>
                     <span><a href="https://github.com/Allergic2Bulletz/startup">Cameron Coltrin's Github</a></span>
                 </footer>
-            </div>
+                <NotificationTest />
+                </div>
+            </NotificationContext.Provider>
         </BrowserRouter>
 );
 }
