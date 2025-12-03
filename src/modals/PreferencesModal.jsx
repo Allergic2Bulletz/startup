@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
 import modalStyles from './modals.module.css';
 
-const PreferencesModal = ({ isOpen, onClose, preferences, onSave, onReset, onExport }) => {
+const PreferencesModal = ({ isOpen, onClose, preferences, onSave, onReset }) => {
   const [formData, setFormData] = useState({
     theme: 'light',
     timeFormat: '12',
@@ -36,10 +36,6 @@ const PreferencesModal = ({ isOpen, onClose, preferences, onSave, onReset, onExp
   const handleReset = () => {
     onReset();
     onClose();
-  };
-
-  const handleExport = () => {
-    onExport();
   };
 
   return (
@@ -137,9 +133,6 @@ const PreferencesModal = ({ isOpen, onClose, preferences, onSave, onReset, onExp
           </button>
           <button type="button" className={modalStyles.importBtn} onClick={handleReset}>
             Reset to Defaults
-          </button>
-          <button type="button" className={modalStyles.importBtn} onClick={handleExport}>
-            Export to Clipboard
           </button>
           <button type="submit">Save Preferences</button>
         </div>

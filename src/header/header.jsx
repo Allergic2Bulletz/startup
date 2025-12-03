@@ -37,7 +37,6 @@ function Header(props) {
         preferences={props.preferences}
         onSave={props.onUpdatePreferences}
         onReset={props.onResetPreferences}
-        onExport={props.onExportPreferences}
       />
     </>
   );

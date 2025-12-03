@@ -48,17 +48,10 @@ const usePreferences = () => {
         setPreferences(defaultPrefs);
     }, []);
 
-    const exportPreferences = useCallback(() => {
-        const dataStr = JSON.stringify(preferences, null, 2);
-        navigator.clipboard.writeText(dataStr);
-        // TODO: Push notification banner with message "Preferences exported to clipboard"
-    }, [preferences]);
-
     return {
         preferences,
         updatePreferences,
-        resetPreferences,
-        exportPreferences
+        resetPreferences
     };
 };
 

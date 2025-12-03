@@ -14,7 +14,7 @@ export default function App() {
     const [authState, setAuthState] = React.useState(currentAuthState);
     
     // Preferences management
-    const { preferences, updatePreferences, resetPreferences, exportPreferences } = usePreferences();
+    const { preferences, updatePreferences, resetPreferences } = usePreferences();
 
     return (
         <BrowserRouter>
@@ -25,7 +25,6 @@ export default function App() {
                     preferences={preferences}
                     onUpdatePreferences={updatePreferences}
                     onResetPreferences={resetPreferences}
-                    onExportPreferences={exportPreferences}
                 />
 
                 <Routes>
