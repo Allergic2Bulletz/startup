@@ -51,6 +51,25 @@ const AddReminderModal = ({ isOpen, onClose, onSave }) => {
     }
   };
 
+  const handleImport = () => {
+    const jsonStr = navigator.clipboard.readText().then(text => {
+      try {
+        const data = JSON.parse(text);
+        if (data.title && data.datetime && data.timezone) {
+          setFormData({
+            title: data.title,
+            datetime: data.datetime,
+            timezone: data.timezone
+          });
+        }
+      } catch (error) {
+        alert("Invalid JSON data in clipboard.");
+      }
+    });
+  };
+
+  // todo - check for user time zone to set the input default form value
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h3>Add New Reminder</h3>
@@ -104,6 +123,9 @@ const AddReminderModal = ({ isOpen, onClose, onSave }) => {
         <div className={modalStyles.modalButtons}>
           <button type="button" className={modalStyles.cancelBtn} onClick={onClose}>
             Cancel
+          </button>
+          <button type="button" className={modalStyles.importBtn} onClick={handleImport}>
+            Import from Clipboard
           </button>
           <button type="submit">Add Reminder</button>
         </div>
