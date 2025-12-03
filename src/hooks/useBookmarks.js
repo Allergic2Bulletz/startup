@@ -55,7 +55,7 @@ const useBookmarks = () => {
                 }
                 : bookmark
         ));
-    }, []);
+    }, [bookmarks]);
 
     const deleteBookmark = useCallback((id) => {
         setBookmarks(prev => prev.map(bookmark => 
@@ -67,7 +67,7 @@ const useBookmarks = () => {
                 }
                 : bookmark
         ));
-    }, []);
+    }, [bookmarks]);
 
     const moveBookmark = useCallback((id, direction) => {
         const active = bookmarks.filter(b => !b.deleted).sort((a, b) => a.order - b.order);
