@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './dashboard.module.css';
 import { formatTimeForTimezone, formatDateForTimezone } from '../utils/timeUtils.js';
 
-const BookmarkTile = React.memo(function BookmarkTile({ bookmark, referenceTime, forecasting, onUpdate, onDelete, onMoveUp, onMoveDown }) {
+const BookmarkTile = React.memo(function BookmarkTile({ bookmark, referenceTime, forecasting, onUpdate, onDelete, onMoveUp, onMoveDown, onExport }) {
     const handleTimezoneChange = (newTimezone) => {
         onUpdate({ timezone: newTimezone });
     };
@@ -13,6 +13,7 @@ const BookmarkTile = React.memo(function BookmarkTile({ bookmark, referenceTime,
             <div className={styles.tileHeader}>
                 <h3>{bookmark.name}</h3>
                 <div className={styles.tileControls}>
+                    <button className={styles.exportBtn} onClick={onExport}>⧉</button>
                     <button className={styles.moveUpBtn} onClick={onMoveUp}>↑</button>
                     <button className={styles.moveDownBtn} onClick={onMoveDown}>↓</button>
                     <button className={styles.deleteElementButton} onClick={onDelete}>×</button>

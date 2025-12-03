@@ -96,12 +96,23 @@ const useBookmarks = () => {
         }));
     }, [bookmarks]);
 
+    const exportBookmark = useCallback((id) => {
+        // Get the bookmark data and copy the JSON string to clipboard
+        const active = bookmarks.filter(b => !b.deleted)
+        const bookmark = active.find(b => b.id === id && !b.deleted);
+        if (!bookmark) return null;
+        const dataStr = JSON.stringify({name: bookmark.name, timezone: bookmark.timezone}, null, 2);
+        navigator.clipboard.writeText(dataStr);
+        // TODO Push notification banner w/ message "Exported to clipboard"
+    }, [bookmarks]);
+
     return {
         bookmarks: activeBookmarks,
         addBookmark,
         updateBookmark,
         deleteBookmark,
-        moveBookmark
+        moveBookmark,
+        exportBookmark
     };
 };
 

@@ -16,7 +16,7 @@ export default function Dashboard() {
     const [customDate, setCustomDate] = useState('');
     
     // Bookmark management
-    const { bookmarks, addBookmark, updateBookmark, deleteBookmark, moveBookmark } = useBookmarks();
+    const { bookmarks, addBookmark, updateBookmark, deleteBookmark, moveBookmark, exportBookmark } = useBookmarks();
 
     // Update current time every second
     useEffect(() => {
@@ -106,6 +106,7 @@ export default function Dashboard() {
                             onDelete={() => deleteBookmark(bookmark.id)}
                             onMoveUp={() => moveBookmark(bookmark.id, 'up')}
                             onMoveDown={() => moveBookmark(bookmark.id, 'down')}
+                            onExport={() => exportBookmark(bookmark.id)}
                         />
                     ))}
                 </div>
