@@ -8,11 +8,33 @@ const AddReminderModal = ({ isOpen, onClose, onSave }) => {
     datetime: '',
     timezone: 'America/New_York'
   });
+  const [error, setError] = useState('');
+
+  const validateDateTime = (datetime) => {
+    if (!datetime) return false;
+    
+    const selectedDate = new Date(datetime);
+    const now = new Date();
+    
+    if (selectedDate <= now) {
+      setError('Reminder time must be in the future.');
+      return false;
+    }
+    
+    setError('');
+    return true;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    if (!validateDateTime(formData.datetime)) {
+      return;
+    }
+    
     onSave(formData);
     setFormData({ title: '', datetime: '', timezone: 'America/New_York' });
+    setError('');
     onClose();
   };
 
@@ -22,6 +44,11 @@ const AddReminderModal = ({ isOpen, onClose, onSave }) => {
       ...prev,
       [name]: value
     }));
+    
+    // Clear error when user changes datetime
+    if (name === 'datetime' && error) {
+      setError('');
+    }
   };
 
   return (
@@ -51,6 +78,7 @@ const AddReminderModal = ({ isOpen, onClose, onSave }) => {
             onChange={handleInputChange}
             required
           />
+          {error && <div style={{ color: 'red', fontSize: '0.9em', marginTop: '0.25em' }}>{error}</div>}
         </div>
 
         <div>
