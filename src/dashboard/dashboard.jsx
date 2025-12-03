@@ -21,7 +21,7 @@ export default function Dashboard() {
     const { bookmarks, addBookmark, updateBookmark, deleteBookmark, moveBookmark, exportBookmark } = useBookmarks();
     
     // Reminder management
-    const { reminders, addReminder, updateReminder, deleteReminder, moveReminder, exportReminder } = useReminders();
+    const { reminders, addReminder, updateReminder, deleteReminder, moveReminder, exportReminder, checkReminders } = useReminders();
 
     // Update current time every second
     useEffect(() => {
@@ -32,6 +32,16 @@ export default function Dashboard() {
         // Cleanup interval on component unmount
         return () => clearInterval(timer);
     }, []);
+
+    // Check reminders for expiration every second
+    useEffect(() => {
+        const reminderTimer = setInterval(() => {
+            checkReminders();
+        }, 1000);
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(reminderTimer);
+    }, [checkReminders]);
 
     // Check if custom time/date is valid and create reference time
     const getReference = () => {

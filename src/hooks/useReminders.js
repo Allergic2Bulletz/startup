@@ -107,13 +107,26 @@ const useReminders = () => {
         // TODO Push notification banner w/ message "Exported to clipboard"
     }, [reminders]);
 
+    const checkReminders = useCallback(() => {
+        const now = new Date();
+        const activeReminders = reminders.filter(r => !r.deleted);
+        
+        activeReminders.forEach(reminder => {
+            const reminderDate = new Date(reminder.datetime);
+            if (now >= reminderDate && !reminder.expired) {
+                updateReminder(reminder.id, { expired: true });
+            }
+        });
+    }, [reminders, updateReminder]);
+
     return {
         reminders: activeReminders,
         addReminder,
         updateReminder,
         deleteReminder,
         moveReminder,
-        exportReminder
+        exportReminder,
+        checkReminders
     };
 };
 
