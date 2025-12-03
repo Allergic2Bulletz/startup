@@ -8,6 +8,34 @@
 - [Canvas](https://byu.instructure.com)
 - [MDN](https://developer.mozilla.org)
 
+## Project Plans
+
+### Offline Sync
+"How should it work for the visitor?"
+
+Guest -> localstorage (permanent, shared for all guests!)
+User -> sessionstorage (browser session and user-specific)
+
+Case A: 
+I use the site as a guest. I like it, so I create an account. My data in the browser gets migrated into the server, localstorage is flushed, and I seamlessly continue working.
+Case B:
+I use the site as a user. I lose connection for a few hours, but I don't end my session. I continue to use the site and when I reconnect, my offline changes in sessionstorage are synced to the server.
+Case C:
+I use the site as a user. I lose connection for a few hours and I end my session. When I come back to the site, I'm logged out. Any changes I made while offline are lost.
+Case D:
+I use the site as a guest on my personal PC. I never create an account, but my data never goes away.
+Case E:
+I use the site as a guest on a public PC. I ignore any site warnings about using it on a public PC. Somebody else uses the site as a guest and will see my info.
+Case F:
+I use the site as a guest on a public PC. Somebody else logs in. My data is visible to them (in localstorage) but does not contaminate their data and vice-versa.
+Case G:
+I use the site as a user on a public PC. I log out when I'm done, but I don't close the browser. My data is not discoverable for the next guest or user.
+
+RULES:
+When a user logs in, we clean sessionstorage.
+When a user logs out, we clean sessionstorage.
+Guest data is shared and permanent in localstorage
+
 ## AWS
 
 My elastic IP address is: 54.243.35.4
