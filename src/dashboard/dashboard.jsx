@@ -12,7 +12,6 @@ import useReminders from '../hooks/useReminders';
 export default function Dashboard() {
     const [showBookmarkModal, setShowBookmarkModal] = useState(false);
     const [showReminderModal, setShowReminderModal] = useState(false);
-    const [showPreferencesModal, setShowPreferencesModal] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());
     const [customTime, setCustomTime] = useState('');
     const [customDate, setCustomDate] = useState('');
