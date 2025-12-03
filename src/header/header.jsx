@@ -15,6 +15,12 @@ function Header(props) {
     setShowPreferencesModal(true);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('userName');
+    props.onLogout();
+    navigate('/');
+  }
+
   return (
     <>
       <header className={styles.header}>
@@ -26,7 +32,7 @@ function Header(props) {
         {props.currentAuthState === AuthState.Authenticated && (
           <nav className={styles.nav}>
             <span className={styles.welcomeMessage}>Logged in as {props.userName}</span>
-            <button className={styles.logoutBtn} onClick={() => navigate('/')}>Logout</button>
+            <button className={styles.logoutBtn} onClick={handleLogout}>Logout</button>
             <button className={styles.preferencesBtn} onClick={handlePreferencesClick}>Preferences ⚙️</button>
           </nav>
         )}

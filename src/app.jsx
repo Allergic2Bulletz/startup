@@ -25,6 +25,10 @@ export default function App() {
                     preferences={preferences}
                     onUpdatePreferences={updatePreferences}
                     onResetPreferences={resetPreferences}
+                    onLogout={() => {
+                        setUserName('');
+                        setAuthState(AuthState.Unauthenticated);
+                    }}
                 />
 
                 <Routes>
