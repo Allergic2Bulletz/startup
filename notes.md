@@ -51,7 +51,15 @@ A bunch of interesting reading about Javscript function logic, including some me
 
 Reminder that Hooks [must be called at the top scope of the function and cannot be called inside of a loop or conditional.](https://github.com/webprogramming260/.github/blob/main/profile/webFrameworks/react/hooks/hooks.md)
 
-
+Extremely cool use of spread operator:
+```javascript
+people = people.map(person =>
+  person.name === "Bob"
+    ? { ...person, ...update, occupation: "drummer" }
+    : person
+);
+```
+This use of spread operators will overwrite shared values from left to right. You can put anything inside of update!
 
 ## React Part 2: Reactivity EXAMPLE NOTES
 
