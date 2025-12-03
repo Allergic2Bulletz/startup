@@ -8,7 +8,7 @@ import { Unauthenticated } from './unauthenticated.jsx';
 function Splash({ userName, currentAuthState, onAuthChange }) {
     const navigate = useNavigate();
 
-    const handleTestClick = () => {
+    const continueGuest = () => {
         navigate('/dashboard');
     };
 
@@ -27,7 +27,7 @@ function Splash({ userName, currentAuthState, onAuthChange }) {
                 <button onClick={() => navigate('/dashboard')}>Go to Dashboard</button>
             </section>
         )}
-        <button type="button" className={styles.testBtn} onClick={handleTestClick}>Test - Goto Dashboard</button>
+        {currentAuthState === AuthState.Unauthenticated && <button type="button" className={styles.testBtn} onClick={continueGuest}>Continue as Guest</button>}
         </div>
     </main>
   );

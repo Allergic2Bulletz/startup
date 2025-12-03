@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthState } from '../authState.js';
 import PreferencesModal from '../modals/PreferencesModal.jsx';
+import styles from './header.module.css';
 
 function Header(props) {
   const location = useLocation();
@@ -16,17 +17,24 @@ function Header(props) {
 
   return (
     <>
-      <header>
-        <div className="branding">
-          <h1 className="logo">ezTimes</h1>
-          <span className="tagline">Time Zone Coordination finally made easy.</span>
+      <header className={styles.header}>
+        <div className={styles.branding}>
+          <h1 className={styles.logo} onClick={() => navigate('/')}>ezTimes 🏠</h1>
+          <span className={styles.tagline}>Time Zone Coordination finally made easy.</span>
         </div>
         
         {props.currentAuthState === AuthState.Authenticated && (
-          <nav>
-            <span className="welcome-message">Logged in as {props.userName}</span>
-            <button id="logout-btn" onClick={() => navigate('/')}>Logout</button>
-            <button id="preferences-btn" onClick={handlePreferencesClick}>Preferences ⚙️</button>
+          <nav className={styles.nav}>
+            <span className={styles.welcomeMessage}>Logged in as {props.userName}</span>
+            <button className={styles.logoutBtn} onClick={() => navigate('/')}>Logout</button>
+            <button className={styles.preferencesBtn} onClick={handlePreferencesClick}>Preferences ⚙️</button>
+          </nav>
+        )}
+        
+        {isDashboard && props.currentAuthState === AuthState.Unauthenticated && (
+          <nav className={styles.nav}>
+            <span className={styles.welcomeMessage}>Logged in as Guest</span>
+            <button className={styles.preferencesBtn} onClick={handlePreferencesClick}>Preferences ⚙️</button>
           </nav>
         )}
       </header>
