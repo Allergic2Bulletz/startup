@@ -28,19 +28,16 @@ export default function Dashboard() {
             setCurrentTime(new Date());
         }, 1000);
 
-        // Cleanup interval on component unmount
-        return () => clearInterval(timer);
-    }, []);
-
-    // Check reminders for expiration every second
-    useEffect(() => {
         const reminderTimer = setInterval(() => {
             checkReminders();
         }, 1000);
 
         // Cleanup interval on component unmount
-        return () => clearInterval(reminderTimer);
-    }, [checkReminders]);
+        return () => {
+            clearInterval(timer);
+            clearInterval(reminderTimer);
+        };
+    }, []);
 
     // Check if custom time/date is valid and create reference time
     const getReference = () => {
