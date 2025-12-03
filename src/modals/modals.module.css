@@ -105,6 +105,15 @@
     background-color: #555;
 }
 
+.modalButtons .importBtn {
+    background-color: #28a745;
+    color: white;
+}
+
+.modalButtons .importBtn:hover {
+    background-color: #218838;
+}
+
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
     .modal {

@@ -23,6 +23,22 @@ const AddBookmarkModal = ({ isOpen, onClose, onSave }) => {
     }));
   };
 
+  const handleImport = () => {
+    const jsonStr = navigator.clipboard.readText().then(text => {
+      try {
+        const data = JSON.parse(text);
+        if (data.name && data.timezone) {
+          setFormData({
+            name: data.name,
+            timezone: data.timezone
+          });
+        }
+      } catch (error) {
+        alert("Invalid JSON data in clipboard.");
+      }
+    });
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h3>Add New Bookmark</h3>
@@ -63,6 +79,9 @@ const AddBookmarkModal = ({ isOpen, onClose, onSave }) => {
         <div className={modalStyles.modalButtons}>
           <button type="button" className={modalStyles.cancelBtn} onClick={onClose}>
             Cancel
+          </button>
+          <button type="button" className={modalStyles.importBtn} onClick={handleImport}>
+            Import from Clipboard
           </button>
           <button type="submit">Add Bookmark</button>
         </div>
