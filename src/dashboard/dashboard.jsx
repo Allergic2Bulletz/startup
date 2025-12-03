@@ -5,7 +5,9 @@ import AddBookmarkModal from '../modals/AddBookmarkModal';
 import AddReminderModal from '../modals/AddReminderModal';
 import TimeConverter from './timeConverter';
 import BookmarkTile from './bookmarkTile';
+import ReminderTile from './reminderTile';
 import useBookmarks from '../hooks/useBookmarks';
+import useReminders from '../hooks/useReminders';
 
 export default function Dashboard() {
     const [showBookmarkModal, setShowBookmarkModal] = useState(false);
@@ -17,6 +19,9 @@ export default function Dashboard() {
     
     // Bookmark management
     const { bookmarks, addBookmark, updateBookmark, deleteBookmark, moveBookmark, exportBookmark } = useBookmarks();
+    
+    // Reminder management
+    const { reminders, addReminder, updateReminder, deleteReminder, moveReminder, exportReminder } = useReminders();
 
     // Update current time every second
     useEffect(() => {
@@ -70,7 +75,8 @@ export default function Dashboard() {
 
     const handleSaveReminder = (reminderData) => {
         console.log('Saving reminder:', reminderData);
-        // Add your reminder saving logic here
+        const { title, datetime, timezone } = reminderData;
+        addReminder({ title, datetime, timezone });
     };
 
     const handleSavePreferences = (preferencesData) => {
@@ -119,51 +125,17 @@ export default function Dashboard() {
             <button className={styles.addElementButton} id="add-reminder-btn" onClick={() => setShowReminderModal(true)}>+ Add Reminder</button>
             
             <div className={styles.remindersGrid}>
-                {/* Placeholder reminders */}
-                <div className={styles.tile}>
-                    <div className={styles.tileHeader}>
-                        <h4>Call Mom</h4>
-                        <div className={styles.tileControls}>
-                            <button className={styles.moveUpBtn}>↑</button>
-                            <button className={styles.moveDownBtn}>↓</button>
-                            <button className={styles.deleteElementButton}>×</button>
-                        </div>
-                    </div>
-                    <div className={styles.tileContent}>
-                        <span>Today at 3:00 PM</span>
-                        <button className={styles.copyReminderBtn}>⧉</button>
-                    </div>
-                </div>
-                
-                <div className={styles.tile}>
-                    <div className={styles.tileHeader}>
-                        <h4>Team Meeting</h4>
-                        <div className={styles.tileControls}>
-                            <button className={styles.moveUpBtn}>↑</button>
-                            <button className={styles.moveDownBtn}>↓</button>
-                            <button className={styles.deleteElementButton}>×</button>
-                        </div>
-                    </div>
-                    <div className={styles.tileContent}>
-                        <span>Nov 29 at 10:00 AM</span>
-                        <button className={styles.copyReminderBtn}>⧉</button>
-                    </div>
-                </div>
-                
-                <div className={styles.tile}>
-                    <div className={styles.tileHeader}>
-                        <h4>Birthday Call</h4>
-                        <div className={styles.tileControls}>
-                            <button className={styles.moveUpBtn}>↑</button>
-                            <button className={styles.moveDownBtn}>↓</button>
-                            <button className={styles.deleteElementButton}>×</button>
-                        </div>
-                    </div>
-                    <div className={styles.tileContent}>
-                        <span>Dec 1 at 2:00 PM</span>
-                        <button className={styles.copyReminderBtn}>⧉</button>
-                    </div>
-                </div>
+                {reminders.map(reminder => (
+                    <ReminderTile
+                        key={reminder.id}
+                        reminder={reminder}
+                        onUpdate={(changes) => updateReminder(reminder.id, changes)}
+                        onDelete={() => deleteReminder(reminder.id)}
+                        onMoveUp={() => moveReminder(reminder.id, 'up')}
+                        onMoveDown={() => moveReminder(reminder.id, 'down')}
+                        onExport={() => exportReminder(reminder.id)}
+                    />
+                ))}
             </div>
         </section>
         <AddBookmarkModal
