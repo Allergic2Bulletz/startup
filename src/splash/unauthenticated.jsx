@@ -21,7 +21,8 @@ export function Unauthenticated({ userName, currentAuthState, onAuthChange }) {
         }
         return true;
     }
-
+    // todo - have a toggle for whether or not to import existing data from localStorage upon registration
+    
     // Placeholder function for authentication - replace with real authentication later
     // For now, just set userName to email and mark as authenticated
     // The discrepancy between hanldeLogin and handleRegister is due to login being a submit and register being a button click
