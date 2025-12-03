@@ -118,8 +118,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+- [x] **All functionality implemented or mocked out** - All the core functionality of the website is fully implemented. Users can create, edit, and organize bookmarks and reminders. I have mocked out preferences; they can be set by the visitor but they currently have no effect.
+- [x] **Hooks** - I migrated functionality into dedicated hooks and added new ones e.g. notifications
 
 ## 🚀 Service deliverable
 
