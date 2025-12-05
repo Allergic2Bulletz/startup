@@ -7,12 +7,15 @@ function TimeConverter({ currentTime, customTime, customDate, onCustomTimeChange
     const [quoteText, setQuoteText] = React.useState("");
     const [quoteAuthor, setQuoteAuthor] = React.useState("");
     
-    useEffect(async () => {
-        const quote = fetch('https://thequoteshub.com/api/')
-        const res = await quote;
-        const data = await res.json();
-        setQuoteText(data.quote);
-        setQuoteAuthor(data.author);
+    useEffect(() => {
+        async function fetchQuote() {
+            const quote = await fetch('https://thequoteshub.com/api/')
+            const res = await quote;
+            const data = await res.json();
+            setQuoteText(data.text);
+            setQuoteAuthor(data.author);
+        }
+        fetchQuote();
     }, []);
     
     return (
