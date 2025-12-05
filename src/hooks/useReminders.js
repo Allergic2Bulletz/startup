@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, use } from 'react';
+import { getDatetimeForTimezone } from '../utils/timeUtils.js';
 
 const useReminders = () => {
     const [reminders, setReminders] = useState([]);
@@ -34,10 +35,12 @@ const useReminders = () => {
             .filter(r => !r.deleted)
             .reduce((max, r) => Math.max(max, r.order || 0), -1);
         
+        const finalDateTime = getDatetimeForTimezone(reminderData.datetime, reminderData.timezone);
+        
         const newReminder = {
             id: crypto.randomUUID(),
             title: reminderData.title,
-            datetime: reminderData.datetime,
+            datetime: finalDateTime,
             timezone: reminderData.timezone,
             deleted: false,
             order: maxOrder + 1,
