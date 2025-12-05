@@ -1,6 +1,10 @@
 # Ignore all folders beginning with a period
 .*/
 
+# Production folders
+build/
+dist/
+
 # Common development files and folders
 node_modules/
 *.log
