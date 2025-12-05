@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, use } from 'react';
 import { getDatetimeForTimezone } from '../utils/timeUtils.js';
 
-const useReminders = () => {
+const useReminders = ({ currentAuthState }) => {
     const [reminders, setReminders] = useState([]);
 
     // Load reminders from localStorage on mount

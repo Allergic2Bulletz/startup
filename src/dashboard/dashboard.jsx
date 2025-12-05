@@ -20,7 +20,7 @@ export default function Dashboard({ currentAuthState }) {
     const { bookmarks, addBookmark, updateBookmark, deleteBookmark, moveBookmark, exportBookmark } = useBookmarks({ currentAuthState });
     
     // Reminder management
-    const { reminders, addReminder, updateReminder, deleteReminder, moveReminder, exportReminder, checkReminders } = useReminders();
+    const { reminders, addReminder, updateReminder, deleteReminder, moveReminder, exportReminder, checkReminders } = useReminders({ currentAuthState });
 
     // Update current time every second
     useEffect(() => {
