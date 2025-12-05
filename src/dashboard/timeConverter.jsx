@@ -9,7 +9,7 @@ function TimeConverter({ currentTime, customTime, customDate, onCustomTimeChange
     
     useEffect(() => {
         async function fetchQuote() {
-            const quote = await fetch('https://thequoteshub.com/api/')
+            const quote = await fetch('https://www.thequoteshub.com/api/')
             const res = await quote;
             const data = await res.json();
             setQuoteText(data.text);
