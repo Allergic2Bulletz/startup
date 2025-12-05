@@ -1,25 +1,53 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { AuthState } from '../hooks/useAuthState.js';
+import { useNotificationContext } from './useNotifications.js';
 
-const useBookmarks = () => {
+const useBookmarks = ({ currentAuthState }) => {
     const [bookmarks, setBookmarks] = useState([]);
+    const { showNotification } = useNotificationContext();
 
-    // Load bookmarks from localStorage on mount
+    // Load bookmarks from storage/remote
     useEffect(() => {
         const saved = localStorage.getItem('bookmarks');
-        if (saved) {
+        if (saved && currentAuthState !== AuthState.Authenticated) {
             try {
                 const parsed = JSON.parse(saved);
                 setBookmarks(parsed);
+                return;
             } catch (error) {
                 console.error('Failed to load bookmarks from localStorage:', error);
+                showNotification('Failed to load bookmarks from localStorage', 'error', true);
+                return;
             }
         }
-    }, []);
+
+        const fetchBookmarks = async () => {
+            try {
+                const response = await fetch('/api/bookmarks');
+                if (!response.ok) {
+                    console.error('Failed to fetch bookmarks');
+                    showNotification('Failed to fetch bookmarks', 'error', true);
+                    return;
+                }
+                const data = await response.json();
+                setBookmarks(data || []);
+            } catch (error) {
+                console.error('Error fetching bookmarks:', error);
+                showNotification('Error fetching bookmarks', 'error', true);
+            }
+        };
+
+        if (currentAuthState === AuthState.Authenticated) {
+            fetchBookmarks();
+        }
+    }, [currentAuthState]);
 
     // Auto-save to localStorage when bookmarks change
     useEffect(() => {
-        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-    }, [bookmarks]);
+        if (currentAuthState !== AuthState.Authenticated) {
+            localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+        }
+    }, [bookmarks, currentAuthState]);
 
     // Get active (non-deleted) bookmarks, sorted by order index
     const activeBookmarks = useMemo(() => 
@@ -105,6 +133,85 @@ const useBookmarks = () => {
         navigator.clipboard.writeText(dataStr);
         // TODO Push notification banner w/ message "Exported to clipboard"
     }, [bookmarks]);
+    
+    const createRemote = async (bookmarkData) => {
+        const response = await fetch('/api/bookmarks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bookmarkData)
+        });
+        if (!response.ok) {
+            console.error('Failed to create bookmark');
+            showNotification('Failed to create bookmark', 'error', true);
+            return null;
+        }
+        const newBookmark = await response.json();
+        setBookmarks(prev => [...prev, newBookmark]);
+        return;
+    }
+
+    const updateRemote = async (id, changes) => {
+        const response = await fetch('/api/bookmarks', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, changes })
+        });
+        if (!response.ok) {
+            console.error('Failed to update bookmark');
+            showNotification('Failed to update bookmark', 'error', true);
+            return;
+        }
+        const updatedBookmark = await response.json();
+        setBookmarks(prev => prev.map(bookmark => bookmark.id === id ? updatedBookmark : bookmark));
+    }
+
+    const deleteRemote = async (id) => {
+        const response = await fetch('/api/bookmarks', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+        });
+        if (!response.ok) {
+            console.error('Failed to delete bookmark');
+            showNotification('Failed to delete bookmark', 'error', true);
+            return;
+        }
+        const deletedBookmark = await response.json();
+        setBookmarks(prev => prev.map(bookmark => bookmark.id === id ? deletedBookmark : bookmark));
+    }
+
+    const moveRemote = async (id, direction) => {
+        const response = await fetch('/api/bookmarks/reorder', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, direction })
+        });
+        if (response.status === 409) {
+            return; // no-op on conflict
+        }
+        if (!response.ok) {
+            console.error('Failed to move bookmark');
+            showNotification('Failed to move bookmark', 'error', true);
+            return;
+        }
+        // note - response contains the full updated list of bookmarks
+        const updatedBookmarks = await response.json();
+        setBookmarks(prev => prev.map(bookmark => {
+            const updated = updatedBookmarks.updated.find(b => b.id === bookmark.id);
+            return updated ? updated : bookmark;
+        }));
+    }
+
+    if (currentAuthState === AuthState.Authenticated) {
+        return {
+            bookmarks: activeBookmarks,
+            addBookmark: createRemote,
+            updateBookmark: updateRemote,
+            deleteBookmark: deleteRemote,
+            moveBookmark: moveRemote,
+            exportBookmark
+        };
+    }
 
     return {
         bookmarks: activeBookmarks,
