@@ -15,10 +15,16 @@ function Header(props) {
     setShowPreferencesModal(true);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('userName');
-    props.onLogout();
-    navigate('/');
+  const handleLogout = async () => {
+    const response = await fetch('api/auth/logout', { method: 'DELETE' });
+    if (response.ok) {
+      props.onLogout();
+      navigate('/');
+    } else {
+      // Handle error if needed
+      showNotification('Logout failed', 'error', true);
+      console.error('Logout failed');
+    }
   }
   // TODO - the h1 logo should not stretch across the entire branding div, only be as wide as the text itself
   return (
