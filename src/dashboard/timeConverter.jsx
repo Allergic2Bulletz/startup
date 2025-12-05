@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import styles from './dashboard.module.css';
 import { formatTime, formatDate } from '../utils/timeUtils.js';
 
 function TimeConverter({ currentTime, customTime, customDate, onCustomTimeChange, onCustomDateChange }) {
+    const [quoteText, setQuoteText] = React.useState("");
+    const [quoteAuthor, setQuoteAuthor] = React.useState("");
+    
+    useEffect(async () => {
+        const quote = fetch('https://thequoteshub.com/api/')
+        const res = await quote;
+        const data = await res.json();
+        setQuoteText(data.quote);
+        setQuoteAuthor(data.author);
+    }, []);
+    
     return (
         <section className={styles.timeConverter}>
             <h2>Time Converter</h2>
@@ -48,7 +59,7 @@ function TimeConverter({ currentTime, customTime, customDate, onCustomTimeChange
             
             <div className={styles.thirdPartyQuote}>
                 <h3>Daily Inspiration</h3>
-                <p className={styles.quoteText}>"Time is what we want most, but what we use worst." - William Penn</p>
+                <p className={styles.quoteText}>{quoteText} - {quoteAuthor}</p>
             </div>
         </section>
     )
