@@ -3,8 +3,10 @@ import styles from './splash.module.css';
 import { useNavigate } from 'react-router-dom';
 import { AuthState } from '../hooks/useAuthState.js';
 import { useState } from 'react';
+import { useNotificationContext } from '../hooks/useNotifications.js';
 
 export function Unauthenticated({ userName, currentAuthState, onAuthChange }) {
+    const { showNotification } = useNotificationContext();
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -14,6 +16,7 @@ export function Unauthenticated({ userName, currentAuthState, onAuthChange }) {
 
     const validateBeforeSubmit = () => {
         if (!formData.email || !formData.password) {
+            showNotification('Please fill in both email and password fields.', 'error', true);
             return false; // Basic validation
         }
         if (isLoading) {
@@ -27,13 +30,25 @@ export function Unauthenticated({ userName, currentAuthState, onAuthChange }) {
     // For now, just set userName to email and mark as authenticated
     // The discrepancy between hanldeLogin and handleRegister is due to login being a submit and register being a button click
     const handleLogin = async (email, password) => {
-        // TODO: Replace with actual authentication logic
         try {
             setIsLoading(true);
-            localStorage.setItem('userName', email);
+            const response = await fetch('api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Login failed');
+            }
             onAuthChange(email, AuthState.Authenticated);
             navigate('/dashboard');
-        } finally {
+        } 
+        catch (error) {
+            console.error('Login error:', error);
+            showNotification('Login failed: ' + (error.message || 'Unknown error'), 'error', true);
+        }
+        finally {
             setIsLoading(false);
         }
     }
@@ -46,10 +61,23 @@ export function Unauthenticated({ userName, currentAuthState, onAuthChange }) {
 
         try {
             setIsLoading(true);
-            localStorage.setItem('userName', email);
+            const response = await fetch('api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Register failed');
+            }
             onAuthChange(email, AuthState.Authenticated);
             navigate('/dashboard');
-        } finally {
+        } 
+        catch (error) {
+            console.error('Registration error:', error);
+            showNotification('Registration failed: ' + (error.message || 'Unknown error'), 'error', true);
+        }
+        finally {
             setIsLoading(false);
         }
     };
