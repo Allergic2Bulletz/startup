@@ -13,7 +13,7 @@ import { NotificationContext } from './contexts/NotificationContext.js';
 import NotificationTest from './examples/NotificationTest.jsx';
 
 export default function App() {
-    const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
+    const [userName, setUserName] = React.useState('');
     const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
     const [authState, setAuthState] = React.useState(currentAuthState);
     
@@ -22,6 +22,29 @@ export default function App() {
     
     // Notification management
     const { notification, showNotification, hideNotification } = useNotifications();
+
+    // Fetch username on mount
+    React.useEffect(() => {
+        const fetchAuthState = async () => {
+            try {
+                const response = await fetch('api/auth/getuser');
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserName(data.userName || '');
+                    setAuthState(data.userName ? AuthState.Authenticated : AuthState.Unauthenticated);
+                } else {
+                    setUserName('');
+                    setAuthState(AuthState.Unauthenticated);
+                }
+            } catch (error) {
+                console.error('Failed to fetch auth state:', error);
+                setUserName('');
+                setAuthState(AuthState.Unauthenticated);
+            }
+        };
+
+        fetchAuthState();
+    }, []);
 
     return (
         <BrowserRouter>
