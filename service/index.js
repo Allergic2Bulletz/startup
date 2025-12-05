@@ -2,7 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const uuid = require('uuid');
-const {authRouter, users} = require('./routers/authRouter');
+const {authRouter, users, authenticate} = require('./routers/authRouter.js');
 
 
 const app = express();
@@ -23,7 +23,7 @@ app.use('/api', apiRouter);
 
 apiRouter.use('/auth', authRouter);
 
-apiRouter.get('/secret', authRouter.authenticate, (req, res) => {
+apiRouter.get('/secret', authenticate, (req, res) => {
   res.send({ msg: 'This is a secret message for authenticated users only!' });
 });
 

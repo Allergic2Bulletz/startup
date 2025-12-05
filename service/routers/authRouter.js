@@ -41,7 +41,7 @@ function getEmailByToken(token) {
     return null;
 }
 
-authRouter.authenticate = (req, res, next) => {
+function authenticate(req, res, next) {
     if (req.cookies.auth_token && verifySession(req)) {
         next();
     } else {
@@ -49,7 +49,7 @@ authRouter.authenticate = (req, res, next) => {
     }
 };
 
-authRouter.get('/getuser', authRouter.authenticate, (req, res) => {
+authRouter.get('/getuser', authenticate, (req, res) => {
     if (!req.cookies.userName) {
         const email = getEmailByToken(req.cookies.auth_token);
         createAuthCookies(res, email, req.cookies.auth_token);
@@ -125,4 +125,5 @@ authRouter.delete('/logout', (req, res) => {
 module.exports = {
     authRouter,
     users,
+    authenticate,
 };
