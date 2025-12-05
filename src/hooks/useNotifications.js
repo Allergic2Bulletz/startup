@@ -22,7 +22,7 @@ const useNotifications = () => {
         if (notification && notification.autoClose) {
             const timer = setTimeout(() => {
                 hideNotification();
-            }, 7000); // 7 seconds
+            }, 5000); // 5 seconds
 
             return () => clearTimeout(timer);
         }
