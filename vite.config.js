@@ -5,5 +5,10 @@ export default defineConfig({
         modules: {
             scopeBehaviour: 'local',
         }
+    },
+    server: {
+        proxy: {
+            '/api': 'http://localhost:4000',
+        }
     }
 })
