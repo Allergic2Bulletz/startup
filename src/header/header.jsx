@@ -20,7 +20,7 @@ function Header(props) {
     props.onLogout();
     navigate('/');
   }
-
+  // TODO - the h1 logo should not stretch across the entire branding div, only be as wide as the text itself
   return (
     <>
       <header className={styles.header}>
