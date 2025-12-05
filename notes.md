@@ -90,28 +90,8 @@ people = people.map(person =>
 ```
 This use of spread operators will overwrite shared values from left to right. You can put anything inside of update!
 
-## React Part 2: Reactivity EXAMPLE NOTES
+## React Part 2: Reactivity
 
-This was a lot of fun to see it all come together. I had to keep remembering to use React state instead of just manipulating the DOM directly.
+## Service
 
-Handling the toggling of the checkboxes was particularly interesting.
-
-```jsx
-<div className="input-group sound-button-container">
-  {calmSoundTypes.map((sound, index) => (
-    <div key={index} className="form-check form-switch">
-      <input
-        className="form-check-input"
-        type="checkbox"
-        value={sound}
-        id={sound}
-        onChange={() => togglePlay(sound)}
-        checked={selectedSounds.includes(sound)}
-      ></input>
-      <label className="form-check-label" htmlFor={sound}>
-        {sound}
-      </label>
-    </div>
-  ))}
-</div>
-```
+I made an important change to the deployment script. `cp -r service/routers build/` will recursively go through the routers folder and copy everything into a routers folder in the build folder. This is important to maintain project structure on the prod server.
