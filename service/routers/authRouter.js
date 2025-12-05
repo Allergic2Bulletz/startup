@@ -14,6 +14,14 @@ class authToken {
     }
 }
 
+// For development purposes, create a default user
+const devName = 'dev'
+const devPassword = 'password'
+const devBcryptPassword = bcrypt.hashSync(devPassword, 10);
+users[devName] = { password: devBcryptPassword };
+tokens[devName] = new authToken('70a92b36-8619-4e68-b41a-ab77f36290ad');
+
+
 function createAuthCookies(res, email, token) {
     res.cookie('auth_token', token, {
         httpOnly: true,
