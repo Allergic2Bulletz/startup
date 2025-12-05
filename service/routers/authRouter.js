@@ -2,6 +2,7 @@ const express = require('express');
 const { StatusCodes } = require('../utilities/network.js');
 const authRouter = express.Router();
 const uuid = require('uuid');
+const bcrypt = require('bcryptjs');
 
 const users = {}; // In-memory user store (should be replaced with a database in production)
 const tokens = {}; // In-memory token store
@@ -13,9 +14,14 @@ class authToken {
     }
 }
 
-function setCookie(res, token) {
+function createAuthCookies(res, email, token) {
     res.cookie('auth_token', token, {
         httpOnly: true,
+        secure: true,
+        sameSite: 'Strict'
+    });
+    res.cookie('userName', email, {
+        httpOnly: false,
         secure: true,
         sameSite: 'Strict'
     });
@@ -23,8 +29,36 @@ function setCookie(res, token) {
 
 function verifySession(req) {
     const token = req.cookies.auth_token;
-    return Object.values(tokens).some(authToken => authToken.token === token);
+    return Object.values(tokens).some(authToken => authToken.token === token && authToken.expire > Date.now());
 }
+
+function getEmailByToken(token) {
+    for (const email in tokens) {
+        if (tokens[email].token === token) {
+            return email;
+        }
+    }
+    return null;
+}
+
+authRouter.authenticate = (req, res, next) => {
+    if (req.cookies.auth_token && verifySession(req)) {
+        next();
+    } else {
+        res.status(StatusCodes.UNAUTHORIZED).send({ msg: 'Not authenticated' });
+    }
+};
+
+authRouter.get('/getuser', authRouter.authenticate, (req, res) => {
+    if (!req.cookies.userName) {
+        const email = getEmailByToken(req.cookies.auth_token);
+        createAuthCookies(res, email, req.cookies.auth_token);
+        return res.status(StatusCodes.OK).send({ userName: email });
+    }
+    else {
+        return res.status(StatusCodes.OK).send({ userName: req.cookies.userName });
+    }
+});
 
 authRouter.post('/register', async (req, res) => {
     const { email, password } = req.body;
@@ -41,9 +75,10 @@ authRouter.post('/register', async (req, res) => {
         return res.status(StatusCodes.CONFLICT).send({ error: 'User already exists' });
     }
 
-    users[email] = { password };
+    const bcryptpassword = await bcrypt.hash(password, 10);
+    users[email] = { password: bcryptpassword };
     tokens[email] = new authToken(uuid.v4());
-    setCookie(res, tokens[email].token);
+    createAuthCookies(res, email, tokens[email].token);
     return res.status(StatusCodes.CREATED).send({ msg: 'User registered successfully' });
 });
 
@@ -59,12 +94,12 @@ authRouter.post('/login', async (req, res) => {
         return res.status(StatusCodes.BAD_REQUEST).send({ error: 'Email and password are required' });
     }
     const user = users[email];
-    if (!user || user.password !== password) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
         return res.status(StatusCodes.UNAUTHORIZED).send({ error: 'Invalid email or password' });
     }
 
     tokens[email] = new authToken(uuid.v4());
-    setCookie(res, tokens[email].token);
+    createAuthCookies(res, email, tokens[email].token);
     return res.status(StatusCodes.OK).send({ msg: 'User logged in successfully' });
 });
 
@@ -83,11 +118,8 @@ authRouter.delete('/logout', (req, res) => {
     }
     
     res.clearCookie('auth_token');
-    res.send({ msg: 'User logged out successfully' });
-});
-
-authRouter.get('/status', (req, res) => {
-    res.send({ status: 'OK' });
+    res.clearCookie('userName');
+    return res.status(StatusCodes.OK).send({ msg: 'User logged out successfully' });
 });
 
 module.exports = {
