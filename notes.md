@@ -9,6 +9,7 @@
 - [MDN](https://developer.mozilla.org)
 
 ## Project Plans
+Remove unnecssary function memoization
 
 ### Offline Sync
 "How should it work for the visitor?"
@@ -32,7 +33,7 @@ Case G:
 I use the site as a user on a public PC. I log out when I'm done, but I don't close the browser. My data is not discoverable for the next guest or user.
 
 RULES:
-When a user logs in, we clean sessionstorage.
+When a user logs in, we clean sessionstorage. (Closing the tab resets session storage)
 When a user logs out, we clean sessionstorage.
 Guest data is shared and permanent in localstorage
 
