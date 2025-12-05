@@ -68,7 +68,7 @@ export default function App() {
 
                 <Routes>
                     <Route path="/" element={<Splash userName={userName} currentAuthState={currentAuthState} onAuthChange={(userName, authState) => {setAuthState(authState);setUserName(userName);}} />}/>
-                    <Route path="/dashboard" element={<Dashboard />}/>
+                    <Route path="/dashboard" element={<Dashboard currentAuthState={currentAuthState}/>}/>
                 </Routes>
 
                 <footer>

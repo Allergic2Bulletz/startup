@@ -9,7 +9,7 @@ import ReminderTile from './reminderTile';
 import useBookmarks from '../hooks/useBookmarks';
 import useReminders from '../hooks/useReminders';
 
-export default function Dashboard() {
+export default function Dashboard({ currentAuthState }) {
     const [showBookmarkModal, setShowBookmarkModal] = useState(false);
     const [showReminderModal, setShowReminderModal] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -17,7 +17,7 @@ export default function Dashboard() {
     const [customDate, setCustomDate] = useState('');
     
     // Bookmark management
-    const { bookmarks, addBookmark, updateBookmark, deleteBookmark, moveBookmark, exportBookmark } = useBookmarks();
+    const { bookmarks, addBookmark, updateBookmark, deleteBookmark, moveBookmark, exportBookmark } = useBookmarks({ currentAuthState });
     
     // Reminder management
     const { reminders, addReminder, updateReminder, deleteReminder, moveReminder, exportReminder, checkReminders } = useReminders();
