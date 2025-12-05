@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const uuid = require('uuid');
 const {authRouter, users, authenticate} = require('./routers/authRouter.js');
 const {bookmarkRouter} = require('./routers/bookmarkRouter.js');
+const {reminderRouter} = require('./routers/reminderRouter.js');
 
 const app = express();
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
@@ -23,6 +24,7 @@ app.use('/api', apiRouter);
 
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/bookmarks', bookmarkRouter);
+apiRouter.use('/reminders', reminderRouter);
 
 apiRouter.get('/secret', authenticate, (req, res) => {
   res.send({ msg: 'This is a secret message for authenticated users only!' });
