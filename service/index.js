@@ -23,6 +23,10 @@ app.use('/api', apiRouter);
 
 apiRouter.use('/auth', authRouter);
 
+apiRouter.get('/secret', authRouter.authenticate, (req, res) => {
+  res.send({ msg: 'This is a secret message for authenticated users only!' });
+});
+
 // app.get('/{*splat}', (_req, res) => {
 //   res.send({ msg: 'Simon service' });
 // });
