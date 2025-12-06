@@ -2,7 +2,7 @@ const express = require('express');
 const { StatusCodes } = require('../utilities/network.js');
 const { authenticate } = require('./authRouter.js')
 const crypto = require('crypto');
-
+const { getDatetimeForTimezone } = require('../utilities/time.js');
 const reminderRouter = express.Router();
 const reminders = {};
 
@@ -17,14 +17,15 @@ reminderRouter.post('/', authenticate, (req, res) => {
         return res.status(StatusCodes.BAD_REQUEST).send({ msg: 'Missing required fields' });
     }
     const id = crypto.randomUUID();
-    reminders[id] = { userName: req.cookies.userName, id, title, datetime, timezone, deleted: false, order: maxOrder + 1, modifiedAt: new Date().toISOString() };
+    const finalDateTime = getDatetimeForTimezone(datetime, timezone);
+    reminders[id] = { userName: req.cookies.userName, id, title, datetime: finalDateTime, timezone, deleted: false, order: maxOrder + 1, modifiedAt: new Date().toISOString() };
     res.status(StatusCodes.CREATED).send(reminders[id]);
 });
 
 // Read
 reminderRouter.get('/', authenticate, (req, res) => {
     const userReminders = Object.values(reminders).filter(r => r.userName === req.cookies.userName && !r.deleted);
-    res.status(StatusCodes.OK).send(userReminders);
+    res.status(StatusCodes.OK).send(userReminders || []);
 });
 
 // Update
