@@ -125,12 +125,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Supports registration, login, logout, and restricted endpoint** - I did not complete this part of the deliverable.
+- [x] **Node.js/Express HTTP service** - I created the Node.js core file, routers for each of the core service endpoints, and some placeholder responses for errors.
+- [x] **Static middleware for frontend** - I use an authenticate middleware to check if a request has proper auth, as well as parsing JSON.
+- [x] **Calls to third party endpoints** - The client now supports making calls to a third party quote service.
+- [x] **Backend service endpoints** - I have endpoints for all the functionality on the backend server.
+- [x] **Frontend calls service endpoints** - The client now functions for either a guest or client and will use the service endpoints for users.
+- [x] **Supports registration, login, logout, and restricted endpoint** - All registration and login/logout are implemented. I have a dummy endpoint that requires being logged in (/api/secret), and all user-specific endpoints are roped off as well.
 
 
 ## 🚀 DB deliverable
