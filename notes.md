@@ -95,3 +95,8 @@ This use of spread operators will overwrite shared values from left to right. Yo
 ## Service
 
 I made an important change to the deployment script. `cp -r service/routers build/` will recursively go through the routers folder and copy everything into a routers folder in the build folder. This is important to maintain project structure on the prod server.
+
+## Websocket
+Sync rule:
+Every user client auto syncs on start
+Every action triggers an evaluation: which user and client sent it? For every connected client belonging to that user that does not match the action-provider, force a sync
