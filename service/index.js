@@ -1,7 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
-const uuid = require('uuid');
+const crypto = require('crypto');
 const { authRouter, users, authenticate } = require('./routers/authRouter.js');
 const { bookmarkRouter } = require('./routers/bookmarkRouter.js');
 const { reminderRouter } = require('./routers/reminderRouter.js');

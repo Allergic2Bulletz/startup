@@ -1,7 +1,7 @@
 const express = require('express');
 const { StatusCodes } = require('../utilities/network.js');
 const authRouter = express.Router();
-const uuid = require('uuid');
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 
 const users = {}; // In-memory user store (should be replaced with a database in production)
@@ -85,7 +85,7 @@ authRouter.post('/register', async (req, res) => {
 
     const bcryptpassword = await bcrypt.hash(password, 10);
     users[email] = { password: bcryptpassword };
-    tokens[email] = new authToken(uuid.v4());
+    tokens[email] = new authToken(crypto.randomUUID());
     createAuthCookies(res, email, tokens[email].token);
     return res.status(StatusCodes.CREATED).send({ msg: 'User registered successfully' });
 });
@@ -106,7 +106,7 @@ authRouter.post('/login', async (req, res) => {
         return res.status(StatusCodes.UNAUTHORIZED).send({ error: 'Invalid email or password' });
     }
 
-    tokens[email] = new authToken(uuid.v4());
+    tokens[email] = new authToken(crypto.randomUUID());
     createAuthCookies(res, email, tokens[email].token);
     return res.status(StatusCodes.OK).send({ msg: 'User logged in successfully' });
 });
