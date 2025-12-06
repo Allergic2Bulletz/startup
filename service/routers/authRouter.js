@@ -111,7 +111,7 @@ authRouter.post('/login', async (req, res) => {
     return res.status(StatusCodes.OK).send({ msg: 'User logged in successfully' });
 });
 
-authRouter.delete('/logout', (req, res) => {
+authRouter.delete('/logout', authenticate, (req, res) => {
     const token = req.cookies.auth_token;
     if (token) {
         for (const email in tokens) {
