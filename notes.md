@@ -96,6 +96,34 @@ This use of spread operators will overwrite shared values from left to right. Yo
 
 I made an important change to the deployment script. `cp -r service/routers build/` will recursively go through the routers folder and copy everything into a routers folder in the build folder. This is important to maintain project structure on the prod server.
 
+### Firefox Performance Issue - Connection Pooling
+
+**Issue Discovered**: Firefox shows significant unresponsiveness (2+ second delays) after periods of inactivity, while Chrome performs normally. 
+
+**Investigation Results**: 
+- Firefox network profiling revealed 2-second delays in "After DNS Request" phase for `/api/bookmarks` and `/api/reminders` calls
+- Pattern: Page idle for ~1 minute → next interactions have 2s delay → subsequent interactions are fast (~3ms)
+- Root cause: HTTP keep-alive connection timeout causing Firefox to establish new TCP connections
+
+**Technical Explanation**:
+1. Initial page load: Fast responses using established connections
+2. After ~1 minute idle: Server closes idle connections (HTTP keep-alive timeout)  
+3. Next interaction: Firefox must establish new connections → 2s delay
+4. Subsequent calls: Use fresh connection pool → fast responses
+
+**Browser Differences**:
+- Chrome: More lenient connection pooling, reuses connections longer
+- Firefox: More aggressive about closing idle connections for security/memory
+
+**Solutions**:
+1. **Server-side**: Increase keep-alive timeout in Express server (`server.keepAliveTimeout = 120000`)
+2. **Client-side**: Add periodic "ping" every 45 seconds to keep connections warm
+3. **Fetch optimization**: Add keep-alive headers to requests
+4. **Dev server**: Configure Vite proxy timeouts
+5. **Concurrent requests**: Fetch `/api/bookmarks` and `/api/reminders` simultaneously to reduce user-perceived delay
+
+**Quick Fix Implemented**: Added keep-alive ping in dashboard component to prevent connection timeouts.
+
 ## Websocket
 Sync rule:
 Every user client auto syncs on start
