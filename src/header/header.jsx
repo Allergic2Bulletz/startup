@@ -18,13 +18,15 @@ function Header(props) {
   const handleLogout = async () => {
     const response = await fetch('api/auth/logout', { method: 'DELETE' });
     if (response.ok) {
-      props.onLogout();
-      navigate('/');
-    } else {
-      // Handle error if needed
-      showNotification('Logout failed', 'error', true);
-      console.error('Logout failed');
+      // Successfully logged out
+      console.log('User logged out successfully');
+    } else if (!response.status === 401) {
+      // Handle error if it's something besides an unauthorized request
+      showNotification('Logout failed: ' + response.statusText, 'error', true);
+      console.error('Logout failed' + response.statusText);
     }
+    props.onLogout();
+    navigate('/');
   }
   // TODO - the h1 logo should not stretch across the entire branding div, only be as wide as the text itself
   return (
