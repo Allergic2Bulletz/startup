@@ -28,6 +28,7 @@ export default function Dashboard({ currentAuthState }) {
             setCurrentTime(new Date());
         }, 1000);
 
+        // todo - this will be replaced with websocket for users later
         const reminderTimer = setInterval(() => {
             checkReminders();
         }, 1000);
