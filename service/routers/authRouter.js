@@ -38,13 +38,21 @@ function createAuthCookies(res, email, token) {
 function verifySession(req) {
     const token = req.cookies.auth_token;
     // Check all users' token arrays for a valid token
-    for (const email in tokens) {
-        if (Array.isArray(tokens[email])) {
-            const validToken = tokens[email].find(authToken => 
-                authToken.token === token && authToken.expire > Date.now()
-            );
-            if (validToken) return true;
-        }
+    // for (const email in tokens) {
+    //     if (Array.isArray(tokens[email])) {
+    //         const validToken = tokens[email].find(authToken => 
+    //             authToken.token === token && authToken.expire > Date.now()
+    //         );
+    //         if (validToken) return true;
+    //     }
+    // }
+    const userTokens = tokens[req.cookies.userName];
+    if (Array.isArray(userTokens)) {
+        return userTokens.some(authToken => {
+            if (authToken.token === token && authToken.expire > Date.now()) {
+                return true;
+            }
+        });
     }
     return false;
 }
