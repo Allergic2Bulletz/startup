@@ -17,12 +17,13 @@ export default function App() {
     const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
     const [authState, setAuthState] = React.useState(currentAuthState);
     
-    // Preferences management
-    const { preferences, updatePreferences, resetPreferences } = usePreferences();
-    
     // Notification management
     const { notification, showNotification, hideNotification } = useNotifications();
 
+    // Preferences management
+    const { preferences, updatePreferences, resetPreferences } = usePreferences( currentAuthState, showNotification );
+    
+    
     // Fetch username on mount
     React.useEffect(() => {
         const fetchAuthState = async () => {
