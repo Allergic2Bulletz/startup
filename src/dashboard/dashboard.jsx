@@ -75,8 +75,8 @@ export default function Dashboard({ currentAuthState }) {
 
     const handleSaveBookmark = (bookmarkData) => {
         console.log('Saving bookmark:', bookmarkData);
-        const {name, timezone} = bookmarkData;
-        addBookmark({ name, timezone });
+        // const {title, timezone} = bookmarkData;
+        addBookmark(bookmarkData);
     };
 
     const handleSaveReminder = (reminderData) => {
