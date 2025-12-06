@@ -16,10 +16,10 @@ const AddBookmarkModal = ({ isOpen, onClose, onSave }) => {
   };
 
   const handleInputChange = (e) => {
-    const { title, value } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [title]: value
+      [name]: value
     }));
   };
 
@@ -44,10 +44,10 @@ const AddBookmarkModal = ({ isOpen, onClose, onSave }) => {
       <h3>Add New Bookmark</h3>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="bookmark-name">Bookmark Name:</label>
+          <label htmlFor="bookmark-title">Bookmark Title:</label>
           <input
             type="text"
-            id="bookmark-name"
+            id="bookmark-title"
             name="title"
             value={formData.title}
             onChange={handleInputChange}
