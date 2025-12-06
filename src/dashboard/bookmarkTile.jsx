@@ -11,7 +11,7 @@ const BookmarkTile = React.memo(function BookmarkTile({ bookmark, referenceTime,
     return (
         <div className={`${styles.tile} ${forecasting ? styles.forecastMode : ''}`}>
             <div className={styles.tileHeader}>
-                <h3>{bookmark.name}</h3>
+                <h3>{bookmark.title}</h3>
                 <div className={styles.tileControls}>
                     <button className={styles.exportBtn} onClick={onExport}>⧉</button>
                     <button className={styles.moveUpBtn} onClick={onMoveUp}>↑</button>

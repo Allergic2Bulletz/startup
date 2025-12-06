@@ -4,22 +4,22 @@ import modalStyles from './modals.module.css';
 
 const AddBookmarkModal = ({ isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
-    name: '',
+    title: '',
     timezone: 'America/New_York'
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(formData);
-    setFormData({ name: '', timezone: 'America/New_York' });
+    setFormData({ title: '', timezone: 'America/New_York' });
     onClose();
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { title, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [title]: value
     }));
   };
 
@@ -27,9 +27,9 @@ const AddBookmarkModal = ({ isOpen, onClose, onSave }) => {
     const jsonStr = navigator.clipboard.readText().then(text => {
       try {
         const data = JSON.parse(text);
-        if (data.name && data.timezone) {
+        if (data.title && data.timezone) {
           setFormData({
-            name: data.name,
+            title: data.title,
             timezone: data.timezone
           });
         }
@@ -48,8 +48,8 @@ const AddBookmarkModal = ({ isOpen, onClose, onSave }) => {
           <input
             type="text"
             id="bookmark-name"
-            name="name"
-            value={formData.name}
+            name="title"
+            value={formData.title}
             onChange={handleInputChange}
             required
             placeholder="e.g., Mom (Chicago)"

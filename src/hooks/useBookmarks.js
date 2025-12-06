@@ -64,7 +64,7 @@ const useBookmarks = ({ currentAuthState }) => {
         
         const newBookmark = {
             id: crypto.randomUUID(),
-            name: bookmarkData.name,
+            title: bookmarkData.title,
             timezone: bookmarkData.timezone,
             deleted: false,
             order: maxOrder + 1,
@@ -129,7 +129,7 @@ const useBookmarks = ({ currentAuthState }) => {
         const active = bookmarks.filter(b => !b.deleted)
         const bookmark = active.find(b => b.id === id && !b.deleted);
         if (!bookmark) return null;
-        const dataStr = JSON.stringify({name: bookmark.name, timezone: bookmark.timezone}, null, 2);
+        const dataStr = JSON.stringify({title: bookmark.title, timezone: bookmark.timezone}, null, 2);
         navigator.clipboard.writeText(dataStr);
         // TODO Push notification banner w/ message "Exported to clipboard"
     }, [bookmarks]);
