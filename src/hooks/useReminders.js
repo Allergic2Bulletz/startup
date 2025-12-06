@@ -1,13 +1,16 @@
 import { useState, useEffect, useCallback, useMemo, use } from 'react';
 import { getDatetimeForTimezone } from '../utils/timeUtils.js';
+import { AuthState } from '../hooks/useAuthState.js';
+import { useNotificationContext } from './useNotifications.js';
 
 const useReminders = ({ currentAuthState }) => {
     const [reminders, setReminders] = useState([]);
+    const { showNotification } = useNotificationContext();
 
     // Load reminders from localStorage on mount
     useEffect(() => {
         const saved = localStorage.getItem('reminders');
-        if (saved) {
+        if (saved && currentAuthState !== AuthState.Authenticated) {
             try {
                 const parsed = JSON.parse(saved);
                 setReminders(parsed);
@@ -15,12 +18,34 @@ const useReminders = ({ currentAuthState }) => {
                 console.error('Failed to load reminders from localStorage:', error);
             }
         }
+
+        const fetchReminders = async () => {
+            try {
+                const response = await fetch('/api/reminders');
+                if (!response.ok) {
+                    console.error('Failed to fetch reminders');
+                    showNotification('Failed to fetch reminders', 'error', true);
+                    return;
+                }
+                const data = await response.json();
+                setReminders(data || []);
+            } catch (error) {
+                console.error('Error fetching reminders:', error);
+                showNotification('Error fetching reminders', 'error', true);
+            }
+        };
+
+        if (currentAuthState === AuthState.Authenticated) {
+            fetchReminders();
+        }
     }, []);
 
     // Auto-save to localStorage when reminders change
     useEffect(() => {
-        localStorage.setItem('reminders', JSON.stringify(reminders));
-    }, [reminders]);
+        if (currentAuthState !== AuthState.Authenticated) {
+            localStorage.setItem('reminders', JSON.stringify(reminders));
+        }
+    }, [reminders, currentAuthState]);
 
     // Get active (non-deleted) reminders, sorted by order index
     const activeReminders = useMemo(() => 
@@ -121,6 +146,105 @@ const useReminders = ({ currentAuthState }) => {
             }
         });
     }, [reminders, updateReminder]);
+
+    const createRemote = async (reminder) => {
+        try {
+            const response = await fetch('/api/reminders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reminder)
+            });
+            if (!response.ok) {
+                console.error('Failed to create remote reminder');
+                showNotification('Failed to create remote reminder', 'error', true);
+                return null;
+            }
+            const newReminder = await response.json();
+            setReminders(prev => [...prev, newReminder]);
+            return;
+        } catch (error) {
+            console.error('Error creating remote reminder:', error);
+            showNotification('Error creating remote reminder', 'error', true);
+            return null;
+        }
+    };
+
+    const updateRemote = async (id, changes) => {
+        const response = await fetch('/api/reminders', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, changes })
+        });
+        if (!response.ok) {
+            console.error('Failed to update reminder');
+            showNotification('Failed to update reminder', 'error', true);
+            return;
+        }
+        const updatedReminder = await response.json();
+        setReminders(prev => prev.map(reminder => reminder.id === id ? updatedReminder : reminder));
+    }
+
+    const deleteRemote = async (id) => {
+        const response = await fetch('/api/reminders', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+        });
+        if (!response.ok) {
+            console.error('Failed to delete reminder');
+            showNotification('Failed to delete reminder', 'error', true);
+            return;
+        }
+        const deletedReminder = await response.json();
+        setReminders(prev => prev.map(reminder => reminder.id === id ? deletedReminder : reminder));
+    }
+
+    const moveRemote = async (id, direction) => {
+        const response = await fetch('/api/reminders/reorder', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, direction })
+        });
+        if (response.status === 409) {
+            return; // no-op on conflict
+        }
+        if (!response.ok) {
+            console.error('Failed to move reminder');
+            showNotification('Failed to move reminder', 'error', true);
+            return;
+        }
+        // note - response contains the full updated list of reminders
+        const updatedReminders = await response.json();
+        setReminders(prev => prev.map(reminder => {
+            const updated = updatedReminders.updated.find(b => b.id === reminder.id);
+            return updated ? updated : reminder;
+        }));
+    }
+
+    // todo - this will be replaced with websocket later
+    const checkRemoteReminders = () => {
+        const now = new Date();
+        const activeReminders = reminders.filter(r => !r.deleted);
+        
+        activeReminders.forEach(reminder => {
+            const reminderDate = new Date(reminder.datetime);
+            if (now >= reminderDate && !reminder.expired) {
+                updateRemote(reminder.id, { expired: true });
+            }
+        });
+    };
+
+    if (currentAuthState === AuthState.Authenticated) {
+        return {
+            reminders: activeReminders,
+            addReminder: createRemote,
+            updateReminder: updateRemote,
+            deleteReminder: deleteRemote,
+            moveReminder: moveRemote,
+            exportReminder,
+            checkReminders: checkRemoteReminders
+        };
+    }
 
     return {
         reminders: activeReminders,
