@@ -45,6 +45,16 @@ export default function App() {
         };
 
         fetchAuthState();
+
+        const keepAlive = setInterval(async () => {
+            try {
+                await fetch('api/ping', { method: 'HEAD'})
+            } catch (error) {
+                // Ignore errors in keep-alive
+            }
+        }, 45 * 1000); // every 45 seconds
+
+        return () => clearInterval(keepAlive);
     }, []);
 
     return (
