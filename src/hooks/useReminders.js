@@ -38,7 +38,7 @@ const useReminders = ({ currentAuthState }) => {
         if (currentAuthState === AuthState.Authenticated) {
             fetchReminders();
         }
-    }, []);
+    }, [currentAuthState]);
 
     // Auto-save to localStorage when reminders change
     useEffect(() => {

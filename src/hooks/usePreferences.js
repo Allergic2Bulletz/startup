@@ -13,7 +13,7 @@ const defaultPreferences = {
 
 const usePreferences = ( currentAuthState, showNotification ) => {
     const [preferences, setPreferences] = useState(defaultPreferences);
-    
+
     // Load preferences from localStorage on mount
     useEffect(() => {
         const saved = localStorage.getItem('preferences');
@@ -40,7 +40,9 @@ const usePreferences = ( currentAuthState, showNotification ) => {
             }
         };
 
-        fetchPreferences();
+        if (currentAuthState === AuthState.Authenticated) {
+            fetchPreferences();
+        }
     }, [currentAuthState]);
 
     // Auto-save to localStorage when preferences change
