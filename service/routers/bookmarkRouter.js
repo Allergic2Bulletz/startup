@@ -25,7 +25,7 @@ bookmarkRouter.post('/', authenticate, (req, res) => {
 // Read
 bookmarkRouter.get('/', authenticate, (req, res) => {
     const userBookmarks = Object.values(bookmarks).filter(b => b.userName === req.cookies.userName && !b.deleted);
-    res.status(StatusCodes.OK).send(userBookmarks);
+    res.status(StatusCodes.OK).send(userBookmarks || []);
 });
 
 // Update
