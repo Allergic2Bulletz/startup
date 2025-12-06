@@ -13,12 +13,12 @@ bookmarkRouter.post('/', authenticate, (req, res) => {
             .filter(b => !b.deleted && b.userName === req.cookies.userName)
             .reduce((max, b) => Math.max(max, b.order || 0), -1);
     
-    const {name, timezone } = req.body;
-    if (!name || !timezone) {
+    const {title, timezone } = req.body;
+    if (!title || !timezone) {
         return res.status(StatusCodes.BAD_REQUEST).send({ msg: 'Missing required fields' });
     }
     const id = crypto.randomUUID();
-    bookmarks[id] = { userName: req.cookies.userName, id, name, timezone, deleted: false, order: maxOrder + 1, modifiedAt: new Date().toISOString() };
+    bookmarks[id] = { userName: req.cookies.userName, id, title, timezone, deleted: false, order: maxOrder + 1, modifiedAt: new Date().toISOString() };
     res.status(StatusCodes.CREATED).send(bookmarks[id]);
 });
 
