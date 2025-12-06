@@ -32,10 +32,17 @@ apiRouter.get('/secret', authenticate, (req, res) => {
   res.send({ msg: 'This is a secret message for authenticated users only!' });
 });
 
+apiRouter.get('/ping', (_req, res) => {
+  res.send({ msg: 'pong' });
+});
+
 // app.get('/{*splat}', (_req, res) => {
 //   res.send({ msg: 'Simon service' });
 // });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+
+server.keepAliveTimeout = 120000;
+server.headersTimeout = 125000;
