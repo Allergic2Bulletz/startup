@@ -19,7 +19,7 @@ const devName = 'dev'
 const devPassword = 'password'
 const devBcryptPassword = bcrypt.hashSync(devPassword, 10);
 users[devName] = { password: devBcryptPassword };
-tokens[devName] = new authToken('70a92b36-8619-4e68-b41a-ab77f36290ad');
+// tokens[devName] = new authToken('70a92b36-8619-4e68-b41a-ab77f36290ad');
 
 
 function createAuthCookies(res, email, token) {
@@ -37,20 +37,30 @@ function createAuthCookies(res, email, token) {
 
 function verifySession(req) {
     const token = req.cookies.auth_token;
-    return Object.values(tokens).some(authToken => authToken.token === token && authToken.expire > Date.now());
+    // Check all users' token arrays for a valid token
+    for (const email in tokens) {
+        if (Array.isArray(tokens[email])) {
+            const validToken = tokens[email].find(authToken => 
+                authToken.token === token && authToken.expire > Date.now()
+            );
+            if (validToken) return true;
+        }
+    }
+    return false;
 }
 
 function getEmailByToken(token) {
     for (const email in tokens) {
-        if (tokens[email].token === token) {
-            return email;
+        if (Array.isArray(tokens[email])) {
+            const foundToken = tokens[email].find(authToken => authToken.token === token);
+            if (foundToken) return email;
         }
     }
     return null;
 }
 
 function authenticate(req, res, next) {
-    if (req.cookies.auth_token && verifySession(req)) {
+    if (req.cookies.auth_token && req.cookies.userName && verifySession(req)) {
         next();
     } else {
         res.status(StatusCodes.UNAUTHORIZED).send({ msg: 'Not authenticated' });
@@ -85,8 +95,15 @@ authRouter.post('/register', async (req, res) => {
 
     const bcryptpassword = await bcrypt.hash(password, 10);
     users[email] = { password: bcryptpassword };
-    tokens[email] = new authToken(crypto.randomUUID());
-    createAuthCookies(res, email, tokens[email].token);
+    
+    // Initialize token array for new user or add to existing array
+    if (!tokens[email]) {
+        tokens[email] = [];
+    }
+    const newToken = new authToken(crypto.randomUUID());
+    tokens[email].push(newToken);
+    
+    createAuthCookies(res, email, newToken.token);
     return res.status(StatusCodes.CREATED).send({ msg: 'User registered successfully' });
 });
 
@@ -106,22 +123,45 @@ authRouter.post('/login', async (req, res) => {
         return res.status(StatusCodes.UNAUTHORIZED).send({ error: 'Invalid email or password' });
     }
 
-    tokens[email] = new authToken(crypto.randomUUID());
-    createAuthCookies(res, email, tokens[email].token);
+    // Initialize token array for user if it doesn't exist
+    if (!tokens[email]) {
+        tokens[email] = [];
+    }
+    
+    // Add new session token to user's token array
+    const newToken = new authToken(crypto.randomUUID());
+    tokens[email].push(newToken);
+    
+    createAuthCookies(res, email, newToken.token);
     return res.status(StatusCodes.OK).send({ msg: 'User logged in successfully' });
 });
 
 authRouter.delete('/logout', authenticate, (req, res) => {
     const token = req.cookies.auth_token;
     if (token) {
-        for (const email in tokens) {
-            if (tokens[email].token === token) {
-                delete tokens[email];
-                break;
-            }
+        // Find and remove the specific token from the user's token array
+        // for (const email in tokens) {
+        //     if (Array.isArray(tokens[email])) {
+        //         const tokenIndex = tokens[email].findIndex(authToken => authToken.token === token);
+        //         if (tokenIndex !== -1) {
+        //             tokens[email].splice(tokenIndex, 1);
+        //             // Clean up empty arrays
+        //             if (tokens[email].length === 0) {
+        //                 delete tokens[email];
+        //             }
+        //             break;
+        //         }
+        //     }
+        // }
+        const userTokens = tokens[req.cookies.userName];
+        if (Array.isArray(userTokens)) {
+            tokens[req.cookies.userName] = userTokens.filter(authToken => authToken.token !== token);
         }
-    }
-    else {
+        // Clean up empty arrays
+        if (tokens[req.cookies.userName].length === 0) {
+            delete tokens[req.cookies.userName];
+        }
+    } else {
         return res.status(StatusCodes.BAD_REQUEST).send({ error: 'No active session' });
     }
     
