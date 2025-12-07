@@ -85,11 +85,49 @@ function markBookmarkDeleted(email, id) {
 
 
 // Reminder Operations
+function getAllReminders(email) {
+    return reminderCollection.find({email: email, deleted: false}, {sort: {order: 1}}).toArray();
+}
 
+function getReminder(email, id) {
+    return reminderCollection.findOne({ email: email, id: id, deleted: false });
+}
+
+function getReminderMaxOrder(email) {
+    const query = { email: email, deleted: false };
+    const options = { sort: { order: -1 }, projection: { order: 1 } };
+    return reminderCollection.findOne(query, options);
+}
+
+function addReminder(reminder) {
+    return reminderCollection.insertOne(reminder);
+}
+
+function updateReminder(email, id, changes) {
+    return reminderCollection.updateOne({ email: email, id: id, deleted: false }, { $set: changes });
+}
+
+function deleteReminder(email, id) {
+    return reminderCollection.deleteOne({ email: email, id: id });
+}
+
+function markReminderDeleted(email, id) {
+    return reminderCollection.updateOne({ email: email, id: id }, { $set: { deleted: true, modifiedAt: new Date().toISOString() } });
+}
 
 
 // Preference Operations
+function getPreferences(email) {
+    return prefCollection.findOne({ email: email });
+}
 
+function updatePreferences(email, preferences) {
+    return prefCollection.updateOne({ email: email }, { $set: preferences }, { upsert: true });
+}
+
+function deletePreferences(email) {
+    return prefCollection.deleteOne({ email: email });
+}
 
 
 
@@ -108,5 +146,15 @@ module.exports = {
     addBookmark,
     updateBookmark,
     deleteBookmark,
-    markBookmarkDeleted
+    markBookmarkDeleted,
+    getAllReminders,
+    getReminder,
+    getReminderMaxOrder,
+    addReminder,
+    updateReminder,
+    deleteReminder,
+    markReminderDeleted,
+    getPreferences,
+    updatePreferences,
+    deletePreferences
 };
