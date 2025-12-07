@@ -23,7 +23,7 @@ async function testConnection() {
 testConnection();
 
 // User Operations
-function getUser() {
+function getUser(email) {
     return userCollection.findOne({email: email});
 }
 
