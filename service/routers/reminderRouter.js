@@ -21,7 +21,7 @@ reminderRouter.post('/', authenticate, async (req, res) => {
     const id = crypto.randomUUID();
     const finalDateTime = getDatetimeForTimezone(datetime, timezone);
     
-    const reminder = { userName: req.cookies.userName, id, title, datetime: finalDateTime, timezone, deleted: false, order: maxOrder + 1, modifiedAt: new Date().toISOString() };
+    const reminder = { userName: req.cookies.userName, id, title, datetime: finalDateTime, timezone, deleted: false, index: maxOrder + 1, modifiedAt: new Date().toISOString() };
     const result = await dbOps.addReminder(reminder);
 
     if (result.insertedCount !== 1) {
