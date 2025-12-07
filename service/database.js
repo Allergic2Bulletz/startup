@@ -132,7 +132,6 @@ function deletePreferences(email) {
 
 
 module.exports = { 
-    db, 
     getUser, 
     getUserByToken, 
     addUser, 
