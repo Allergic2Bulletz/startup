@@ -51,8 +51,53 @@ function removeToken(token) {
     return authCollection.deleteOne({token: token});
 }
 
+// Bookmark Operations
+function getAllBookmarks(email) {
+    return bookmarkCollection.find({email: email, deleted: false}, {sort: {order: 1}}).toArray();
+}
+
+function getBookmark(email, id) {
+    return bookmarkCollection.findOne({ email: email, id: id, deleted: false });
+}
+
+function getMaxOrder(email) {
+    const query = { email: email, deleted: false };
+    const options = { sort: { order: -1 }, projection: { order: 1 } };
+    return bookmarkCollection.findOne(query, options);
+}
+
+function addBookmark(bookmark) {
+    return bookmarkCollection.insertOne(bookmark);
+}
+
+function updateBookmark(email, id, changes) {
+    return bookmarkCollection.updateOne({ email: email, id: id, deleted: false }, { $set: changes });
+}
+
+function deleteBookmark(email, id) {
+    return bookmarkCollection.deleteOne({ email: email, id: id });
+}
+
+function markBookmarkDeleted(email, id) {
+    return bookmarkCollection.updateOne({ email: email, id: id }, { $set: { deleted: true, modifiedAt: new Date().toISOString() } });
+}
 
 
 
-
-module.exports = { db, getUser, getUserByToken, addUser, addToken, getTokens, getActiveSession, removeToken };
+module.exports = { 
+    db, 
+    getUser, 
+    getUserByToken, 
+    addUser, 
+    addToken, 
+    getTokens, 
+    getActiveSession, 
+    removeToken,
+    getAllBookmarks,
+    getBookmark,
+    getMaxOrder,
+    addBookmark,
+    updateBookmark,
+    deleteBookmark,
+    markBookmarkDeleted
+};
