@@ -51,6 +51,7 @@ function removeToken(token) {
     return authCollection.deleteOne({token: token});
 }
 
+
 // Bookmark Operations
 function getAllBookmarks(email) {
     return bookmarkCollection.find({email: email, deleted: false}, {sort: {order: 1}}).toArray();
@@ -60,7 +61,7 @@ function getBookmark(email, id) {
     return bookmarkCollection.findOne({ email: email, id: id, deleted: false });
 }
 
-function getMaxOrder(email) {
+function getBookmarkMaxOrder(email) {
     const query = { email: email, deleted: false };
     const options = { sort: { order: -1 }, projection: { order: 1 } };
     return bookmarkCollection.findOne(query, options);
@@ -83,6 +84,14 @@ function markBookmarkDeleted(email, id) {
 }
 
 
+// Reminder Operations
+
+
+
+// Preference Operations
+
+
+
 
 module.exports = { 
     db, 
@@ -95,7 +104,7 @@ module.exports = {
     removeToken,
     getAllBookmarks,
     getBookmark,
-    getMaxOrder,
+    getBookmarkMaxOrder,
     addBookmark,
     updateBookmark,
     deleteBookmark,
