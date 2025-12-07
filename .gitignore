@@ -16,3 +16,6 @@ node_modules/
 
 # Ignore my todos
 todo.md
+
+# Ignore secure files
+dbConfig.json
