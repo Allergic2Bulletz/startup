@@ -181,10 +181,17 @@ const useBookmarks = ({ currentAuthState }) => {
     }
 
     const moveRemote = async (index, direction) => {
-        const response = await fetch('/api/bookmarks/reorder', {    
+        // Find BOTH bookmarks being swapped and send to server
+        const indexMod = direction === 'up' ? -1 : 1;
+        const currArrayIndex = activeBookmarks.findIndex(b => b.index === index);
+        if (currArrayIndex + indexMod < 0 || currArrayIndex + indexMod >= activeBookmarks.length) return;
+        const current = activeBookmarks[currArrayIndex];
+        const target = activeBookmarks[currArrayIndex + indexMod];
+
+        const response = await fetch('/api/bookmarks/swap', {    
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ index, direction })
+            body: JSON.stringify({ from: current.index, to: target.index })
         });
         if (response.status === 409) {
             return; // no-op on conflict
@@ -194,11 +201,20 @@ const useBookmarks = ({ currentAuthState }) => {
             showNotification('Failed to move bookmark', 'error', true);
             return;
         }
-        // note - response contains the changes to both updated bookmarks
-        const updatedBookmarksChanges = await response.json();
+
+        // note - response contains the timestamp of execution, we calculate the rest
+        const data = (await response.json());
+
+        const tempIndex = current.index;
+        current.index = target.index;
+        target.index = tempIndex;
+        current.modifiedAt = data.modifiedAt;
+        target.modifiedAt = data.modifiedAt;
+
+        const updatedBookmarks = [current, target];
         setBookmarks(prev => prev.map(bookmark => {
-            const updates = updatedBookmarksChanges.updated.find(b => b.id === bookmark.id);
-            return updates ? { ...bookmark, ...updates } : bookmark;
+            const updated = updatedBookmarks.find(b => b.id === bookmark.id);
+            return updated ? updated : bookmark;
         }));
     }
 

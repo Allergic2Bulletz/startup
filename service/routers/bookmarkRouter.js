@@ -80,10 +80,10 @@ bookmarkRouter.delete('/', authenticate, async (req, res) => {
     res.status(StatusCodes.OK).send({ id });
 });
 
-// Reorder
+// Reorder - Aggregation-based implementation
 bookmarkRouter.put('/reorder', authenticate, async (req, res) => {
     const startTime = Date.now();
-    console.log('🔄 Reorder function started');
+    console.log('🔄 Reorder function started (Aggregation method)');
     
     const { index, direction } = req.body;
     if (index === undefined || index === null || !direction) {
@@ -92,11 +92,45 @@ bookmarkRouter.put('/reorder', authenticate, async (req, res) => {
     
     console.log(`📥 Input: index=${index}, direction=${direction}`);
     
-    // 1. Determine which index to sort bookmarks in based on direction
-    // 2. Fetch two bookmarks: the current one and the next one in the specified direction
-    // 3. Swap their index values
-    // 4. Update both bookmarks in the database
+    try {
+        // Use the aggregation-based swap function
+        const aggregationStart = Date.now();
+        const result = await dbOps.swapBookmarkIndicesAggregation(req.cookies.userName, index, direction);
+        const aggregationTime = Date.now() - aggregationStart;
+        
+        const totalTime = Date.now() - startTime;
+        console.log(`✅ Aggregation-based reorder completed in ${totalTime}ms (aggregation: ${aggregationTime}ms)`);
+        
+        // Send the updated bookmarks back
+        res.status(StatusCodes.OK).send(result);
+        
+    } catch (error) {
+        const totalTime = Date.now() - startTime;
+        console.log(`❌ Aggregation-based reorder failed in ${totalTime}ms:`, error.message);
+        
+        if (error.message.includes('not enough bookmarks')) {
+            return res.status(StatusCodes.CONFLICT).send({ msg: 'No change in order' });
+        }
+        
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ 
+            msg: 'Failed to reorder bookmarks', 
+            error: error.message 
+        });
+    }
+});
 
+// Reorder - Original implementation (keep as backup/comparison)
+bookmarkRouter.put('/reorder-legacy', authenticate, async (req, res) => {
+    const startTime = Date.now();
+    console.log('🔄 Legacy reorder function started');
+    
+    const { index, direction } = req.body;
+    if (index === undefined || index === null || !direction) {
+        return res.status(StatusCodes.BAD_REQUEST).send({ msg: 'Missing required fields' });
+    }
+    
+    console.log(`📥 Input: index=${index}, direction=${direction}`);
+    
     const sortDirection = direction === 'up' ? { index: -1 } : { index: 1 };
     console.log('🎯 Sort direction calculated:', sortDirection);
 
@@ -136,10 +170,25 @@ bookmarkRouter.put('/reorder', authenticate, async (req, res) => {
     }
 
     const totalTime = Date.now() - startTime;
-    console.log(`✅ Reorder completed successfully in ${totalTime}ms (fetch: ${dbFetchTime}ms, update: ${dbUpdateTime}ms)`);
+    console.log(`✅ Legacy reorder completed successfully in ${totalTime}ms (fetch: ${dbFetchTime}ms, update: ${dbUpdateTime}ms)`);
 
     // Send both bookmarks back
     res.status(StatusCodes.OK).send({ updated: [current, target] });
+});
+
+// Fast Reorder
+bookmarkRouter.put('/swap', authenticate, async (req, res) => {
+    const { from, to } = req.body;
+    if (from === undefined || from === null || to === undefined || to === null) {
+        return res.status(StatusCodes.BAD_REQUEST).send({ msg: 'Missing required fields' });
+    }
+
+    const {results, modifiedAt} = await dbOps.swapBookmarks(req.cookies.userName, from, to);
+    if (results.modifiedCount !== 2) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ msg: 'Failed to swap bookmarks' });
+    }
+
+    res.status(StatusCodes.OK).send({ updated: modifiedAt });
 });
 
 module.exports = {
