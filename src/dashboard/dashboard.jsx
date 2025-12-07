@@ -132,8 +132,8 @@ export default function Dashboard({ currentAuthState }) {
                         reminder={reminder}
                         onUpdate={(changes) => updateReminder(reminder.id, changes)}
                         onDelete={() => deleteReminder(reminder.id)}
-                        onMoveUp={() => moveReminder(reminder.id, 'up')}
-                        onMoveDown={() => moveReminder(reminder.id, 'down')}
+                        onMoveUp={() => moveReminder(reminder.index, 'up')}
+                        onMoveDown={() => moveReminder(reminder.index, 'down')}
                         onExport={() => exportReminder(reminder.id)}
                     />
                 ))}
