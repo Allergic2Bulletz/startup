@@ -259,8 +259,8 @@ async function swapBookmarks(userName, from, to) {
 
 
 // Reminder Operations
-function getAllReminders(userName) {
-    return reminderCollection.find({userName: userName, deleted: false}, {sort: {order: 1}}).toArray();
+async function getAllReminders(userName) {
+    return await reminderCollection.find({userName: userName, deleted: false}, {sort: {order: 1}}).toArray();
 }
 
 function getReminder(userName, id) {
