@@ -137,8 +137,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Stores data in MongoDB** - I did not complete this part of the deliverable.
-- [ ] **Stores credentials in MongoDB** - I did not complete this part of the deliverable.
+- [x] **Stores data in MongoDB** - All authenticated users will have their data uploaded to / pulled from MongoDB
+- [x] **Stores credentials in MongoDB** - User credentials and authsession state are both in MongoDB.
+- Note - Using MongoDB introduces a minimum ~60ms I/O delay. Because I chose to store session info on MongoDB, that means 120ms minimum for even the most simple of operations on an authenticated endpoint. Blegh.
 
 ## 🚀 WebSocket deliverable
 
