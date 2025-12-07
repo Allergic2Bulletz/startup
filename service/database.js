@@ -54,7 +54,7 @@ function removeToken(token) {
 
 // Bookmark Operations
 async function getAllBookmarks(userName) {
-    return await bookmarkCollection.find({userName: userName, deleted: false}, {sort: {order: 1}}).toArray();
+    return await bookmarkCollection.find({userName: userName, deleted: false}, {sort: {index: 1}}).toArray();
 }
 
 function getBookmark(userName, id) {
@@ -63,7 +63,7 @@ function getBookmark(userName, id) {
 
 function getBookmarkMaxOrder(userName) {
     const query = { userName: userName, deleted: false };
-    const options = { sort: { order: -1 }, projection: { order: 1 } };
+    const options = { sort: { index: -1 }, projection: { index: 1 } };
     return bookmarkCollection.findOne(query, options);
 }
 
@@ -81,6 +81,15 @@ function deleteBookmark(userName, id) {
 
 function markBookmarkDeleted(userName, id) {
     return bookmarkCollection.updateOne({ userName: userName, id: id }, { $set: { deleted: true, modifiedAt: new Date().toISOString() } });
+}
+
+function getBookmarksForSwap(userName, index, sortDirection) {
+    // Determine if index needs to be gte or lte based on sort direction
+    const comparisonOperator = sortDirection.index === -1 ? '$lte' : '$gte';
+    const query = { userName: userName, index: { [comparisonOperator]: index }, deleted: false };
+    // Limit results to only two entries
+    const options = { sort: sortDirection, limit: 2, projection: { id: 1, index: 1 } };
+    return bookmarkCollection.find(query, options).toArray();
 }
 
 
@@ -146,6 +155,7 @@ module.exports = {
     updateBookmark,
     deleteBookmark,
     markBookmarkDeleted,
+    getBookmarksForSwap,
     getAllReminders,
     getReminder,
     getReminderMaxOrder,
@@ -153,6 +163,7 @@ module.exports = {
     updateReminder,
     deleteReminder,
     markReminderDeleted,
+
     getPreferences,
     updatePreferences,
     deletePreferences

@@ -111,8 +111,8 @@ export default function Dashboard({ currentAuthState }) {
                             forecasting={forecasting}
                             onUpdate={(changes) => updateBookmark(bookmark.id, changes)}
                             onDelete={() => deleteBookmark(bookmark.id)}
-                            onMoveUp={() => moveBookmark(bookmark.id, 'up')}
-                            onMoveDown={() => moveBookmark(bookmark.id, 'down')}
+                            onMoveUp={() => moveBookmark(bookmark.index, 'up')}
+                            onMoveDown={() => moveBookmark(bookmark.index, 'down')}
                             onExport={() => exportBookmark(bookmark.id)}
                         />
                     ))}

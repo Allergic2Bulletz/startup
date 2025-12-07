@@ -49,25 +49,25 @@ const useBookmarks = ({ currentAuthState }) => {
         }
     }, [bookmarks, currentAuthState]);
 
-    // Get active (non-deleted) bookmarks, sorted by order index
+    // Get active (non-deleted) bookmarks, sorted by index
     const activeBookmarks = useMemo(() => 
         bookmarks
             .filter(bookmark => !bookmark.deleted)
-            .sort((a, b) => a.order - b.order),
+            .sort((a, b) => a.index - b.index),
         [bookmarks]
     );
 
     const addBookmark = useCallback((bookmarkData) => {
-        const maxOrder = bookmarks
+        const maxIndex = bookmarks
             .filter(b => !b.deleted)
-            .reduce((max, b) => Math.max(max, b.order || 0), -1);
+            .reduce((max, b) => Math.max(max, b.index || 0), -1);
         
         const newBookmark = {
             id: crypto.randomUUID(),
             title: bookmarkData.title,
             timezone: bookmarkData.timezone,
             deleted: false,
-            order: maxOrder + 1,
+            index: maxIndex + 1,
             modifiedAt: new Date().toISOString()
         };
         setBookmarks(prev => [...prev, newBookmark]);
@@ -97,9 +97,9 @@ const useBookmarks = ({ currentAuthState }) => {
         ));
     }, [bookmarks]);
 
-    const moveBookmark = useCallback((id, direction) => {
-        const active = bookmarks.filter(b => !b.deleted).sort((a, b) => a.order - b.order);
-        const currentIndex = active.findIndex(b => b.id === id);
+    const moveBookmark = useCallback((index, direction) => {
+        const active = bookmarks.filter(b => !b.deleted).sort((a, b) => a.index - b.index);
+        const currentIndex = active.findIndex(b => b.index === index);
         
         if (currentIndex === -1) return;
         
@@ -109,16 +109,16 @@ const useBookmarks = ({ currentAuthState }) => {
             
         if (newIndex === currentIndex) return;
         
-        // Swap order values between current and target bookmarks
+        // Swap index values between current and target bookmarks
         const current = active[currentIndex];
         const target = active[newIndex];
         
         setBookmarks(prev => prev.map(bookmark => {
-            if (bookmark.id === current.id) {
-                return { ...bookmark, order: target.order, modifiedAt: new Date().toISOString() };
+            if (bookmark.index === current.index) {
+                return { ...bookmark, index: target.index, modifiedAt: new Date().toISOString() };
             }
-            if (bookmark.id === target.id) {
-                return { ...bookmark, order: current.order, modifiedAt: new Date().toISOString() };
+            if (bookmark.index === target.index) {
+                return { ...bookmark, index: current.index, modifiedAt: new Date().toISOString() };
             }
             return bookmark;
         }));
@@ -180,11 +180,11 @@ const useBookmarks = ({ currentAuthState }) => {
         setBookmarks(prev => prev.map(bookmark => bookmark.id === id ? deletedBookmark : bookmark));
     }
 
-    const moveRemote = async (id, direction) => {
-        const response = await fetch('/api/bookmarks/reorder', {
+    const moveRemote = async (index, direction) => {
+        const response = await fetch('/api/bookmarks/reorder', {    
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, direction })
+            body: JSON.stringify({ index, direction })
         });
         if (response.status === 409) {
             return; // no-op on conflict
@@ -194,11 +194,11 @@ const useBookmarks = ({ currentAuthState }) => {
             showNotification('Failed to move bookmark', 'error', true);
             return;
         }
-        // note - response contains the full updated list of bookmarks
-        const updatedBookmarks = await response.json();
+        // note - response contains the changes to both updated bookmarks
+        const updatedBookmarksChanges = await response.json();
         setBookmarks(prev => prev.map(bookmark => {
-            const updated = updatedBookmarks.updated.find(b => b.id === bookmark.id);
-            return updated ? updated : bookmark;
+            const updates = updatedBookmarksChanges.updated.find(b => b.id === bookmark.id);
+            return updates ? { ...bookmark, ...updates } : bookmark;
         }));
     }
 
