@@ -16,7 +16,14 @@ class authToken {
 const devName = 'dev'
 const devPassword = 'password'
 const devBcryptPassword = bcrypt.hashSync(devPassword, 10);
-users[devName] = { password: devBcryptPassword };
+async function devInit() {
+    const existingUser = await dbOps.getUser(devName);
+    if (!existingUser) {
+        await dbOps.addUser(devName, devBcryptPassword);
+        console.log(`Development user created: ${devName} / ${devPassword}`);
+    }
+}
+devInit();
 
 
 function createAuthCookies(res, email, token) {
