@@ -6,6 +6,7 @@ const { authRouter, users, authenticate } = require('./routers/authRouter.js');
 const { bookmarkRouter } = require('./routers/bookmarkRouter.js');
 const { reminderRouter } = require('./routers/reminderRouter.js');
 const { prefRouter } = require('./routers/prefRouter.js');
+const { SyncServer } = require('./wsServer.js');
 
 const app = express();
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
@@ -36,6 +37,23 @@ apiRouter.get('/ping', (_req, res) => {
   res.send({ msg: 'pong' });
 });
 
+// WebSocket test endpoints
+apiRouter.post('/ws/ping-all', authenticate, (_req, res) => {
+  const count = wsServer.pingAllClients();
+  res.send({ msg: `Pinged ${count} clients` });
+});
+
+apiRouter.post('/ws/alert', authenticate, (req, res) => {
+  const { message, userName } = req.body;
+  const count = wsServer.sendAlert(message || 'Test alert', userName);
+  res.send({ msg: `Alert sent to ${count} clients` });
+});
+
+apiRouter.get('/ws/clients', authenticate, (_req, res) => {
+  const clients = wsServer.getClientsInfo();
+  res.send({ clients });
+});
+
 // app.get('/{*splat}', (_req, res) => {
 //   res.send({ msg: 'Simon service' });
 // });
@@ -46,3 +64,9 @@ const server = app.listen(port, () => {
 
 server.keepAliveTimeout = 120000;
 server.headersTimeout = 125000;
+
+// Initialize WebSocket Server
+const wsServer = new SyncServer(server);
+
+// Export wsServer for use in other modules
+module.exports = { wsServer };
