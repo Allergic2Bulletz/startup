@@ -9,8 +9,8 @@ const bookmarkRouter = express.Router();
 
 // Create - return created bookmark as json
 bookmarkRouter.post('/', authenticate, async (req, res) => {
-    // todo - this might return an object instead of a number
-    const maxOrder = await dbOps.getBookmarkMaxOrder(req.cookies.userName);
+    const maxOrderDoc = await dbOps.getBookmarkMaxOrder(req.cookies.userName);
+    const maxOrder = maxOrderDoc ? maxOrderDoc.order : -1;
     const {title, timezone } = req.body;
     
     if (!title || !timezone) {
