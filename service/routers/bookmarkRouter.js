@@ -30,7 +30,7 @@ bookmarkRouter.post('/', authenticate, async (req, res) => {
 
 // Read
 bookmarkRouter.get('/', authenticate, async (req, res) => {
-    const userBookmarks = await dbOps.getBookmarks(req.cookies.userName);
+    const userBookmarks = await dbOps.getAllBookmarks(req.cookies.userName);
     res.status(StatusCodes.OK).send(userBookmarks || []);
 });
 
