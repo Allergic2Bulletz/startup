@@ -289,6 +289,26 @@ function markReminderDeleted(userName, id) {
     return reminderCollection.updateOne({ userName: userName, id: id }, { $set: { deleted: true, modifiedAt: new Date().toISOString() } });
 }
 
+async function swapReminders(userName, from, to) {
+    const now = new Date();
+    const bulkOps = [
+        {
+            updateOne: {
+                filter: { userName: userName, index: from, deleted: false },
+                update: { $set: { index: to, modifiedAt: now } }
+            }
+        },
+        {
+            updateOne: {
+                filter: { userName: userName, index: to, deleted: false },
+                update: { $set: { index: from, modifiedAt: now } }
+            }
+        }
+    ];
+
+    return {results: await reminderCollection.bulkWrite(bulkOps), modifiedAt: now};
+}
+
 
 // Preference Operations
 function getPreferences(userName) {
