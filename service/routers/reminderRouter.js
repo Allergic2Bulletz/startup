@@ -76,11 +76,11 @@ reminderRouter.delete('/', authenticate, async (req, res) => {
         return res.status(StatusCodes.NOT_FOUND).send({ msg: 'Reminder not found' });
     }
 
-    const result = await dbOps.markReminderDeleted(req.cookies.userName, id);
+    const { result, modifiedAt } = await dbOps.markReminderDeleted(req.cookies.userName, id);
     if (result.modifiedCount !== 1) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ msg: 'Failed to delete reminder' });
     }
-    res.status(StatusCodes.OK).send({ id });
+    res.status(StatusCodes.OK).send({ modifiedAt });
 });
 
 // Reorder

@@ -79,8 +79,9 @@ function deleteBookmark(userName, id) {
     return bookmarkCollection.deleteOne({ userName: userName, id: id });
 }
 
-function markBookmarkDeleted(userName, id) {
-    return bookmarkCollection.updateOne({ userName: userName, id: id }, { $set: { deleted: true, modifiedAt: new Date().toISOString() } });
+async function markBookmarkDeleted(userName, id) {
+    const now = new Date().toISOString();
+    return { result: await bookmarkCollection.updateOne({ userName: userName, id: id }, { $set: { deleted: true, modifiedAt: now } }), modifiedAt: now};
 }
 
 function getBookmarksForSwap(userName, index, sortDirection) {
@@ -285,8 +286,9 @@ function deleteReminder(userName, id) {
     return reminderCollection.deleteOne({ userName: userName, id: id });
 }
 
-function markReminderDeleted(userName, id) {
-    return reminderCollection.updateOne({ userName: userName, id: id }, { $set: { deleted: true, modifiedAt: new Date().toISOString() } });
+async function markReminderDeleted(userName, id) {
+    const now = new Date().toISOString();
+    return { result: await reminderCollection.updateOne({ userName: userName, id: id }, { $set: { deleted: true, modifiedAt: now } }), modifiedAt: now};
 }
 
 async function swapReminders(userName, from, to) {

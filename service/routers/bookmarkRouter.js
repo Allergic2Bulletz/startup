@@ -73,11 +73,11 @@ bookmarkRouter.delete('/', authenticate, async (req, res) => {
         return res.status(StatusCodes.NOT_FOUND).send({ msg: 'Bookmark not found' });
     }
 
-    const result = await dbOps.markBookmarkDeleted(req.cookies.userName, id);
+    const { result, modifiedAt } = await dbOps.markBookmarkDeleted(req.cookies.userName, id);
     if (result.modifiedCount !== 1) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ msg: 'Failed to delete bookmark' });
     }
-    res.status(StatusCodes.OK).send({ id });
+    res.status(StatusCodes.OK).send({ modifiedAt });
 });
 
 // Fast Reorder

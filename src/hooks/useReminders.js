@@ -195,14 +195,14 @@ const useReminders = ({ currentAuthState }) => {
             showNotification('Failed to delete reminder', 'error', true);
             return;
         }
-        const deletedReminder = await response.json();
-        setReminders(prev => prev.map(reminder => reminder.id === id ? deletedReminder : reminder));
+        const { modifiedAt } = await response.json();
+        setReminders(prev => prev.map(reminder => reminder.id === id ? { ...reminder, deleted: true, modifiedAt } : reminder));
     }
 
     const moveRemote = async (index, direction) => {
         // Find BOTH reminders being swapped and send to server
         const indexMod = direction === 'up' ? -1 : 1;
-        const currArrayIndex = activeReminders.findIndex(r => r.order === index);
+        const currArrayIndex = activeReminders.findIndex(r => r.index === index);
         if (currArrayIndex + indexMod < 0 || currArrayIndex + indexMod >= activeReminders.length) return;
         const current = activeReminders[currArrayIndex];
         const target = activeReminders[currArrayIndex + indexMod];
@@ -210,7 +210,7 @@ const useReminders = ({ currentAuthState }) => {
         const response = await fetch('/api/reminders/swap', {    
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ from: current.order, to: target.order })
+            body: JSON.stringify({ from: current.index, to: target.index })
         });
         if (response.status === 409) {
             return; // no-op on conflict
@@ -224,9 +224,9 @@ const useReminders = ({ currentAuthState }) => {
         // note - response contains the timestamp of execution, we calculate the rest
         const data = (await response.json());
 
-        const tempOrder = current.order;
-        current.order = target.order;
-        target.order = tempOrder;
+        const tempIndex = current.index;
+        current.index = target.index;
+        target.index = tempIndex;
         current.modifiedAt = data.modifiedAt;
         target.modifiedAt = data.modifiedAt;
 

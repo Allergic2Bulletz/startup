@@ -176,8 +176,8 @@ const useBookmarks = ({ currentAuthState }) => {
             showNotification('Failed to delete bookmark', 'error', true);
             return;
         }
-        const deletedBookmark = await response.json();
-        setBookmarks(prev => prev.map(bookmark => bookmark.id === id ? deletedBookmark : bookmark));
+        const { modifiedAt } = await response.json();
+        setBookmarks(prev => prev.map(bookmark => bookmark.id === id ? { ...bookmark, deleted: true, modifiedAt } : bookmark));
     }
 
     const moveRemote = async (index, direction) => {
