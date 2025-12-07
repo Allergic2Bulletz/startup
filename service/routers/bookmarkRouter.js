@@ -80,6 +80,21 @@ bookmarkRouter.delete('/', authenticate, async (req, res) => {
     res.status(StatusCodes.OK).send({ id });
 });
 
+// Fast Reorder
+bookmarkRouter.put('/swap', authenticate, async (req, res) => {
+    const { from, to } = req.body;
+    if (from === undefined || from === null || to === undefined || to === null) {
+        return res.status(StatusCodes.BAD_REQUEST).send({ msg: 'Missing required fields' });
+    }
+
+    const {results, modifiedAt} = await dbOps.swapBookmarks(req.cookies.userName, from, to);
+    if (results.modifiedCount !== 2) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ msg: 'Failed to swap bookmarks' });
+    }
+
+    res.status(StatusCodes.OK).send({ updated: modifiedAt });
+});
+
 // Reorder - Aggregation-based implementation
 bookmarkRouter.put('/reorder', authenticate, async (req, res) => {
     const startTime = Date.now();
@@ -176,20 +191,6 @@ bookmarkRouter.put('/reorder-legacy', authenticate, async (req, res) => {
     res.status(StatusCodes.OK).send({ updated: [current, target] });
 });
 
-// Fast Reorder
-bookmarkRouter.put('/swap', authenticate, async (req, res) => {
-    const { from, to } = req.body;
-    if (from === undefined || from === null || to === undefined || to === null) {
-        return res.status(StatusCodes.BAD_REQUEST).send({ msg: 'Missing required fields' });
-    }
-
-    const {results, modifiedAt} = await dbOps.swapBookmarks(req.cookies.userName, from, to);
-    if (results.modifiedCount !== 2) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ msg: 'Failed to swap bookmarks' });
-    }
-
-    res.status(StatusCodes.OK).send({ updated: modifiedAt });
-});
 
 module.exports = {
     bookmarkRouter
