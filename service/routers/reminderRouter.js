@@ -83,45 +83,19 @@ reminderRouter.delete('/', authenticate, async (req, res) => {
     res.status(StatusCodes.OK).send({ id });
 });
 
-
-reminderRouter.put('/reorder', authenticate, async (req, res) => {
-    const { id, direction } = req.body;
-    if (!id || !direction) {
+// Reorder
+reminderRouter.put('/swap', authenticate, async (req, res) => {
+    const { from, to } = req.body;
+    if (from === undefined || from === null || to === undefined || to === null) {
         return res.status(StatusCodes.BAD_REQUEST).send({ msg: 'Missing required fields' });
     }
-    const userReminders = await dbOps.getAllReminders(req.cookies.userName);
-    
-    const currentIndex = userReminders.findIndex(r => r.id === id);
-    
-    if (currentIndex === -1) {
-        return res.status(StatusCodes.NOT_FOUND).send({ msg: 'Reminder not found' });
-    }
-    const newIndex = direction === 'up' 
-        ? Math.max(0, currentIndex - 1)
-        : Math.min(userReminders.length - 1, currentIndex + 1);
-    
-    if (newIndex === currentIndex) {
-        return res.status(StatusCodes.CONFLICT).send({ msg: 'No change in order' });
+
+    const {results, modifiedAt} = await dbOps.swapReminders(req.cookies.userName, from, to);
+    if (results.modifiedCount !== 2) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ msg: 'Failed to swap reminders' });
     }
 
-    const current = userReminders[currentIndex];
-    const target = userReminders[newIndex];
-    const currentOrder = current.order;
-    current.order = target.order;
-    target.order = currentOrder;
-
-    current.modifiedAt = new Date().toISOString();
-    target.modifiedAt = new Date().toISOString();
-
-    const result1 = await dbOps.updateReminder(req.cookies.userName, current.id, { order: current.order, modifiedAt: current.modifiedAt });
-    const result2 = await dbOps.updateReminder(req.cookies.userName, target.id, { order: target.order, modifiedAt: target.modifiedAt });
-
-    if (result1.modifiedCount !== 1 || result2.modifiedCount !== 1) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ msg: 'Failed to reorder reminders' });
-    }
-
-    // Send both reminders back
-    res.status(StatusCodes.OK).send({ updated: [current, target] });
+    res.status(StatusCodes.OK).send({ updated: modifiedAt });
 });
 
 module.exports = {
