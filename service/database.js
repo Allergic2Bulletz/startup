@@ -19,8 +19,10 @@ async function testConnection() {
         process.exit(1);
     }
 }
-testConnection(email);
+// Do not export this function, just run it once when the module is loaded
+testConnection();
 
+// User Operations
 function getUser() {
     return userCollection.findOne({email: email});
 }
