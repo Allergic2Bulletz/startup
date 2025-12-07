@@ -20,7 +20,7 @@ function Splash({ userName, currentAuthState, onAuthChange }) {
                 <p>Keep track of everyone's local time with minimal hassle. Bookmark your frequently-checked time zones, convert times across regions, and get notifications for your important reminders.</p>
             </section>
         
-        {currentAuthState === AuthState.Unauthenticated && <Unauthenticated userName={userName} currentAuthState={currentAuthState} onAuthChange={onAuthChange} />}
+        {currentAuthState === AuthState.Unauthenticated && <Unauthenticated onAuthChange={onAuthChange} />}
         {currentAuthState === AuthState.Authenticated && (
             <section className={styles.authenticated}>
                 <h2>Logged in as {userName}</h2>

@@ -26,13 +26,13 @@ async function devInit() {
 devInit();
 
 
-function createAuthCookies(res, email, token) {
+function createAuthCookies(res, userName, token) {
     res.cookie('authToken', token, {
         httpOnly: true,
         secure: true,
         sameSite: 'Strict'
     });
-    res.cookie('userName', email, {
+    res.cookie('userName', userName, {
         httpOnly: false,
         secure: true,
         sameSite: 'Strict'
@@ -61,9 +61,9 @@ async function authenticate(req, res, next) {
 
 authRouter.get('/getuser', authenticate, async (req, res) => {
     if (!req.cookies.userName) {
-        const email = await getUserByToken(req.cookies.authToken);
-        createAuthCookies(res, email, req.cookies.authToken);
-        return res.status(StatusCodes.OK).send({ userName: email });
+        const userName = await dbOps.getUserByToken(req.cookies.authToken);
+        createAuthCookies(res, userName, req.cookies.authToken);
+        return res.status(StatusCodes.OK).send({ userName: userName });
     }
     else {
         return res.status(StatusCodes.OK).send({ userName: req.cookies.userName });
@@ -71,53 +71,53 @@ authRouter.get('/getuser', authenticate, async (req, res) => {
 });
 
 authRouter.post('/register', async (req, res) => {
-    const { email, password } = req.body;
+    const { userName, password } = req.body;
     if (req.cookies.authToken) {
         if (await verifySession(req)) {
             return res.status(StatusCodes.BAD_REQUEST).send({ error: 'Already authenticated' });
         }
     }
 
-    if (!email || !password) {
-        return res.status(StatusCodes.BAD_REQUEST).send({ error: 'Email and password are required' });
+    if (!userName || !password) {
+        return res.status(StatusCodes.BAD_REQUEST).send({ error: 'Username and password are required' });
     }
-    if (await getUser(email)) {
+    if (await dbOps.getUser(userName)) {
         return res.status(StatusCodes.CONFLICT).send({ error: 'User already exists' });
     }
 
     const bcryptpassword = await bcrypt.hash(password, 10);
-    await addUser(email, bcryptpassword);
+    await dbOps.addUser(userName, bcryptpassword);
     
     const newToken = new authToken(crypto.randomUUID());
-    await dbOps.addToken(email, newToken);
+    await dbOps.addToken(userName, newToken);
     
-    createAuthCookies(res, email, newToken.token);
+    createAuthCookies(res, userName, newToken.token);
     return res.status(StatusCodes.CREATED).send({ msg: 'User registered successfully' });
 });
 
 authRouter.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { userName, password } = req.body;
     if (req.cookies.authToken) {
         if (await verifySession(req)) {
             return res.status(StatusCodes.BAD_REQUEST).send({ error: 'Already authenticated' });
         }
     }
 
-    if (!email || !password) {
-        return res.status(StatusCodes.BAD_REQUEST).send({ error: 'Email and password are required' });
+    if (!userName || !password) {
+        return res.status(StatusCodes.BAD_REQUEST).send({ error: 'Username and password are required' });
     }
 
-    const user = await dbOps.getUser(email);
+    const user = await dbOps.getUser(userName);
     if (!user || !(await bcrypt.compare(password, user.password))) {
-        return res.status(StatusCodes.UNAUTHORIZED).send({ error: 'Invalid email or password' });
+        return res.status(StatusCodes.UNAUTHORIZED).send({ error: 'Invalid username or password' });
     }
 
     
     // Add new session token
     const newToken = new authToken(crypto.randomUUID());
-    await dbOps.addToken(email, newToken);
+    await dbOps.addToken(userName, newToken);
     
-    createAuthCookies(res, email, newToken.token);
+    createAuthCookies(res, userName, newToken.token);
     return res.status(StatusCodes.OK).send({ msg: 'User logged in successfully' });
 });
 
