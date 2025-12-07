@@ -270,7 +270,7 @@ function getReminder(userName, id) {
 
 function getReminderMaxOrder(userName) {
     const query = { userName: userName, deleted: false };
-    const options = { sort: { order: -1 }, projection: { order: 1 } };
+    const options = { sort: { index: -1 }, projection: { index: 1 } };
     return reminderCollection.findOne(query, options);
 }
 
@@ -352,7 +352,7 @@ module.exports = {
     updateReminder,
     deleteReminder,
     markReminderDeleted,
-
+    swapReminders,
     getPreferences,
     updatePreferences,
     deletePreferences

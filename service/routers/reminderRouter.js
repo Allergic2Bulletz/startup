@@ -9,8 +9,8 @@ const reminderRouter = express.Router();
 
 // Create
 reminderRouter.post('/', authenticate, async (req, res) => {
-    const maxOrderDoc = await dbOps.getReminderMaxOrder(req.cookies.userName);
-    const maxOrder = maxOrderDoc ? maxOrderDoc.order : -1;
+    const maxIndexDoc = await dbOps.getReminderMaxOrder(req.cookies.userName);
+    const maxIndex = maxIndexDoc ? maxIndexDoc.index : -1;
     
     const {title, datetime, timezone } = req.body;
     
@@ -21,7 +21,7 @@ reminderRouter.post('/', authenticate, async (req, res) => {
     const id = crypto.randomUUID();
     const finalDateTime = getDatetimeForTimezone(datetime, timezone);
     
-    const reminder = { userName: req.cookies.userName, id, title, datetime: finalDateTime, timezone, deleted: false, index: maxOrder + 1, modifiedAt: new Date().toISOString() };
+    const reminder = { userName: req.cookies.userName, id, title, datetime: finalDateTime, timezone, deleted: false, index: maxIndex + 1, modifiedAt: new Date().toISOString() };
     const result = await dbOps.addReminder(reminder);
 
     if (!result.acknowledged) {

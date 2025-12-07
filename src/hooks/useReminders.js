@@ -56,7 +56,7 @@ const useReminders = ({ currentAuthState }) => {
     );
 
     const addReminder = useCallback((reminderData) => {
-        const maxOrder = reminders
+        const maxIndex = reminders
             .filter(r => !r.deleted)
             .reduce((max, r) => Math.max(max, r.index || 0), -1);
         
@@ -68,7 +68,7 @@ const useReminders = ({ currentAuthState }) => {
             datetime: finalDateTime,
             timezone: reminderData.timezone,
             deleted: false,
-            index: maxOrder + 1,
+            index: maxIndex + 1,
             modifiedAt: new Date().toISOString()
         };
         setReminders(prev => [...prev, newReminder]);
