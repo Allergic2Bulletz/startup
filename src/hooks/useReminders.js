@@ -47,18 +47,18 @@ const useReminders = ({ currentAuthState }) => {
         }
     }, [reminders, currentAuthState]);
 
-    // Get active (non-deleted) reminders, sorted by order index
+    // Get active (non-deleted) reminders, sorted by index
     const activeReminders = useMemo(() => 
         reminders
             .filter(reminder => !reminder.deleted)
-            .sort((a, b) => a.order - b.order),
+            .sort((a, b) => a.index - b.index),
         [reminders]
     );
 
     const addReminder = useCallback((reminderData) => {
         const maxOrder = reminders
             .filter(r => !r.deleted)
-            .reduce((max, r) => Math.max(max, r.order || 0), -1);
+            .reduce((max, r) => Math.max(max, r.index || 0), -1);
         
         const finalDateTime = getDatetimeForTimezone(reminderData.datetime, reminderData.timezone);
         
@@ -68,7 +68,7 @@ const useReminders = ({ currentAuthState }) => {
             datetime: finalDateTime,
             timezone: reminderData.timezone,
             deleted: false,
-            order: maxOrder + 1,
+            index: maxOrder + 1,
             modifiedAt: new Date().toISOString()
         };
         setReminders(prev => [...prev, newReminder]);
@@ -99,7 +99,7 @@ const useReminders = ({ currentAuthState }) => {
     }, []);
 
     const moveReminder = useCallback((id, direction) => {
-        const active = reminders.filter(r => !r.deleted).sort((a, b) => a.order - b.order);
+        const active = reminders.filter(r => !r.deleted).sort((a, b) => a.index - b.index);
         const currentIndex = active.findIndex(r => r.id === id);
         
         if (currentIndex === -1) return;
@@ -110,16 +110,16 @@ const useReminders = ({ currentAuthState }) => {
             
         if (newIndex === currentIndex) return;
         
-        // Swap order values between current and target reminders
+        // Swap index values between current and target reminders
         const current = active[currentIndex];
         const target = active[newIndex];
         
         setReminders(prev => prev.map(reminder => {
             if (reminder.id === current.id) {
-                return { ...reminder, order: target.order, modifiedAt: new Date().toISOString() };
+                return { ...reminder, index: target.index, modifiedAt: new Date().toISOString() };
             }
             if (reminder.id === target.id) {
-                return { ...reminder, order: current.order, modifiedAt: new Date().toISOString() };
+                return { ...reminder, index: current.index, modifiedAt: new Date().toISOString() };
             }
             return reminder;
         }));
@@ -199,11 +199,18 @@ const useReminders = ({ currentAuthState }) => {
         setReminders(prev => prev.map(reminder => reminder.id === id ? deletedReminder : reminder));
     }
 
-    const moveRemote = async (id, direction) => {
-        const response = await fetch('/api/reminders/reorder', {
+    const moveRemote = async (index, direction) => {
+        // Find BOTH reminders being swapped and send to server
+        const indexMod = direction === 'up' ? -1 : 1;
+        const currArrayIndex = activeReminders.findIndex(r => r.order === index);
+        if (currArrayIndex + indexMod < 0 || currArrayIndex + indexMod >= activeReminders.length) return;
+        const current = activeReminders[currArrayIndex];
+        const target = activeReminders[currArrayIndex + indexMod];
+
+        const response = await fetch('/api/reminders/swap', {    
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, direction })
+            body: JSON.stringify({ from: current.order, to: target.order })
         });
         if (response.status === 409) {
             return; // no-op on conflict
@@ -213,10 +220,19 @@ const useReminders = ({ currentAuthState }) => {
             showNotification('Failed to move reminder', 'error', true);
             return;
         }
-        // note - response contains the full updated list of reminders
-        const updatedReminders = await response.json();
+
+        // note - response contains the timestamp of execution, we calculate the rest
+        const data = (await response.json());
+
+        const tempOrder = current.order;
+        current.order = target.order;
+        target.order = tempOrder;
+        current.modifiedAt = data.modifiedAt;
+        target.modifiedAt = data.modifiedAt;
+
+        const updatedReminders = [current, target];
         setReminders(prev => prev.map(reminder => {
-            const updated = updatedReminders.updated.find(b => b.id === reminder.id);
+            const updated = updatedReminders.find(r => r.id === reminder.id);
             return updated ? updated : reminder;
         }));
     }
