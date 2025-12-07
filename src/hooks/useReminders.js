@@ -98,9 +98,9 @@ const useReminders = ({ currentAuthState }) => {
         ));
     }, []);
 
-    const moveReminder = useCallback((id, direction) => {
+    const moveReminder = useCallback((index, direction) => {
         const active = reminders.filter(r => !r.deleted).sort((a, b) => a.index - b.index);
-        const currentIndex = active.findIndex(r => r.id === id);
+        const currentIndex = active.findIndex(r => r.index === index);
         
         if (currentIndex === -1) return;
         
@@ -115,10 +115,10 @@ const useReminders = ({ currentAuthState }) => {
         const target = active[newIndex];
         
         setReminders(prev => prev.map(reminder => {
-            if (reminder.id === current.id) {
+            if (reminder.index === current.index) {
                 return { ...reminder, index: target.index, modifiedAt: new Date().toISOString() };
             }
-            if (reminder.id === target.id) {
+            if (reminder.index === target.index) {
                 return { ...reminder, index: current.index, modifiedAt: new Date().toISOString() };
             }
             return reminder;
