@@ -25,7 +25,7 @@ cp -rf dist build/public # move the React front end to the target distribution
 cp service/*.js build # move the back end service to the target distribution
 cp service/*.json build
 cp -r service/routers build/
-cp -r service/utilities build/
+cp -r service/utils build/
 
 # Step 2
 printf "\n----> Clearing out previous distribution on the target\n"
