@@ -1,5 +1,5 @@
 const express = require('express');
-const { StatusCodes } = require('../utilities/network.js');
+const { StatusCodes } = require('../utils/network.js');
 const authRouter = express.Router();
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');

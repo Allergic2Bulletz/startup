@@ -2,7 +2,7 @@ const express = require('express');
 const { StatusCodes } = require('../utilities/network.js');
 const { authenticate } = require('./authRouter.js')
 const crypto = require('crypto');
-const { getDatetimeForTimezone } = require('../utilities/time.js');
+const { getDatetimeForTimezone } = require('../utils/time.js');
 const reminderRouter = express.Router();
 const reminders = {};
 
