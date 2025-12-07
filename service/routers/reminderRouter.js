@@ -24,7 +24,7 @@ reminderRouter.post('/', authenticate, async (req, res) => {
     const reminder = { userName: req.cookies.userName, id, title, datetime: finalDateTime, timezone, deleted: false, index: maxOrder + 1, modifiedAt: new Date().toISOString() };
     const result = await dbOps.addReminder(reminder);
 
-    if (result.insertedCount !== 1) {
+    if (!result.acknowledged) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ msg: 'Failed to create reminder' });
     }
 
