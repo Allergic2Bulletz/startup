@@ -17,8 +17,6 @@ export default function App() {
     const [userName, setUserName] = React.useState('');
     const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
     const [authState, setAuthState] = React.useState(currentAuthState);
-
-    const [activeAlert, setActiveAlert] = React.useState(false);
     
     // WebSocket client instance
     const wsClient = React.useRef(null);
@@ -44,15 +42,15 @@ export default function App() {
         wsClient.current = new WebSocketClient();
         
         // Set up connection callbacks
-        wsClient.current.onConnected(() => {
-            console.log('📱 WebSocket connected in React');
-            showNotification('WebSocket connected', 'success');
-        });
+        // wsClient.current.onConnected(() => {
+        //     console.log('📱 WebSocket connected in React');
+        //     showNotification('WebSocket connected', 'success');
+        // });
         
-        wsClient.current.onDisconnected(() => {
-            console.log('📱 WebSocket disconnected in React');
-            showNotification('WebSocket disconnected', 'warning');
-        });
+        // wsClient.current.onDisconnected(() => {
+        //     console.log('📱 WebSocket disconnected in React');
+        //     showNotification('WebSocket disconnected', 'warning');
+        // });
         
         // Connect when component mounts
         wsClient.current.connect(userName);
@@ -121,19 +119,15 @@ export default function App() {
 
                 <Routes>
                     <Route path="/" element={<Splash userName={userName} currentAuthState={currentAuthState} onAuthChange={(userName, authState) => {setAuthState(authState);setUserName(userName);}} />}/>
-                    <Route path="/dashboard" element={<Dashboard currentAuthState={currentAuthState}/>}/>
+                    <Route path="/dashboard" element={<Dashboard currentAuthState={currentAuthState} wsClient={wsClient.current}/>}/>
                 </Routes>
 
                 {/* WebSocket Test Controls */}
                 <div style={{ position: 'fixed', top: '10px', right: '250px', zIndex: 1000, background: 'rgba(0,0,0,0.1)', padding: '10px', borderRadius: '5px' }}>
                     <div style={{ fontSize: '12px', marginBottom: '5px' }}>
-                        WebSocket Status: {wsClient.current?.getStatus().connected ? '🟢 Connected' : '🔴 Disconnected'}
-                        {activeAlert && <span style={{ color: 'red', marginLeft: '10px' }}>🚨 ALERT ACTIVE</span>}
+                        WebSocket Status: {wsClient.current?.isConnected ? '🟢 Connected' : '🔴 Disconnected'}
                     </div>
-                    <button onClick={testWebSocketPing} style={{ margin: '2px', fontSize: '10px' }}>Test Ping</button>
-                    {activeAlert && (
-                        <button onClick={clearActiveAlert} style={{ margin: '2px', fontSize: '10px', backgroundColor: 'orange' }}>Clear Alert</button>
-                    )}
+                    {/* <button onClick={testWebSocketPing} style={{ margin: '2px', fontSize: '10px' }}>Test Ping</button> */}
                 </div>
 
                 <footer>
