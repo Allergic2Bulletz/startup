@@ -3,7 +3,13 @@ const { StatusCodes } = require('../utils/network.js');
 const { authenticate } = require('./authRouter.js')
 const crypto = require('crypto');
 const dbOps = require('../database.js');
+const { Command } = require('../wsServer.js');
 
+// Use a getter function to access wsServer after it's initialized
+const getWsServer = () => {
+    const { wsServer } = require('../index.js');
+    return wsServer;
+};
 
 const bookmarkRouter = express.Router();
 
@@ -26,6 +32,7 @@ bookmarkRouter.post('/', authenticate, async (req, res) => {
     }
 
     res.status(StatusCodes.CREATED).send(bookmark);
+    getWsServer().sendToUserClients(req.cookies.userName, new Command('sync', 'bookmarks', {}));
 });
 
 // Read
@@ -58,6 +65,7 @@ bookmarkRouter.put('/', authenticate, async (req, res) => {
     }
 
     res.status(StatusCodes.OK).send(updatedBookmark);
+    getWsServer().sendToUserClients(req.cookies.userName, new Command('sync', 'bookmarks', {}));
 });
 
 // Delete
@@ -78,6 +86,7 @@ bookmarkRouter.delete('/', authenticate, async (req, res) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ msg: 'Failed to delete bookmark' });
     }
     res.status(StatusCodes.OK).send({ modifiedAt });
+    getWsServer().sendToUserClients(req.cookies.userName, new Command('sync', 'bookmarks', {}));
 });
 
 // Fast Reorder
@@ -93,6 +102,7 @@ bookmarkRouter.put('/swap', authenticate, async (req, res) => {
     }
 
     res.status(StatusCodes.OK).send({ updated: modifiedAt });
+    getWsServer().sendToUserClients(req.cookies.userName, new Command('sync', 'bookmarks', {}));
 });
 
 // Reorder - Aggregation-based implementation
