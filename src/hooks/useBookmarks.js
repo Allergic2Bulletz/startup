@@ -2,9 +2,25 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { AuthState } from '../hooks/useAuthState.js';
 import { useNotificationContext } from './useNotifications.js';
 
-const useBookmarks = ({ currentAuthState }) => {
+const useBookmarks = ({ currentAuthState, wsClient }) => {
     const [bookmarks, setBookmarks] = useState([]);
     const { showNotification } = useNotificationContext();
+
+    const fetchBookmarks = async () => {
+        try {
+            const response = await fetch('/api/bookmarks');
+            if (!response.ok) {
+                console.error('Failed to fetch bookmarks');
+                showNotification('Failed to fetch bookmarks', 'error', true);
+                return;
+            }
+            const data = await response.json();
+            setBookmarks(data || []);
+        } catch (error) {
+            console.error('Error fetching bookmarks:', error);
+            showNotification('Error fetching bookmarks', 'error', true);
+        }
+    };
 
     // Load bookmarks from storage/remote
     useEffect(() => {
@@ -21,26 +37,33 @@ const useBookmarks = ({ currentAuthState }) => {
             }
         }
 
-        const fetchBookmarks = async () => {
-            try {
-                const response = await fetch('/api/bookmarks');
-                if (!response.ok) {
-                    console.error('Failed to fetch bookmarks');
-                    showNotification('Failed to fetch bookmarks', 'error', true);
-                    return;
-                }
-                const data = await response.json();
-                setBookmarks(data || []);
-            } catch (error) {
-                console.error('Error fetching bookmarks:', error);
-                showNotification('Error fetching bookmarks', 'error', true);
-            }
-        };
-
         if (currentAuthState === AuthState.Authenticated) {
             fetchBookmarks();
         }
-    }, [currentAuthState]);
+
+        return () => {
+            // Cleanup if needed
+        };
+    }, [currentAuthState, showNotification]);
+
+    // Stable handler function for WebSocket commands
+    const handleSync = useCallback((command) => {
+        if(command.target !== 'bookmarks') return;
+        if(command.action !== 'sync') return;
+        fetchBookmarks();
+    }, []);
+
+    // Initialize wsClient handlers
+    useEffect(() => {
+        if (wsClient.current) {
+            wsClient.current.addHandler(handleSync);
+
+            return () => {
+                wsClient.current?.removeHandler(handleSync);
+                console.log('🧹 Cleaned up bookmark wsClient handlers');
+            };
+        }
+    }, [wsClient, handleSync]);
 
     // Auto-save to localStorage when bookmarks change
     useEffect(() => {

@@ -31,6 +31,7 @@ export default function App() {
     React.useEffect(() => {
         if (authState !== AuthState.Authenticated) {
             if (wsClient.current) {
+                console.log('📱 Disconnecting WebSocket due to unauthenticated state');
                 wsClient.current.disconnect();
                 wsClient.current = null;
             }
@@ -59,9 +60,10 @@ export default function App() {
         return () => {
             if (wsClient.current) {
                 wsClient.current.disconnect();
+                wsClient.current = null;
             }
         };
-    }, [authState, showNotification]);
+    }, [authState, userName, showNotification]);
     
     // Fetch username on mount
     // Note - this is responsible for triggering a refresh of the auth-state on page refresh
@@ -119,7 +121,7 @@ export default function App() {
 
                 <Routes>
                     <Route path="/" element={<Splash userName={userName} currentAuthState={currentAuthState} onAuthChange={(userName, authState) => {setAuthState(authState);setUserName(userName);}} />}/>
-                    <Route path="/dashboard" element={<Dashboard currentAuthState={currentAuthState} wsClient={wsClient.current}/>}/>
+                    <Route path="/dashboard" element={<Dashboard currentAuthState={currentAuthState} wsClient={wsClient}/>}/>
                 </Routes>
 
                 {/* WebSocket Test Controls */}
