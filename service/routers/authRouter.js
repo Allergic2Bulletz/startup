@@ -92,7 +92,7 @@ authRouter.post('/register', async (req, res) => {
     await dbOps.addToken(userName, newToken);
     
     createAuthCookies(res, userName, newToken.token);
-    return res.status(StatusCodes.CREATED).send({ msg: 'User registered successfully' });
+    return res.status(StatusCodes.CREATED).send({ msg: 'User registered successfully', userName: userName });
 });
 
 authRouter.post('/login', async (req, res) => {
@@ -118,7 +118,7 @@ authRouter.post('/login', async (req, res) => {
     await dbOps.addToken(userName, newToken);
     
     createAuthCookies(res, userName, newToken.token);
-    return res.status(StatusCodes.OK).send({ msg: 'User logged in successfully' });
+    return res.status(StatusCodes.OK).send({ msg: 'User logged in successfully', userName: userName });
 });
 
 authRouter.delete('/logout', authenticate, async (req, res) => {
