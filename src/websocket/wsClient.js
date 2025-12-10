@@ -200,9 +200,9 @@ class CommandQueue {
 }
 
 class Command {
-    constructor(target, cmd, data) {
+    constructor(target, action, data) {
         this.target = target;
-        this.cmd = cmd;
+        this.action = action;
         this.data = data;
     }
 }
@@ -283,7 +283,7 @@ class WebSocketClient {
                     this.sendPong(message);
                     break;
                 case 'command':
-                    this.receiveCommand(new Command(message.target, message.cmd, message.data));
+                    this.receiveCommand(new Command(message.target, message.action, message.data));
                     break;
                 default:
                     console.log(`📡 Unknown message type: ${message.type}`);
@@ -294,7 +294,8 @@ class WebSocketClient {
     }
 
     receiveCommand(command) {
-        for (const handler of this.handlers) {
+        console.log(`There are ${this.commandHandlers.length} command handlers`);
+        for (const handler of this.commandHandlers) {
             handler(command);
         }
     }
@@ -323,11 +324,11 @@ class WebSocketClient {
     }
 
     addHandler(handler) {
-        this.handlers.push(handler);
+        this.commandHandlers.push(handler);
     }
 
     removeHandler(handler) {
-        this.handlers = this.handlers.filter(h => h !== handler);
+        this.commandHandlers = this.commandHandlers.filter(h => h !== handler);
     }
 }
 
