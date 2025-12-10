@@ -1,5 +1,7 @@
 const { WebSocketServer } = require('ws');
 const dbOps = require('./database.js');
+const crypto = require('crypto');
+const { start } = require('repl');
 
 class ExampleSyncServer {
     constructor(server) {
@@ -213,20 +215,148 @@ class ExampleSyncServer {
 class SyncServer {
     constructor(httpserver) {
         this.wss = new WebSocketServer({ server: httpserver });
+        this.userClients = new Map(); // Map of userName to Set of clientIds
         this.clients = new Map(); // Store client connections with metadata
         this.setupServer();
     }
 
     setupServer() {
-        this.wss.on('connection', (ws, req) => {
-            const clientId = this.generateClientId();
+        this.wss.on('connection', async (ws, req) => {
+            let userName = null;
+
+            // Authenticate using cookies if present
+            if (req.cookies.authToken && req.cookies.userName) {
+                try {
+                    const isValid = await dbOps.getActiveSession(req.cookies.userName, req.cookies.authToken);
+                    if (isValid) {
+                        userName = req.cookies.userName;
+                        console.log(`📡 WebSocket authenticated: ${userName}`);
+                    } else {
+                        console.log(`📡 WebSocket authentication failed for ${req.cookies.userName}`);
+                        ws.send(JSON.stringify({
+                            type: 'error',
+                            msg: 'WebSocket authentication failed'
+                        }));
+                        ws.close();
+                        return;
+                    }
+                } catch (error) {
+                    console.error('📡 WebSocket authentication error:', error);
+                }
+            }
+            else {
+                console.log('📡 WebSocket connection without authentication cookies');
+            }
+
+            // const clientId = crypto.randomUUID();
+            const clientId = `client_${userName}_${Date.now()}_${Math.random().toString(8)}`;
             console.log(`📡 WebSocket client connected: ${clientId}`);
+
+            // Store client with metadata
+            this.clients.set(clientId, {
+                ws: ws,
+                connected: true,
+                lastPing: Date.now(),
+                userName: userName
+            });
+
+            // Map userName to clientId
+            this.userClients.has(userName) || this.userClients.set(userName, new Set());
+            this.userClients.get(userName).add(clientId);
+
+            // Set up message handling
+            ws.on('message', (data) => {
+                this.handleMessage(clientId, data);
+            });
+
+            ws.on('error', (error) => {
+                console.error(`📡 WebSocket error for client ${clientId}:`, error);
+            });
+
+            // Handle client disconnect
+            ws.on('close', () => {
+                console.log(`📡 WebSocket client disconnected: ${clientId}`);
+                this.removeClient(clientId);
+            });
+        });
+        console.log('📡 WebSocket Server initialized');
+        
+        this.startPingInterval();
+    }
+
+    // Remove a client from tracking
+    removeClient(clientId) {
+        const client = this.clients.get(clientId);
+        if (client) {
+            this.userClients.get(client.userName).delete(clientId);
+            if (this.userClients.get(client.userName).size === 0) {
+                this.userClients.delete(client.userName);
+            }
+            this.clients.delete(clientId);
+        }
+    }
+
+    handleMessage(clientId, data) {
+        try {
+            const message = JSON.parse(data);
+            console.log(`📡 Received from ${clientId}:`, message);
+        } catch (error) {
+            console.error(`📡 Error handling message from ${clientId}:`, error);
+        }
+    }
+
+    handlePong(clientId, message) {
+        const client = this.clients.get(clientId);
+        if (client) {
+            client.lastPing = Date.now();
+            client.connected = true;
+            console.log(`📡 Pong received from ${clientId}`);
+        }
+    }
+
+    // Send message to specific client
+    sendToClient(clientId, message) {
+        const client = this.clients.get(clientId);
+        if (client && client.ws.readyState === WebSocket.OPEN) {
+            client.ws.send(JSON.stringify(message));
+            return true;
+        }
+        return false;
+    }
+
+    // Send to other clients of the same user
+    sendToUserClients(clientId, message) {
+        const client = this.clients.get(clientId);
+        const otherClientIds = this.userClients.get(client.userName) || new Set();
+        for (const otherClientId of otherClientIds) {
+            if (otherClientId !== clientId) {
+                this.sendToClient(otherClientId, message);
+            }
+        }
+    }
+
+    // Ping clients to check connection
+    pingAllClients() {
+        const pingMessage = {type: 'ping', timestamp: new Date().toISOString()};
+        this.clients.forEach((client, clientId) => {
+            if(client.connected === false) {
+                console.log(`📡 Client ${clientId} did not respond to previous ping, marking as disconnected`);
+                client.ws.terminate();
+
+                this.removeClient(clientId);
+                return;
+            }
+            
+            client.connected = false; // Will be set to true on pong
+            this.sendToClient(clientId, pingMessage);
         });
     }
 
-    generateClientId() {
-        return `client_`
+    // Periodically call pingAllClients
+    startPingInterval(intervalMs = 30000) {
+        setInterval(() => {
+            this.pingAllClients();
+        }, intervalMs);
+    }
 }
-
-
 module.exports = { SyncServer };
