@@ -31,18 +31,17 @@ export default function App() {
     
     // Initialize WebSocket
     React.useEffect(() => {
+        if (authState !== AuthState.Authenticated) {
+            if (wsClient.current) {
+                wsClient.current.disconnect();
+                wsClient.current = null;
+            }
+
+            return;
+        }
+
         // Create WebSocket client
         wsClient.current = new WebSocketClient();
-        
-        // Set up alert callback
-        wsClient.current.onAlert((alertMessage) => {
-            console.log('📱 Alert received:', alertMessage);
-            setActiveAlert(true);
-            showNotification(`WebSocket Alert: ${alertMessage}`, 'info');
-            
-            // Auto-clear alert after 5 seconds
-            setTimeout(() => setActiveAlert(false), 5000);
-        });
         
         // Set up connection callbacks
         wsClient.current.onConnected(() => {
@@ -56,7 +55,7 @@ export default function App() {
         });
         
         // Connect when component mounts
-        wsClient.current.connect();
+        wsClient.current.connect(userName);
         
         // Cleanup on unmount
         return () => {
@@ -64,33 +63,10 @@ export default function App() {
                 wsClient.current.disconnect();
             }
         };
-    }, []);
-    
-    // Update WebSocket auth when userName changes
-    React.useEffect(() => {
-        if (wsClient.current && userName) {
-            wsClient.current.sendAuth(userName);
-        }
-    }, [userName]);
-    
-    // Test functions for WebSocket
-    const testWebSocketPing = React.useCallback(() => {
-        if (wsClient.current) {
-            const success = wsClient.current.sendPing();
-            if (success) {
-                showNotification('Ping sent to server', 'info');
-            } else {
-                showNotification('WebSocket not connected', 'error');
-            }
-        }
-    }, [showNotification]);
-    
-    const clearActiveAlert = React.useCallback(() => {
-        setActiveAlert(false);
-        showNotification('Alert cleared', 'success');
-    }, [showNotification]);
+    }, [authState, showNotification]);
     
     // Fetch username on mount
+    // Note - this is responsible for triggering a refresh of the auth-state on page refresh
     React.useEffect(() => {
         const fetchAuthState = async () => {
             try {
@@ -149,7 +125,7 @@ export default function App() {
                 </Routes>
 
                 {/* WebSocket Test Controls */}
-                <div style={{ position: 'fixed', top: '10px', right: '10px', zIndex: 1000, background: 'rgba(0,0,0,0.1)', padding: '10px', borderRadius: '5px' }}>
+                <div style={{ position: 'fixed', top: '10px', right: '250px', zIndex: 1000, background: 'rgba(0,0,0,0.1)', padding: '10px', borderRadius: '5px' }}>
                     <div style={{ fontSize: '12px', marginBottom: '5px' }}>
                         WebSocket Status: {wsClient.current?.getStatus().connected ? '🟢 Connected' : '🔴 Disconnected'}
                         {activeAlert && <span style={{ color: 'red', marginLeft: '10px' }}>🚨 ALERT ACTIVE</span>}
