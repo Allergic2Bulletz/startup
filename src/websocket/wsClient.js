@@ -186,7 +186,31 @@ class ExampleWebSocketClient {
     }
 }
 
+class CommandQueue {
+    constructor() {
+        this.commands = [];
+        this.lock = false;
+    }
+    enqueue(command) {
+        this.commands.push(command);
+    }
+    dequeue() {
+        return this.commands.shift();
+    }
+}
+
+class Command {
+    constructor(target, cmd, data) {
+        this.target = target;
+        this.cmd = cmd;
+        this.data = data;
+    }
+}
+
 class WebSocketClient {
+    commands = new CommandQueue();
+    commandHandlers = [];
+
     constructor() {
         this.ws = null;
         this.isConnected = false;
@@ -199,11 +223,111 @@ class WebSocketClient {
         this.userName = null;
     }
 
-    connect(userName = null) {
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const port = window.location.port;
-        this.ws = new WebSocket(`${protocol}://${window.location.hostname}:${port}/ws`);
+    connect(userName) {
+        if(!userName) {
+           throw new Error("WebSocketClient: userName is required to connect");
+        }
+        this.userName = userName;
 
+        const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+        const port = window.location.port;
+        this.ws = new WebSocket(`${protocol}://${window.location.hostname}:${port}/ws/?userName=${this.userName}`);
+
+        this.setupEventHandlers();
+    }
+
+    disconnect() {
+        if (this.ws) {
+            this.ws.close();
+            this.ws = null;
+        }
+        this.isConnected = false;
+        if (this.onDisconnectedCallback) {
+            this.onDisconnectedCallback();
+        }
+    }
+
+    setupEventHandlers() {
+        this.ws.onopen = (event) => {
+            console.log('📡 WebSocket connected');
+            this.isConnected = true;
+            this.reconnectAttempts = 0;
+        };
+
+        this.ws.onmessage = (event) => {
+            this.parseMessage(event.data);
+        }
+
+        this.ws.onclose = (event) => {
+            console.log('📡 WebSocket disconnected:', event.code, event.reason);
+            this.isConnected = false;
+
+            if (this.onDisconnectedCallback) {
+                this.onDisconnectedCallback();
+            }
+
+            // Attempt reconnection
+            if(event.code !== 1000) { // 1000 = Normal Closure
+                 this.handleReconnect();
+            }
+        }
+    }
+
+    parseMessage(data) {
+        try {
+            const message = JSON.parse(data);
+            console.log('📡 Received message:', message);
+
+            switch (message.type) {
+                case 'ping':
+                    this.sendPong(message);
+                    break;
+                case 'command':
+                    this.receiveCommand(new Command(message.target, message.cmd, message.data));
+                    break;
+                default:
+                    console.log(`📡 Unknown message type: ${message.type}`);
+            }   
+        } catch (error) {
+            console.error('📡 Error parsing message:', error);
+        }
+    }
+
+    receiveCommand(command) {
+        for (const handler of this.handlers) {
+            handler(command);
+        }
+    }
+
+    sendPong(message) {
+        console.log('📡 Ping received from server');
+        this.ws.send(JSON.stringify({
+            type: 'pong',
+            timestamp: new Date().toISOString()
+        }));
+    }
+
+    handleReconnect() {
+        // note - basically if a ws disconnects, wsClient will try to create a new ws. If that one fails, try to make another one, etc
+        if (this.reconnectAttempts < this.maxReconnectAttempts) {
+            this.reconnectAttempts++;
+            const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1); // Exponential backoff
+            console.log(`📡 Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+            setTimeout(() => {
+                this.connect(this.userName);
+            }, delay);
+        }
+        else {
+            console.error('📡 Max reconnection attempts reached');
+        }
+    }
+
+    addHandler(handler) {
+        this.handlers.push(handler);
+    }
+
+    removeHandler(handler) {
+        this.handlers = this.handlers.filter(h => h !== handler);
     }
 }
 
