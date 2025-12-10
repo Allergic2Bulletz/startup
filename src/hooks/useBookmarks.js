@@ -7,6 +7,7 @@ const useBookmarks = ({ currentAuthState, wsClient }) => {
     const { showNotification } = useNotificationContext();
 
     const fetchBookmarks = async () => {
+        console.log('Fetching bookmarks from server...');
         try {
             const response = await fetch('/api/bookmarks');
             if (!response.ok) {
@@ -15,6 +16,7 @@ const useBookmarks = ({ currentAuthState, wsClient }) => {
                 return;
             }
             const data = await response.json();
+            console.log('Fetched bookmarks: ', data);
             setBookmarks(data || []);
         } catch (error) {
             console.error('Error fetching bookmarks:', error);
@@ -63,7 +65,7 @@ const useBookmarks = ({ currentAuthState, wsClient }) => {
                 console.log('🧹 Cleaned up bookmark wsClient handlers');
             };
         }
-    }, [wsClient, handleSync]);
+    }, [wsClient.current, currentAuthState, handleSync]);
 
     // Auto-save to localStorage when bookmarks change
     useEffect(() => {
@@ -228,17 +230,17 @@ const useBookmarks = ({ currentAuthState, wsClient }) => {
         // note - response contains the timestamp of execution, we calculate the rest
         const data = (await response.json());
 
-        const tempIndex = current.index;
-        current.index = target.index;
-        target.index = tempIndex;
-        current.modifiedAt = data.modifiedAt;
-        target.modifiedAt = data.modifiedAt;
+        // const tempIndex = current.index;
+        // current.index = target.index;
+        // target.index = tempIndex;
+        // current.modifiedAt = data.modifiedAt;
+        // target.modifiedAt = data.modifiedAt;
 
-        const updatedBookmarks = [current, target];
-        setBookmarks(prev => prev.map(bookmark => {
-            const updated = updatedBookmarks.find(b => b.id === bookmark.id);
-            return updated ? updated : bookmark;
-        }));
+        // const updatedBookmarks = [current, target];
+        // setBookmarks(prev => prev.map(bookmark => {
+        //     const updated = updatedBookmarks.find(b => b.id === bookmark.id);
+        //     return updated ? updated : bookmark;
+        // }));
     }
 
     if (currentAuthState === AuthState.Authenticated) {

@@ -3,9 +3,26 @@ import { getDatetimeForTimezone } from '../utils/timeUtils.js';
 import { AuthState } from '../hooks/useAuthState.js';
 import { useNotificationContext } from './useNotifications.js';
 
-const useReminders = ({ currentAuthState }) => {
+const useReminders = ({ currentAuthState, wsClient }) => {
     const [reminders, setReminders] = useState([]);
     const { showNotification } = useNotificationContext();
+
+    const fetchReminders = useCallback(async () => {
+        console.log('Fetching bookmarks from server...');
+        try {
+            const response = await fetch('/api/reminders');
+            if (!response.ok) {
+                console.error('Failed to fetch reminders');
+                showNotification('Failed to fetch reminders', 'error', true);
+                return;
+            }
+            const data = await response.json();
+            setReminders(data || []);
+        } catch (error) {
+            console.error('Error fetching reminders:', error);
+            showNotification('Error fetching reminders', 'error', true);
+        }
+    }, [showNotification]);
 
     // Load reminders from localStorage on mount
     useEffect(() => {
@@ -19,26 +36,29 @@ const useReminders = ({ currentAuthState }) => {
             }
         }
 
-        const fetchReminders = async () => {
-            try {
-                const response = await fetch('/api/reminders');
-                if (!response.ok) {
-                    console.error('Failed to fetch reminders');
-                    showNotification('Failed to fetch reminders', 'error', true);
-                    return;
-                }
-                const data = await response.json();
-                setReminders(data || []);
-            } catch (error) {
-                console.error('Error fetching reminders:', error);
-                showNotification('Error fetching reminders', 'error', true);
-            }
-        };
-
         if (currentAuthState === AuthState.Authenticated) {
             fetchReminders();
         }
-    }, [currentAuthState]);
+    }, [currentAuthState, showNotification]);
+
+    // Stable handler function for WebSocket commands
+    const handleSync = useCallback((command) => {
+        if(command.target !== 'reminders') return;
+        if(command.action !== 'sync') return;
+        fetchReminders();
+    }, []);
+
+    // Initialize wsClient handlers
+    useEffect(() => {
+        if (wsClient.current) {
+            wsClient.current.addHandler(handleSync);
+
+            return () => {
+                wsClient.current?.removeHandler(handleSync);
+                console.log('🧹 Cleaned up reminder wsClient handlers');
+            };
+        }
+    }, [wsClient.current, handleSync]);
 
     // Auto-save to localStorage when reminders change
     useEffect(() => {

@@ -40,7 +40,12 @@ export default function App() {
         }
 
         // Create WebSocket client
-        wsClient.current = new WebSocketClient();
+        if (!wsClient.current) {
+            console.log('📱 Initializing WebSocket connection');
+            wsClient.current = new WebSocketClient();
+            wsClient.current.connect(userName);
+        }
+       
         
         // Set up connection callbacks
         // wsClient.current.onConnected(() => {
@@ -52,9 +57,6 @@ export default function App() {
         //     console.log('📱 WebSocket disconnected in React');
         //     showNotification('WebSocket disconnected', 'warning');
         // });
-        
-        // Connect when component mounts
-        wsClient.current.connect(userName);
         
         // Cleanup on unmount
         return () => {
