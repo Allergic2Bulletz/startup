@@ -97,7 +97,8 @@ bookmarkRouter.put('/swap', authenticate, async (req, res) => {
     }
 
     const {results, modifiedAt} = await dbOps.swapBookmarks(req.cookies.userName, from, to);
-    if (results.modifiedCount !== 2) {
+    // For some awful reason, mongoDB considers three updates to two documents should return modifiedCount of 3
+    if (results.modifiedCount !== 3) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ msg: 'Failed to swap bookmarks' });
     }
 
