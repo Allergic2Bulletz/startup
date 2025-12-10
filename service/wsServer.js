@@ -212,6 +212,26 @@ class ExampleSyncServer {
     }
 }
 
+class Message {
+    constructor(type, data = {}) {
+        this.type = type;
+        this.data = data;
+    }
+
+    stringify() {
+        // This ensures all enumerable properties are included
+        return JSON.stringify(this);
+    }
+}
+
+class Command extends Message {
+    constructor(action, target, data = {}) {
+        super('command', data);
+        this.action = action;
+        this.target = target;
+    }
+}
+
 class SyncServer {
     constructor(httpserver) {
         this.wss = new WebSocketServer({ server: httpserver });
@@ -326,13 +346,21 @@ class SyncServer {
     }
 
     // Send to other clients of the same user
-    sendToUserClients(clientId, message) {
+    sendToOtherUserClients(clientId, message) {
         const client = this.clients.get(clientId);
         const otherClientIds = this.userClients.get(client.userName) || new Set();
         for (const otherClientId of otherClientIds) {
             if (otherClientId !== clientId) {
                 this.sendToClient(otherClientId, message);
             }
+        }
+    }
+    
+    // Send to all clients of a specific user
+    sendToUserClients(userName, message) {
+        const clientIds = this.userClients.get(userName) || new Set();
+        for (const clientId of clientIds) {
+            this.sendToClient(clientId, message);
         }
     }
 
@@ -360,4 +388,5 @@ class SyncServer {
         }, intervalMs);
     }
 }
-module.exports = { SyncServer };
+
+module.exports = { SyncServer, Command, Message };
