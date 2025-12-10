@@ -1,6 +1,7 @@
 const { WebSocketServer } = require('ws');
+const dbOps = require('./database.js');
 
-class SyncServer {
+class ExampleSyncServer {
     constructor(server) {
         this.wss = new WebSocketServer({ server });
         this.clients = new Map(); // Store client connections with metadata
@@ -8,16 +9,36 @@ class SyncServer {
     }
 
     setupServer() {
-        this.wss.on('connection', (ws, req) => {
+        this.wss.on('connection', async (ws, req) => {
             const clientId = this.generateClientId();
             console.log(`📡 WebSocket client connected: ${clientId}`);
+
+            // Parse cookies from the request
+            // const cookies = this.parseCookies(req.headers.cookie);
+            let userName = null;
+
+            // Authenticate using cookies if present
+            if (req.cookies.authToken && req.cookies.userName) {
+                try {
+                    const isValid = await dbOps.getActiveSession(req.cookies.userName, req.cookies.authToken);
+                    if (isValid) {
+                        userName = req.cookies.userName;
+                        console.log(`📡 WebSocket authenticated: ${userName}`);
+                    } else {
+                        console.log(`📡 WebSocket authentication failed for ${req.cookies.userName}`);
+                    }
+                } catch (error) {
+                    console.error('📡 WebSocket authentication error:', error);
+                }
+            }
 
             // Store client with metadata
             this.clients.set(clientId, {
                 ws: ws,
                 connected: true,
                 lastPing: Date.now(),
-                userName: null // Will be set when authenticated
+                userName: userName,
+                authenticated: !!userName
             });
 
             // Set up message handling
@@ -40,6 +61,8 @@ class SyncServer {
             this.sendToClient(clientId, {
                 type: 'connected',
                 clientId: clientId,
+                authenticated: !!userName,
+                userName: userName,
                 timestamp: new Date().toISOString()
             });
         });
@@ -157,6 +180,20 @@ class SyncServer {
         return `client_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     }
 
+    // // Parse cookies from request headers
+    // parseCookies(cookieString) {
+    //     const cookies = {};
+    //     if (cookieString) {
+    //         cookieString.split(';').forEach(cookie => {
+    //             const parts = cookie.trim().split('=');
+    //             if (parts.length === 2) {
+    //                 cookies[parts[0]] = decodeURIComponent(parts[1]);
+    //             }
+    //         });
+    //     }
+    //     return cookies;
+    // }
+
     // Get connected clients info
     getClientsInfo() {
         const info = [];
@@ -165,11 +202,30 @@ class SyncServer {
                 id: clientId,
                 userName: client.userName,
                 connected: client.connected,
+                authenticated: client.authenticated,
                 lastPing: client.lastPing
             });
         });
         return info;
     }
+}
+
+class SyncServer {
+    constructor(httpserver) {
+        this.wss = new WebSocketServer({ server: httpserver });
+        this.clients = new Map(); // Store client connections with metadata
+        this.setupServer();
+    }
+
+    setupServer() {
+        this.wss.on('connection', (ws, req) => {
+            const clientId = this.generateClientId();
+            console.log(`📡 WebSocket client connected: ${clientId}`);
+        });
+    }
+
+    generateClientId() {
+        return `client_`
 }
 
 
