@@ -4,6 +4,13 @@ const { authenticate } = require('./authRouter.js')
 const crypto = require('crypto');
 const { getDatetimeForTimezone } = require('../utils/time.js');
 const dbOps = require('../database.js');
+const { Command } = require('../wsServer.js');
+
+// Use a getter function to access wsServer after it's initialized
+const getWsServer = () => {
+    const { wsServer } = require('../index.js');
+    return wsServer;
+};
 
 const reminderRouter = express.Router();
 
@@ -29,6 +36,7 @@ reminderRouter.post('/', authenticate, async (req, res) => {
     }
 
     res.status(StatusCodes.CREATED).send(reminder);
+    getWsServer().sendToUserClients(req.cookies.userName, new Command('sync', 'reminders', {}));
 });
 
 // Read
@@ -61,6 +69,7 @@ reminderRouter.put('/', authenticate, async (req, res) => {
     }
 
     res.status(StatusCodes.OK).send(updatedReminder);
+    getWsServer().sendToUserClients(req.cookies.userName, new Command('sync', 'reminders', {}));
 });
 
 // Delete
@@ -81,6 +90,7 @@ reminderRouter.delete('/', authenticate, async (req, res) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ msg: 'Failed to delete reminder' });
     }
     res.status(StatusCodes.OK).send({ modifiedAt });
+    getWsServer().sendToUserClients(req.cookies.userName, new Command('sync', 'reminders', {}));
 });
 
 // Reorder
@@ -97,6 +107,7 @@ reminderRouter.put('/swap', authenticate, async (req, res) => {
     }
 
     res.status(StatusCodes.OK).send({ updated: modifiedAt });
+    getWsServer().sendToUserClients(req.cookies.userName, new Command('sync', 'reminders', {}));
 });
 
 module.exports = {
