@@ -1,4 +1,4 @@
-class WebSocketClient {
+class ExampleWebSocketClient {
     constructor() {
         this.ws = null;
         this.isConnected = false;
@@ -34,11 +34,6 @@ class WebSocketClient {
             this.isConnected = true;
             this.reconnectAttempts = 0;
             
-            // Send authentication if we have a username
-            if (this.userName) {
-                this.sendAuth(this.userName);
-            }
-            
             if (this.onConnectedCallback) {
                 this.onConnectedCallback();
             }
@@ -73,7 +68,12 @@ class WebSocketClient {
             switch (message.type) {
                 case 'connected':
                     this.clientId = message.clientId;
-                    console.log(`📡 Assigned client ID: ${this.clientId}`);
+                    const authStatus = message.authenticated ? 'authenticated' : 'unauthenticated';
+                    console.log(`📡 Assigned client ID: ${this.clientId} (${authStatus})`);
+                    if (message.authenticated && message.userName) {
+                        this.userName = message.userName;
+                        console.log(`📡 Authenticated as: ${this.userName}`);
+                    }
                     break;
                 case 'ping':
                     this.handlePing(message);
@@ -183,6 +183,27 @@ class WebSocketClient {
             userName: this.userName,
             reconnectAttempts: this.reconnectAttempts
         };
+    }
+}
+
+class WebSocketClient {
+    constructor() {
+        this.ws = null;
+        this.isConnected = false;
+        this.reconnectAttempts = 0;
+        this.maxReconnectAttempts = 5;
+        this.reconnectDelay = 1000; // Start with 1 second
+        this.onConnectedCallback = null;
+        this.onDisconnectedCallback = null;
+        this.clientId = null;
+        this.userName = null;
+    }
+
+    connect(userName = null) {
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const port = window.location.port;
+        this.ws = new WebSocket(`${protocol}://${window.location.hostname}:${port}/ws`);
+
     }
 }
 
