@@ -225,31 +225,25 @@ class SyncServer {
             let userName = null;
 
             // Authenticate using cookies if present
-            if (req.cookies.authToken && req.cookies.userName) {
-                try {
-                    const isValid = await dbOps.getActiveSession(req.cookies.userName, req.cookies.authToken);
-                    if (isValid) {
-                        userName = req.cookies.userName;
-                        console.log(`📡 WebSocket authenticated: ${userName}`);
-                    } else {
-                        console.log(`📡 WebSocket authentication failed for ${req.cookies.userName}`);
-                        ws.send(JSON.stringify({
-                            type: 'error',
-                            msg: 'WebSocket authentication failed'
-                        }));
-                        ws.close();
-                        return;
-                    }
-                } catch (error) {
-                    console.error('📡 WebSocket authentication error:', error);
-                }
+            const dummyURL = new URL(req.url, `http://${req.headers.host}`);
+            const queryUserName = dummyURL.searchParams.get('userName');
+            userName = queryUserName;
+            if (userName) {
+                userName = queryUserName;
+                console.log(`📡 WebSocket authenticated: ${userName}`);
             }
             else {
-                console.log('📡 WebSocket connection without authentication cookies');
+                console.log(`📡 WebSocket authentication failed for ${req.cookies.userName}`);
+                    ws.send(JSON.stringify({
+                        type: 'error',
+                        msg: 'WebSocket authentication failed'
+                    }));
+                ws.close(1008, 'Authentication failed');
+                return;
             }
 
             // const clientId = crypto.randomUUID();
-            const clientId = `client_${userName}_${Date.now()}_${Math.random().toString(8)}`;
+            const clientId = `client_${userName}_${Date.now()}_${Math.random().toString().slice(2)}`;
             console.log(`📡 WebSocket client connected: ${clientId}`);
 
             // Store client with metadata
@@ -300,6 +294,13 @@ class SyncServer {
         try {
             const message = JSON.parse(data);
             console.log(`📡 Received from ${clientId}:`, message);
+            switch (message.type) {
+                case 'pong':
+                    this.handlePong(clientId, message);
+                    break;
+                default:
+                    console.log(`📡 Unknown message type: ${message.type}`);
+            }
         } catch (error) {
             console.error(`📡 Error handling message from ${clientId}:`, error);
         }
@@ -346,14 +347,14 @@ class SyncServer {
                 this.removeClient(clientId);
                 return;
             }
-            
+
             client.connected = false; // Will be set to true on pong
             this.sendToClient(clientId, pingMessage);
         });
     }
 
     // Periodically call pingAllClients
-    startPingInterval(intervalMs = 30000) {
+    startPingInterval(intervalMs = 60000) {
         setInterval(() => {
             this.pingAllClients();
         }, intervalMs);
