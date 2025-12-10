@@ -128,3 +128,7 @@ I made an important change to the deployment script. `cp -r service/routers buil
 Sync rule:
 Every user client auto syncs on start
 Every action triggers an evaluation: which user and client sent it? For every connected client belonging to that user that does not match the action-provider, force a sync
+
+Server sends commands, deciphered by the wsClient. 
+wsClient provides a list of commands to the useXXXXX hooks. Commands are stored in a special array with a semaphore to prevent race conditions.
+useXXXX hooks analyze the latest command on the list and execute it if they're responsible for that command. Pop the command at the end and reset the semaphore.
