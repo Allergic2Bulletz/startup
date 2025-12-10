@@ -244,13 +244,19 @@ async function swapBookmarks(userName, from, to) {
         {
             updateOne: {
                 filter: { userName: userName, index: from, deleted: false },
-                update: { $set: { index: to, modifiedAt: now } }
+                update: { $set: { index: -1, modifiedAt: now } }
             }
         },
         {
             updateOne: {
                 filter: { userName: userName, index: to, deleted: false },
                 update: { $set: { index: from, modifiedAt: now } }
+            }
+        },
+        {
+            updateOne: {
+                filter: { userName: userName, index: -1, deleted: false },
+                update: { $set: { index: to, modifiedAt: now } }
             }
         }
     ];
@@ -297,13 +303,19 @@ async function swapReminders(userName, from, to) {
         {
             updateOne: {
                 filter: { userName: userName, index: from, deleted: false },
-                update: { $set: { index: to, modifiedAt: now } }
+                update: { $set: { index: -1, modifiedAt: now } }
             }
         },
         {
             updateOne: {
                 filter: { userName: userName, index: to, deleted: false },
                 update: { $set: { index: from, modifiedAt: now } }
+            }
+        },
+        {
+            updateOne: {
+                filter: { userName: userName, index: -1, deleted: false },
+                update: { $set: { index: to, modifiedAt: now } }
             }
         }
     ];
