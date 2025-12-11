@@ -3,6 +3,7 @@ import { NotificationContext } from '../contexts/NotificationContext.js';
 
 const useNotifications = () => {
     const [notification, setNotification] = useState(null);
+    const [suppressNotifications, setSuppressNotifications] = useState(false);
 
     const showNotification = useCallback((message, notificationType = 'default', autoClose = true) => {
         const newNotification = {
@@ -10,8 +11,9 @@ const useNotifications = () => {
             notificationType,
             autoClose
         };
+        if (suppressNotifications) return;
         setNotification(newNotification);
-    }, []);
+    }, [suppressNotifications]);
 
     const hideNotification = useCallback(() => {
         setNotification(null);
@@ -31,7 +33,9 @@ const useNotifications = () => {
     return {
         notification,
         showNotification,
-        hideNotification
+        hideNotification,
+        suppressNotifications,
+        toggleNotifications: () => setSuppressNotifications(prev => !prev)
     };
 };
 
