@@ -145,8 +145,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Backend listens for WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Frontend makes WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
-- [ ] **Application is fully functional** - I did not complete this part of the deliverable.
+- [x] **Backend listens for WebSocket connection** - wsService.js upgrades http connection to ws + handles incoming messages
+- [x] **Frontend makes WebSocket connection** - wsClient.js creates ws connection to backend
+- [x] **Data sent over WebSocket connection** - Upon a CRUD operation in any of the main routers (not authentication), the SyncServer will send a Command message to the subscribed clients
+- [x] **WebSocket data displayed** - Subscribed clients create handlers that will update the appropriate data on the UI after a sync.
+- [x] **Application is fully functional** - Reminders, Bookmarks, and Preferences are all functional and synchronized between clients.
