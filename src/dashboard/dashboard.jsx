@@ -9,7 +9,7 @@ import ReminderTile from './reminderTile';
 import useBookmarks from '../hooks/useBookmarks';
 import useReminders from '../hooks/useReminders';
 
-export default function Dashboard({ currentAuthState, wsClient }) {
+export default function Dashboard({ currentAuthState, wsClient, preferences }) {
     const [showBookmarkModal, setShowBookmarkModal] = useState(false);
     const [showReminderModal, setShowReminderModal] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -20,12 +20,13 @@ export default function Dashboard({ currentAuthState, wsClient }) {
     const { bookmarks, addBookmark, updateBookmark, deleteBookmark, moveBookmark, exportBookmark } = useBookmarks({ currentAuthState, wsClient });
     
     // Reminder management
-    const { reminders, addReminder, updateReminder, deleteReminder, moveReminder, exportReminder, checkReminders } = useReminders({ currentAuthState, wsClient });
+    const { reminders, addReminder, updateReminder, deleteReminder, moveReminder, exportReminder, checkReminders } = useReminders({ currentAuthState, wsClient, preferences });
 
     // Update current time every second
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentTime(new Date());
+            // console.log(`Current authState in Dashboard: `, currentAuthState);
         }, 1000);
 
         // todo - this will be replaced with websocket for users later
