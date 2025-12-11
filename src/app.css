@@ -16,6 +16,16 @@ html, body {
     margin: 0px;
 }
 
+body.black .body {
+    background-color: rgb(24, 24, 24);
+    color: #aaa;
+}
+
+body.black input, body.black select, body.black textarea, body.black button {
+    background-color: #6c6c6c;
+    color: #eee;
+}
+
 footer {
     display: flex;
     align-items: center;
@@ -26,6 +36,15 @@ footer {
     border-width: 0px;
     border-top: 1px solid #444;
     justify-content: center;
+}
+
+header {
+    background-color: rgb(24, 24, 50);
+}
+
+body.black header, body.black footer {
+    background-color: rgb(5, 4, 10);
+    border-color: #222;
 }
 
 footer > * {
