@@ -326,7 +326,8 @@ async function swapReminders(userName, from, to) {
 
 // Preference Operations
 function getPreferences(userName) {
-    return prefCollection.findOne({ userName: userName });
+    const options = { projection: { theme: 1, notifications: 1, reminderSound: 1, modifiedAt: 1 } };
+    return prefCollection.findOne({ userName: userName }, options);
 }
 
 function updatePreferences(userName, preferences) {
