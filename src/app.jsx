@@ -22,11 +22,38 @@ export default function App() {
     const wsClient = React.useRef(null);
     
     // Notification management
-    const { notification, showNotification, hideNotification } = useNotifications();
+    const { notification, showNotification, hideNotification, suppressNotifications, toggleNotifications } = useNotifications();
 
     // Preferences management
-    const { preferences, updatePreferences, resetPreferences } = usePreferences( currentAuthState, showNotification );
+    const { preferences, updatePreferences, resetPreferences } = usePreferences( currentAuthState, showNotification, wsClient );
     
+    // Manage body theme class based on preferences
+    React.useEffect(() => {
+        if (preferences.theme === 'black') {
+            document.body.classList.add('black');
+        } else {
+            document.body.classList.remove('black');
+        }
+        
+        // Cleanup function to ensure no leftover classes
+        return () => {
+            document.body.classList.remove('black');
+        };
+    }, [preferences.theme]);
+
+    // Suppress notifications based on preferences
+    React.useEffect(() => {
+        if (!preferences.notifications) {
+            if (!suppressNotifications) {
+                toggleNotifications();
+            }
+        } else {
+            if (suppressNotifications) {
+                toggleNotifications();
+            }
+        }
+    }, [preferences.notifications, suppressNotifications, toggleNotifications]);
+
     // Initialize WebSocket
     React.useEffect(() => {
         if (authState !== AuthState.Authenticated) {
@@ -123,7 +150,7 @@ export default function App() {
 
                 <Routes>
                     <Route path="/" element={<Splash userName={userName} currentAuthState={currentAuthState} onAuthChange={(userName, authState) => {setAuthState(authState);setUserName(userName);}} />}/>
-                    <Route path="/dashboard" element={<Dashboard currentAuthState={currentAuthState} wsClient={wsClient}/>}/>
+                    <Route path="/dashboard" element={<Dashboard currentAuthState={currentAuthState} wsClient={wsClient} preferences={preferences}/>}/>
                 </Routes>
 
                 {/* WebSocket Test Controls */}
