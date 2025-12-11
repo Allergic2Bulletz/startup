@@ -2,22 +2,25 @@ import React, { useState, useEffect } from 'react';
 import Modal from './Modal';
 import modalStyles from './modals.module.css';
 
-const PreferencesModal = ({ isOpen, onClose, preferences, onSave, onReset }) => {
-  const [formData, setFormData] = useState({
-    theme: 'light',
-    timeFormat: '12',
-    showSeconds: false,
-    defaultTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+const defaultFormData = {
+  theme: 'blue', // 'blue' or 'black'
+    // timeFormat: '12',
+    // showSeconds: false,
+    // defaultTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     notifications: true,
     reminderSound: true
-  });
+};
+
+const PreferencesModal = ({ isOpen, onClose, preferences, onSave, onReset }) => {
+  const [formData, setFormData] = useState(defaultFormData);
 
   // Update form data when preferences change or modal opens
   useEffect(() => {
-    if (isOpen && preferences) {
+    if (preferences) {
       setFormData(preferences);
     }
-  }, [isOpen, preferences]);
+    else {setFormData(defaultFormData)}
+  }, [preferences]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -50,12 +53,12 @@ const PreferencesModal = ({ isOpen, onClose, preferences, onSave, onReset }) => 
             value={formData.theme}
             onChange={handleInputChange}
           >
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
+            <option value="blue">Blue</option>
+            <option value="black">Black</option>
           </select>
         </div>
 
-        <div>
+        {/* <div>
           <label htmlFor="timeFormat">Time Format:</label>
           <select
             id="timeFormat"
@@ -99,7 +102,7 @@ const PreferencesModal = ({ isOpen, onClose, preferences, onSave, onReset }) => 
             <option value="Asia/Shanghai">CST (Shanghai)</option>
             <option value="Australia/Sydney">AEST (Sydney)</option>
           </select>
-        </div>
+        </div> */}
 
         <div>
           <label htmlFor="notifications">
