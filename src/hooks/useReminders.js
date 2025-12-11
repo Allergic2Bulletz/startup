@@ -3,9 +3,10 @@ import { getDatetimeForTimezone } from '../utils/timeUtils.js';
 import { AuthState } from '../hooks/useAuthState.js';
 import { useNotificationContext } from './useNotifications.js';
 
-const useReminders = ({ currentAuthState, wsClient }) => {
+const useReminders = ({ currentAuthState, wsClient, preferences }) => {
     const [reminders, setReminders] = useState([]);
     const { showNotification } = useNotificationContext();
+    const [playingSound, setPlayingSound] = useState(false);
 
     const fetchReminders = useCallback(async () => {
         console.log('Fetching bookmarks from server...');
@@ -23,6 +24,14 @@ const useReminders = ({ currentAuthState, wsClient }) => {
             showNotification('Error fetching reminders', 'error', true);
         }
     }, [showNotification]);
+
+    const playReminderSound = () => {
+        if (playingSound || !preferences.reminderSound) return;
+        setPlayingSound(true);
+        console.log('Playing reminder sound');
+        const audio = new Audio('/alarm_soft_01.wav');
+        audio.play().finally(() => setPlayingSound(false));
+    };
 
     // Load reminders from localStorage on mount
     useEffect(() => {
@@ -88,6 +97,7 @@ const useReminders = ({ currentAuthState, wsClient }) => {
             datetime: finalDateTime,
             timezone: reminderData.timezone,
             deleted: false,
+            expired: false,
             index: maxIndex + 1,
             modifiedAt: new Date().toISOString()
         };
@@ -158,10 +168,12 @@ const useReminders = ({ currentAuthState, wsClient }) => {
     const checkReminders = useCallback(() => {
         const now = new Date();
         const activeReminders = reminders.filter(r => !r.deleted);
-        
+        console.log('Checking local reminders at', now.toISOString());
+
         activeReminders.forEach(reminder => {
             const reminderDate = new Date(reminder.datetime);
             if (now >= reminderDate && !reminder.expired) {
+                playReminderSound();
                 updateReminder(reminder.id, { expired: true });
             }
         });
@@ -260,17 +272,20 @@ const useReminders = ({ currentAuthState, wsClient }) => {
     // todo - this will be replaced with websocket later
     const checkRemoteReminders = () => {
         const now = new Date();
+        console.log('Checking reminders at', now.toISOString());
         const activeReminders = reminders.filter(r => !r.deleted);
         
         activeReminders.forEach(reminder => {
             const reminderDate = new Date(reminder.datetime);
             if (now >= reminderDate && !reminder.expired) {
+                playReminderSound();
                 updateRemote(reminder.id, { expired: true });
             }
         });
     };
 
-    if (currentAuthState === AuthState.Authenticated) {
+    if (currentAuthState == 'authenticated') {
+        console.log('current authState in useReminders:', currentAuthState);
         return {
             reminders: activeReminders,
             addReminder: createRemote,
